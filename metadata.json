@@ -1,0 +1,5 @@
+{
+  "name": "Báo giá Phụ kiện Mai Vinh",
+  "description": "Ứng dụng PWA xem báo giá phụ kiện ống nước uPVC Mai Vinh (hệ dày và hệ mỏng).",
+  "requestFramePermissions": ["microphone"]
+}
