@@ -250,7 +250,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "31",
-    "name": "Chữ T",
+    "name": "Chữ Tê",
     "spec": "Ø21",
     "priceTax": "4.320 đ",
     "priceDiscount": "3.197 đ",
@@ -258,7 +258,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "32",
-    "name": "Chữ T",
+    "name": "Chữ Tê",
     "spec": "Ø27",
     "priceTax": "6.912 đ",
     "priceDiscount": "5.115 đ",
@@ -266,7 +266,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "33",
-    "name": "Chữ T",
+    "name": "Chữ Tê",
     "spec": "Ø34",
     "priceTax": "10.584 đ",
     "priceDiscount": "7.832 đ",
@@ -274,7 +274,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "34",
-    "name": "Chữ T",
+    "name": "Chữ Tê",
     "spec": "Ø42",
     "priceTax": "14.904 đ",
     "priceDiscount": "11.029 đ",
@@ -282,7 +282,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "35",
-    "name": "Chữ T",
+    "name": "Chữ Tê",
     "spec": "Ø49",
     "priceTax": "22.140 đ",
     "priceDiscount": "16.384 đ",
@@ -290,7 +290,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "36",
-    "name": "Chữ T",
+    "name": "Chữ Tê",
     "spec": "Ø60",
     "priceTax": "37.260 đ",
     "priceDiscount": "27.572 đ",
@@ -298,7 +298,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "37",
-    "name": "Chữ T",
+    "name": "Chữ Tê",
     "spec": "Ø76",
     "priceTax": "57.240 đ",
     "priceDiscount": "42.358 đ",
@@ -306,7 +306,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "38",
-    "name": "Chữ T",
+    "name": "Chữ Tê",
     "spec": "Ø90",
     "priceTax": "95.472 đ",
     "priceDiscount": "70.649 đ",
@@ -314,7 +314,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "39",
-    "name": "Chữ T",
+    "name": "Chữ Tê",
     "spec": "Ø114",
     "priceTax": "170.532 đ",
     "priceDiscount": "126.194 đ",
@@ -322,7 +322,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "40",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø27 x 21",
     "priceTax": "5.184 đ",
     "priceDiscount": "3.836 đ",
@@ -330,7 +330,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "41",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø34 x 21",
     "priceTax": "7.668 đ",
     "priceDiscount": "5.674 đ",
@@ -338,7 +338,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "42",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø34 x 27",
     "priceTax": "9.180 đ",
     "priceDiscount": "6.793 đ",
@@ -346,7 +346,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "43",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø42 x 21",
     "priceTax": "11.340 đ",
     "priceDiscount": "8.392 đ",
@@ -354,7 +354,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "44",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø42 x 27",
     "priceTax": "11.340 đ",
     "priceDiscount": "8.392 đ",
@@ -362,7 +362,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "45",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø42 x 34",
     "priceTax": "12.636 đ",
     "priceDiscount": "9.351 đ",
@@ -370,7 +370,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "46",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø49 x 21",
     "priceTax": "14.904 đ",
     "priceDiscount": "11.029 đ",
@@ -378,7 +378,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "47",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø49 x 27",
     "priceTax": "16.200 đ",
     "priceDiscount": "11.988 đ",
@@ -386,7 +386,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "48",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø49 x 34",
     "priceTax": "17.820 đ",
     "priceDiscount": "13.187 đ",
@@ -394,7 +394,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "49",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø49 x 42",
     "priceTax": "19.980 đ",
     "priceDiscount": "14.785 đ",
@@ -402,7 +402,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "50",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø60 x 21",
     "priceTax": "23.760 đ",
     "priceDiscount": "17.582 đ",
@@ -410,7 +410,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "51",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø60 x 27",
     "priceTax": "26.352 đ",
     "priceDiscount": "19.500 đ",
@@ -418,7 +418,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "52",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø60 x 34",
     "priceTax": "24.516 đ",
     "priceDiscount": "18.142 đ",
@@ -426,7 +426,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "53",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø60 x 42",
     "priceTax": "27.540 đ",
     "priceDiscount": "20.380 đ",
@@ -434,7 +434,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "54",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø60 x 49",
     "priceTax": "31.104 đ",
     "priceDiscount": "23.017 đ",
@@ -442,7 +442,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "55",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø76 x 60",
     "priceTax": "74.304 đ",
     "priceDiscount": "54.985 đ",
@@ -450,7 +450,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "56",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø90 x 27",
     "priceTax": "70.416 đ",
     "priceDiscount": "52.108 đ",
@@ -458,7 +458,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "57",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø90 x 34",
     "priceTax": "57.240 đ",
     "priceDiscount": "42.358 đ",
@@ -466,7 +466,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "58",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø90 x 42",
     "priceTax": "61.452 đ",
     "priceDiscount": "45.474 đ",
@@ -474,7 +474,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "59",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø90 x 49",
     "priceTax": "65.664 đ",
     "priceDiscount": "48.591 đ",
@@ -482,7 +482,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "60",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø90 x 60",
     "priceTax": "69.768 đ",
     "priceDiscount": "51.628 đ",
@@ -674,7 +674,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "84",
-    "name": "Bít RT",
+    "name": "Bít răng trong",
     "spec": "Ø21",
     "priceTax": "1.080 đ",
     "priceDiscount": "799 đ",
@@ -682,7 +682,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "85",
-    "name": "Bít RT",
+    "name": "Bít răng trong",
     "spec": "Ø27",
     "priceTax": "1.404 đ",
     "priceDiscount": "1.039 đ",
@@ -690,7 +690,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "86",
-    "name": "Bít RT",
+    "name": "Bít răng trong",
     "spec": "Ø34",
     "priceTax": "1.836 đ",
     "priceDiscount": "1.359 đ",
@@ -698,7 +698,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "87",
-    "name": "Bít RN",
+    "name": "Bít răng ngoài",
     "spec": "Ø21",
     "priceTax": "1.296 đ",
     "priceDiscount": "959 đ",
@@ -706,7 +706,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "88",
-    "name": "Bít RN",
+    "name": "Bít răng ngoài",
     "spec": "Ø27",
     "priceTax": "1.944 đ",
     "priceDiscount": "1.439 đ",
@@ -714,7 +714,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "89",
-    "name": "Bít RN",
+    "name": "Bít răng ngoài",
     "spec": "Ø34",
     "priceTax": "2.160 đ",
     "priceDiscount": "1.598 đ",
@@ -866,7 +866,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "108",
-    "name": "2 đầu RN",
+    "name": "2 đầu răng ngoài",
     "spec": "Ø21",
     "priceTax": "1.836 đ",
     "priceDiscount": "1.359 đ",
@@ -874,7 +874,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "109",
-    "name": "2 đầu RN",
+    "name": "2 đầu răng ngoài",
     "spec": "Ø27",
     "priceTax": "2.592 đ",
     "priceDiscount": "1.918 đ",
@@ -882,7 +882,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "110",
-    "name": "2 đầu RN",
+    "name": "2 đầu răng ngoài",
     "spec": "Ø34",
     "priceTax": "3.780 đ",
     "priceDiscount": "2.797 đ",
@@ -890,7 +890,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "111",
-    "name": "2 đầu RN giảm",
+    "name": "2 đầu răng ngoài giảm",
     "spec": "27 x 21",
     "priceTax": "2.160 đ",
     "priceDiscount": "1.598 đ",
@@ -898,7 +898,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "112",
-    "name": "2 đầu RN giảm",
+    "name": "2 đầu răng ngoài giảm",
     "spec": "34 x 21",
     "priceTax": "3.132 đ",
     "priceDiscount": "2.318 đ",
@@ -906,7 +906,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "113",
-    "name": "2 đầu RN giảm",
+    "name": "2 đầu răng ngoài giảm",
     "spec": "34 x 27",
     "priceTax": "3.240 đ",
     "priceDiscount": "2.398 đ",
@@ -914,7 +914,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "114",
-    "name": "2 đầu RN giảm",
+    "name": "2 đầu răng ngoài giảm",
     "spec": "42 x 34",
     "priceTax": "4.968 đ",
     "priceDiscount": "3.676 đ",
@@ -922,7 +922,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "115",
-    "name": "Co RN",
+    "name": "Co răng ngoài",
     "spec": "Ø21",
     "priceTax": "4.752 đ",
     "priceDiscount": "3.516 đ",
@@ -930,7 +930,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "116",
-    "name": "Co RN",
+    "name": "Co răng ngoài",
     "spec": "Ø27",
     "priceTax": "6.156 đ",
     "priceDiscount": "4.555 đ",
@@ -938,7 +938,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "117",
-    "name": "Co RN",
+    "name": "Co răng ngoài",
     "spec": "Ø34",
     "priceTax": "10.800 đ",
     "priceDiscount": "7.992 đ",
@@ -946,7 +946,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "118",
-    "name": "Co RN",
+    "name": "Co răng ngoài",
     "spec": "Ø42",
     "priceTax": "16.092 đ",
     "priceDiscount": "11.908 đ",
@@ -954,7 +954,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "119",
-    "name": "Co RN",
+    "name": "Co răng ngoài",
     "spec": "Ø49",
     "priceTax": "24.408 đ",
     "priceDiscount": "18.062 đ",
@@ -962,7 +962,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "120",
-    "name": "Co RT",
+    "name": "Co răng trong",
     "spec": "Ø21",
     "priceTax": "3.780 đ",
     "priceDiscount": "2.797 đ",
@@ -970,7 +970,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "121",
-    "name": "Co RT",
+    "name": "Co răng trong",
     "spec": "Ø27",
     "priceTax": "5.184 đ",
     "priceDiscount": "3.836 đ",
@@ -978,7 +978,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "122",
-    "name": "Co RT",
+    "name": "Co răng trong",
     "spec": "Ø34",
     "priceTax": "9.180 đ",
     "priceDiscount": "6.793 đ",
@@ -986,7 +986,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "123",
-    "name": "Co RT",
+    "name": "Co răng trong",
     "spec": "Ø42",
     "priceTax": "14.040 đ",
     "priceDiscount": "10.390 đ",
@@ -994,7 +994,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "124",
-    "name": "Co RT",
+    "name": "Co răng trong",
     "spec": "Ø49",
     "priceTax": "21.384 đ",
     "priceDiscount": "15.824 đ",
@@ -1002,7 +1002,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "125",
-    "name": "Chữ T RN",
+    "name": "Chữ Tê răng ngoài",
     "spec": "Ø21",
     "priceTax": "5.940 đ",
     "priceDiscount": "4.396 đ",
@@ -1010,7 +1010,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "126",
-    "name": "Chữ T RN",
+    "name": "Chữ Tê răng ngoài",
     "spec": "Ø27",
     "priceTax": "8.856 đ",
     "priceDiscount": "6.553 đ",
@@ -1018,7 +1018,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "127",
-    "name": "Chữ T RT",
+    "name": "Chữ Tê răng trong",
     "spec": "Ø21",
     "priceTax": "5.400 đ",
     "priceDiscount": "3.996 đ",
@@ -1026,7 +1026,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "128",
-    "name": "Chữ T RT",
+    "name": "Chữ Tê răng trong",
     "spec": "Ø27",
     "priceTax": "7.128 đ",
     "priceDiscount": "5.275 đ",
@@ -1034,7 +1034,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "129",
-    "name": "Co RN giảm",
+    "name": "Co răng ngoài giảm",
     "spec": "Ø21 x 27",
     "priceTax": "5.400 đ",
     "priceDiscount": "3.996 đ",
@@ -1042,7 +1042,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "130",
-    "name": "Co RN giảm",
+    "name": "Co răng ngoài giảm",
     "spec": "Ø27 x 21",
     "priceTax": "6.156 đ",
     "priceDiscount": "4.555 đ",
@@ -1050,7 +1050,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "131",
-    "name": "Co RN giảm",
+    "name": "Co răng ngoài giảm",
     "spec": "Ø27 x 34",
     "priceTax": "9.072 đ",
     "priceDiscount": "6.713 đ",
@@ -1058,7 +1058,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "132",
-    "name": "Co RN giảm",
+    "name": "Co răng ngoài giảm",
     "spec": "Ø34 x 27",
     "priceTax": "8.100 đ",
     "priceDiscount": "5.994 đ",
@@ -1066,7 +1066,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "133",
-    "name": "Co RT giảm",
+    "name": "Co răng trong giảm",
     "spec": "Ø21 x 27",
     "priceTax": "5.508 đ",
     "priceDiscount": "4.076 đ",
@@ -1074,7 +1074,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "134",
-    "name": "Co RT giảm",
+    "name": "Co răng trong giảm",
     "spec": "Ø27 x 34",
     "priceTax": "12.420 đ",
     "priceDiscount": "9.191 đ",
@@ -1082,7 +1082,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "135",
-    "name": "Co RT giảm",
+    "name": "Co răng trong giảm",
     "spec": "Ø34 x 27",
     "priceTax": "8.856 đ",
     "priceDiscount": "6.553 đ",
@@ -1194,7 +1194,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "149",
-    "name": "Chữ T RN giảm",
+    "name": "Chữ Tê răng ngoài giảm",
     "spec": "Ø21 x 27",
     "priceTax": "7.668 đ",
     "priceDiscount": "5.674 đ",
@@ -1202,7 +1202,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "150",
-    "name": "Chữ T RT giảm",
+    "name": "Chữ Tê răng trong giảm",
     "spec": "Ø21 x 27",
     "priceTax": "7.344 đ",
     "priceDiscount": "5.435 đ",
@@ -1498,7 +1498,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "187",
-    "name": "Giảm RN",
+    "name": "Giảm răng ngoài",
     "spec": "Ø21 x 27",
     "priceTax": "2.268 đ",
     "priceDiscount": "1.678 đ",
@@ -1506,7 +1506,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "188",
-    "name": "Giảm RN",
+    "name": "Giảm răng ngoài",
     "spec": "Ø21 x 34",
     "priceTax": "4.752 đ",
     "priceDiscount": "3.516 đ",
@@ -1514,7 +1514,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "189",
-    "name": "Giảm RN",
+    "name": "Giảm răng ngoài",
     "spec": "Ø27 x 21",
     "priceTax": "2.484 đ",
     "priceDiscount": "1.838 đ",
@@ -1522,7 +1522,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "190",
-    "name": "Giảm RN",
+    "name": "Giảm răng ngoài",
     "spec": "Ø27 x 34",
     "priceTax": "3.456 đ",
     "priceDiscount": "2.557 đ",
@@ -1530,7 +1530,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "191",
-    "name": "Giảm RN",
+    "name": "Giảm răng ngoài",
     "spec": "Ø34 x 21",
     "priceTax": "4.428 đ",
     "priceDiscount": "3.277 đ",
@@ -1538,7 +1538,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "192",
-    "name": "Giảm RN",
+    "name": "Giảm răng ngoài",
     "spec": "Ø34 x 27",
     "priceTax": "4.644 đ",
     "priceDiscount": "3.437 đ",
@@ -1546,7 +1546,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "193",
-    "name": "Giảm RN",
+    "name": "Giảm răng ngoài",
     "spec": "Ø42 x 34",
     "priceTax": "7.668 đ",
     "priceDiscount": "5.674 đ",
@@ -1554,7 +1554,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "194",
-    "name": "Giảm RN",
+    "name": "Giảm răng ngoài",
     "spec": "Ø42 x 27",
     "priceTax": "7.452 đ",
     "priceDiscount": "5.514 đ",
@@ -1562,7 +1562,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "195",
-    "name": "Giảm RN",
+    "name": "Giảm răng ngoài",
     "spec": "Ø49 x 27",
     "priceTax": "9.180 đ",
     "priceDiscount": "6.793 đ",
@@ -1570,7 +1570,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "196",
-    "name": "Giảm RN",
+    "name": "Giảm răng ngoài",
     "spec": "Ø49 x 34",
     "priceTax": "9.504 đ",
     "priceDiscount": "7.033 đ",
@@ -1578,7 +1578,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "197",
-    "name": "Giảm RN",
+    "name": "Giảm răng ngoài",
     "spec": "Ø49 x 42",
     "priceTax": "13.716 đ",
     "priceDiscount": "10.150 đ",
@@ -1586,7 +1586,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "198",
-    "name": "Giảm RN",
+    "name": "Giảm răng ngoài",
     "spec": "Ø60 x 27",
     "priceTax": "12.420 đ",
     "priceDiscount": "9.191 đ",
@@ -1594,7 +1594,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "199",
-    "name": "Giảm RN",
+    "name": "Giảm răng ngoài",
     "spec": "Ø60 x 34",
     "priceTax": "12.528 đ",
     "priceDiscount": "9.271 đ",
@@ -1602,7 +1602,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "200",
-    "name": "Giảm RN",
+    "name": "Giảm răng ngoài",
     "spec": "Ø60 x 42",
     "priceTax": "13.932 đ",
     "priceDiscount": "10.310 đ",
@@ -1610,7 +1610,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "201",
-    "name": "Giảm RN",
+    "name": "Giảm răng ngoài",
     "spec": "Ø60 x 49",
     "priceTax": "16.092 đ",
     "priceDiscount": "11.908 đ",
@@ -1618,7 +1618,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "202",
-    "name": "Giảm RT",
+    "name": "Giảm răng trong",
     "spec": "Ø21 x 27",
     "priceTax": "3.240 đ",
     "priceDiscount": "2.398 đ",
@@ -1626,7 +1626,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "203",
-    "name": "Giảm RT",
+    "name": "Giảm răng trong",
     "spec": "Ø21 x 34",
     "priceTax": "4.536 đ",
     "priceDiscount": "3.357 đ",
@@ -1634,7 +1634,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "204",
-    "name": "Giảm RT",
+    "name": "Giảm răng trong",
     "spec": "Ø27 x 21",
     "priceTax": "3.024 đ",
     "priceDiscount": "2.238 đ",
@@ -1642,7 +1642,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "205",
-    "name": "Giảm RT",
+    "name": "Giảm răng trong",
     "spec": "Ø27 x 34",
     "priceTax": "5.076 đ",
     "priceDiscount": "3.756 đ",
@@ -1650,7 +1650,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "206",
-    "name": "Giảm RT",
+    "name": "Giảm răng trong",
     "spec": "Ø34 x 27",
     "priceTax": "4.536 đ",
     "priceDiscount": "3.357 đ",
@@ -1810,7 +1810,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "226",
-    "name": "Giảm RN (đồng)",
+    "name": "Giảm răng ngoài (đồng)",
     "spec": "Ø21 x 27",
     "priceTax": "15.876 đ",
     "priceDiscount": "11.748 đ",
@@ -1834,7 +1834,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "229",
-    "name": "Giảm RT (đồng)",
+    "name": "Giảm răng trong (đồng)",
     "spec": "Ø21 x 27",
     "priceTax": "9.936 đ",
     "priceDiscount": "7.353 đ",
@@ -1842,7 +1842,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "230",
-    "name": "Co RN (đồng)",
+    "name": "Co răng ngoài (đồng)",
     "spec": "Ø21",
     "priceTax": "21.168 đ",
     "priceDiscount": "15.664 đ",
@@ -1850,7 +1850,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "231",
-    "name": "Co RN (đồng)",
+    "name": "Co răng ngoài (đồng)",
     "spec": "Ø27",
     "priceTax": "35.316 đ",
     "priceDiscount": "26.134 đ",
@@ -1858,7 +1858,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "232",
-    "name": "Co RT (đồng)",
+    "name": "Co răng trong (đồng)",
     "spec": "Ø21",
     "priceTax": "15.444 đ",
     "priceDiscount": "11.429 đ",
@@ -1866,7 +1866,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "233",
-    "name": "Co RT (đồng)",
+    "name": "Co răng trong (đồng)",
     "spec": "Ø27",
     "priceTax": "24.408 đ",
     "priceDiscount": "18.062 đ",
@@ -1874,7 +1874,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "234",
-    "name": "Co RN giảm (đồng)",
+    "name": "Co răng ngoài giảm (đồng)",
     "spec": "Ø21 x 27",
     "priceTax": "28.836 đ",
     "priceDiscount": "21.339 đ",
@@ -1882,7 +1882,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "235",
-    "name": "Co RT giảm (đồng)",
+    "name": "Co răng trong giảm (đồng)",
     "spec": "Ø21 x 27",
     "priceTax": "18.792 đ",
     "priceDiscount": "13.906 đ",
@@ -1890,7 +1890,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "236",
-    "name": "Chữ T RN (đồng)",
+    "name": "Chữ Tê răng ngoài (đồng)",
     "spec": "Ø21",
     "priceTax": "21.168 đ",
     "priceDiscount": "15.664 đ",
@@ -1898,7 +1898,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "237",
-    "name": "Chữ T RN (đồng)",
+    "name": "Chữ Tê răng ngoài (đồng)",
     "spec": "Ø27",
     "priceTax": "32.832 đ",
     "priceDiscount": "24.296 đ",
@@ -1906,7 +1906,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "238",
-    "name": "Tê RN giảm (đồng)",
+    "name": "Tê răng ngoài giảm (đồng)",
     "spec": "Ø21 x 27",
     "priceTax": "33.696 đ",
     "priceDiscount": "24.935 đ",
@@ -1914,7 +1914,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "239",
-    "name": "Chữ T RT (đồng)",
+    "name": "Chữ Tê răng trong (đồng)",
     "spec": "Ø21",
     "priceTax": "16.632 đ",
     "priceDiscount": "12.308 đ",
@@ -1922,7 +1922,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "240",
-    "name": "Chữ T RT (đồng)",
+    "name": "Chữ Tê răng trong (đồng)",
     "spec": "Ø27",
     "priceTax": "18.684 đ",
     "priceDiscount": "13.826 đ",
@@ -1930,7 +1930,7 @@ export const dayData: Product[] = [
   },
   {
     "stt": "241",
-    "name": "Tê RT giảm (đồng)",
+    "name": "Tê răng trong giảm (đồng)",
     "spec": "Ø21 x 27",
     "priceTax": "18.144 đ",
     "priceDiscount": "13.427 đ",
@@ -2485,7 +2485,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "53",
-    "name": "Chữ T",
+    "name": "Chữ Tê",
     "spec": "Ø16",
     "priceTax": "2.052 đ",
     "priceDiscount": "1.518 đ",
@@ -2493,7 +2493,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "54",
-    "name": "Chữ T",
+    "name": "Chữ Tê",
     "spec": "Ø21",
     "priceTax": "2.808 đ",
     "priceDiscount": "2.078 đ",
@@ -2501,7 +2501,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "55",
-    "name": "Chữ T",
+    "name": "Chữ Tê",
     "spec": "Ø27",
     "priceTax": "3.888 đ",
     "priceDiscount": "2.877 đ",
@@ -2509,7 +2509,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "56",
-    "name": "Chữ T",
+    "name": "Chữ Tê",
     "spec": "Ø34",
     "priceTax": "5.076 đ",
     "priceDiscount": "3.756 đ",
@@ -2517,7 +2517,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "57",
-    "name": "Chữ T",
+    "name": "Chữ Tê",
     "spec": "Ø42",
     "priceTax": "6.912 đ",
     "priceDiscount": "5.115 đ",
@@ -2525,7 +2525,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "58",
-    "name": "Chữ T",
+    "name": "Chữ Tê",
     "spec": "Ø49",
     "priceTax": "9.936 đ",
     "priceDiscount": "7.353 đ",
@@ -2533,7 +2533,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "59",
-    "name": "Chữ T",
+    "name": "Chữ Tê",
     "spec": "Ø60",
     "priceTax": "15.768 đ",
     "priceDiscount": "11.668 đ",
@@ -2541,7 +2541,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "60",
-    "name": "Chữ T",
+    "name": "Chữ Tê",
     "spec": "Ø76",
     "priceTax": "24.084 đ",
     "priceDiscount": "17.822 đ",
@@ -2549,7 +2549,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "61",
-    "name": "Chữ T",
+    "name": "Chữ Tê",
     "spec": "Ø90",
     "priceTax": "31.536 đ",
     "priceDiscount": "23.337 đ",
@@ -2557,7 +2557,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "62",
-    "name": "Chữ T",
+    "name": "Chữ Tê",
     "spec": "Ø110",
     "priceTax": "52.812 đ",
     "priceDiscount": "39.081 đ",
@@ -2565,7 +2565,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "63",
-    "name": "Chữ T",
+    "name": "Chữ Tê",
     "spec": "Ø114",
     "priceTax": "67.068 đ",
     "priceDiscount": "49.630 đ",
@@ -2573,7 +2573,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "64",
-    "name": "Chữ T",
+    "name": "Chữ Tê",
     "spec": "Ø140",
     "priceTax": "120.744 đ",
     "priceDiscount": "89.351 đ",
@@ -2581,7 +2581,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "65",
-    "name": "Chữ T",
+    "name": "Chữ Tê",
     "spec": "Ø168",
     "priceTax": "240.732 đ",
     "priceDiscount": "178.142 đ",
@@ -2589,7 +2589,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "66",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø27 x 21",
     "priceTax": "3.348 đ",
     "priceDiscount": "2.478 đ",
@@ -2597,7 +2597,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "67",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø34 x 21",
     "priceTax": "4.644 đ",
     "priceDiscount": "3.437 đ",
@@ -2605,7 +2605,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "68",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø34 x 27",
     "priceTax": "4.968 đ",
     "priceDiscount": "3.676 đ",
@@ -2613,7 +2613,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "69",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø49 x 21",
     "priceTax": "7.344 đ",
     "priceDiscount": "5.435 đ",
@@ -2621,7 +2621,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "70",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø49 x 27",
     "priceTax": "7.452 đ",
     "priceDiscount": "5.514 đ",
@@ -2629,7 +2629,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "71",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø49 x 34",
     "priceTax": "7.560 đ",
     "priceDiscount": "5.594 đ",
@@ -2637,7 +2637,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "72",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø49 x 42",
     "priceTax": "8.640 đ",
     "priceDiscount": "6.394 đ",
@@ -2645,7 +2645,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "73",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø60 x 21",
     "priceTax": "11.448 đ",
     "priceDiscount": "8.472 đ",
@@ -2653,7 +2653,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "74",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø60 x 27",
     "priceTax": "11.880 đ",
     "priceDiscount": "8.791 đ",
@@ -2661,7 +2661,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "75",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø60 x 34",
     "priceTax": "16.956 đ",
     "priceDiscount": "12.547 đ",
@@ -2669,7 +2669,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "76",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø60 x 42",
     "priceTax": "13.392 đ",
     "priceDiscount": "9.910 đ",
@@ -2677,7 +2677,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "77",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø60 x 49",
     "priceTax": "14.040 đ",
     "priceDiscount": "10.390 đ",
@@ -2685,7 +2685,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "78",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø90 x 60",
     "priceTax": "25.920 đ",
     "priceDiscount": "19.181 đ",
@@ -2693,7 +2693,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "79",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø114 x 60",
     "priceTax": "41.148 đ",
     "priceDiscount": "30.450 đ",
@@ -2701,7 +2701,7 @@ export const mongData: Product[] = [
   },
   {
     "stt": "80",
-    "name": "Chữ T giảm",
+    "name": "Chữ Tê giảm",
     "spec": "Ø114 x 90",
     "priceTax": "57.240 đ",
     "priceDiscount": "42.358 đ",

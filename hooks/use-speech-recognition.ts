@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 // Extend window object for webkitSpeechRecognition
 declare global {
@@ -25,6 +25,17 @@ export function useSpeechRecognition({
   const [isSupported, setIsSupported] = useState(true);
   const [recognition, setRecognition] = useState<any>(null);
 
+   const onResultRef = useRef<UseSpeechRecognitionProps['onResult']>(onResult);
+   const onErrorRef = useRef<UseSpeechRecognitionProps['onError']>(onError);
+
+   useEffect(() => {
+     onResultRef.current = onResult;
+   }, [onResult]);
+
+   useEffect(() => {
+     onErrorRef.current = onError;
+   }, [onError]);
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -45,8 +56,8 @@ export function useSpeechRecognition({
 
       recognitionInstance.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
-        if (onResult) {
-          onResult(transcript);
+        if (onResultRef.current) {
+          onResultRef.current(transcript);
         }
         setIsListening(false);
       };
@@ -66,9 +77,9 @@ export function useSpeechRecognition({
             errorMessage = 'Lỗi kết nối mạng';
             break;
         }
-        
-        if (onError) {
-          onError(errorMessage);
+
+        if (onErrorRef.current) {
+          onErrorRef.current(errorMessage);
         }
       };
 
@@ -77,8 +88,20 @@ export function useSpeechRecognition({
       };
 
       setRecognition(recognitionInstance);
+
+      return () => {
+        recognitionInstance.onstart = null;
+        recognitionInstance.onresult = null;
+        recognitionInstance.onerror = null;
+        recognitionInstance.onend = null;
+        try {
+          recognitionInstance.stop();
+        } catch {
+          // ignore if already stopped
+        }
+      };
     }
-  }, [lang, onResult, onError]);
+  }, [lang]);
 
   const startListening = useCallback(() => {
     if (!recognition) return;
