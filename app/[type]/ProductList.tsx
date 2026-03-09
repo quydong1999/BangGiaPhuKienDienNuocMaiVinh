@@ -1,54 +1,55 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
-import { Product } from '@/lib/data';
+import type { Product } from '@/types/types';
 import { Mic, MicOff, Loader2 } from 'lucide-react';
 import { useSpeechRecognition } from '@/hooks/use-speech-recognition';
 
 interface ProductListProps {
   data: Product[];
-  themeColor: 'emerald' | 'blue';
+  themeColor: 'emerald' | 'blue' | 'yellow';
+  filterField: 'name' | 'spec';
 }
 
-export default function ProductList({ data, themeColor }: ProductListProps) {
-  const [selectedName, setSelectedName] = useState<string>('Tất cả');
+export default function ProductList({ data, themeColor, filterField }: ProductListProps) {
+  const [selectedField, setSelectedField] = useState<string>('Tất cả');
   const [speechError, setSpeechError] = useState<string | null>(null);
 
   // Extract unique product names
-  const uniqueNames = useMemo(() => {
-    const names = new Set(data.map(item => item.name));
-    return ['Tất cả', ...Array.from(names)];
+  const uniqueData = useMemo(() => {
+    const _data = new Set(data.map(item => item[filterField]));
+    return ['Tất cả', ...Array.from(_data)];
   }, [data]);
 
   const handleSpeechResult = (text: string) => {
     setSpeechError(null);
     const lowerText = text.toLowerCase();
-    
+
     // Find best match
     let bestMatch = 'Tất cả';
     let maxMatchScore = 0;
 
-    for (const name of uniqueNames) {
-      if (name === 'Tất cả') continue;
-      
-      const lowerName = name.toLowerCase();
-      if (lowerName === lowerText) {
-        bestMatch = name;
+    for (const item of uniqueData) {
+      if (item === 'Tất cả') continue;
+
+      const lowerItem = item.toLowerCase();
+      if (lowerItem === lowerText) {
+        bestMatch = item;
         break;
       }
-      
+
       // Simple partial match logic
-      if (lowerName.includes(lowerText) || lowerText.includes(lowerName)) {
-        const score = Math.min(lowerName.length, lowerText.length) / Math.max(lowerName.length, lowerText.length);
+      if (lowerItem.includes(lowerText) || lowerText.includes(lowerItem)) {
+        const score = Math.min(lowerItem.length, lowerText.length) / Math.max(lowerItem.length, lowerText.length);
         if (score > maxMatchScore) {
           maxMatchScore = score;
-          bestMatch = name;
+          bestMatch = item;
         }
       }
     }
 
     if (bestMatch !== 'Tất cả') {
-      setSelectedName(bestMatch);
+      setSelectedField(bestMatch);
     } else {
       setSpeechError(`Không tìm thấy: "${text}"`);
       setTimeout(() => setSpeechError(null), 3000);
@@ -66,9 +67,9 @@ export default function ProductList({ data, themeColor }: ProductListProps) {
 
   // Filter data based on selected name
   const filteredData = useMemo(() => {
-    if (selectedName === 'Tất cả') return data;
-    return data.filter(item => item.name === selectedName);
-  }, [data, selectedName]);
+    if (selectedField === 'Tất cả') return data;
+    return data.filter(item => item[filterField] === selectedField);
+  }, [data, selectedField]);
 
   const colorClasses = {
     emerald: {
@@ -88,6 +89,15 @@ export default function ProductList({ data, themeColor }: ProductListProps) {
       badge: 'bg-blue-100 text-blue-800',
       micActive: 'bg-blue-100 text-blue-600 animate-pulse',
       micInactive: 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+    },
+    yellow: {
+      bg: 'bg-yellow-50',
+      text: 'text-yellow-700',
+      border: 'border-yellow-200',
+      focus: 'focus:ring-yellow-500 focus:border-yellow-500',
+      badge: 'bg-yellow-100 text-yellow-800',
+      micActive: 'bg-yellow-100 text-yellow-600 animate-pulse',
+      micInactive: 'bg-slate-100 text-slate-600 hover:bg-slate-200'
     }
   };
 
@@ -103,28 +113,27 @@ export default function ProductList({ data, themeColor }: ProductListProps) {
         <div className="flex gap-2">
           <select
             id="product-filter"
-            value={selectedName}
-            onChange={(e) => setSelectedName(e.target.value)}
+            value={selectedField}
+            onChange={(e) => setSelectedField(e.target.value)}
             className={`block w-full rounded-xl border border-slate-300 shadow-sm py-3 px-4 text-base ${theme.focus} transition-shadow bg-white`}
           >
-            {uniqueNames.map(name => (
-              <option key={name} value={name}>{name}</option>
+            {uniqueData.map(item => (
+              <option key={item} value={item}>{item}</option>
             ))}
           </select>
-          
+
           {isSupported && (
             <button
               onClick={isListening ? stopListening : startListening}
-              className={`flex-shrink-0 flex items-center justify-center w-12 rounded-xl transition-colors ${
-                isListening ? theme.micActive : theme.micInactive
-              }`}
+              className={`flex-shrink-0 flex items-center justify-center w-12 rounded-xl transition-colors ${isListening ? theme.micActive : theme.micInactive
+                }`}
               title={isListening ? "Dừng nghe" : "Tìm kiếm bằng giọng nói"}
             >
               {isListening ? <Loader2 className="w-5 h-5 animate-spin" /> : <Mic className="w-5 h-5" />}
             </button>
           )}
         </div>
-        
+
         <div className="mt-2 flex justify-between items-center text-sm">
           <span className="text-slate-500">
             Hiển thị {filteredData.length} sản phẩm
@@ -165,7 +174,7 @@ export default function ProductList({ data, themeColor }: ProductListProps) {
           </table>
         </div>
       </div>
-      
+
       {filteredData.length === 0 && (
         <div className="text-center py-12 text-slate-500">
           Không tìm thấy sản phẩm nào.

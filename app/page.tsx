@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { FileText, Layers } from 'lucide-react';
+import { FileText, Layers, Circle } from 'lucide-react';
 
 export default function HomePage() {
   return (
@@ -42,6 +42,21 @@ export default function HomePage() {
               <div className="text-left">
                 <h2 className="text-xl font-semibold text-slate-900">Loại Mỏng</h2>
                 <p className="text-sm text-slate-500">Phụ kiện uPVC hệ mỏng</p>
+              </div>
+            </div>
+          </Link>
+
+          <Link
+            href="/vanphuoc"
+            className="group relative flex items-center justify-between p-6 bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md transition-all active:scale-[0.98]"
+          >
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-blue-100 text-blue-600 rounded-xl group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                <Circle className="w-6 h-6" />
+              </div>
+              <div className="text-left">
+                <h2 className="text-xl font-semibold text-slate-900">Vạn Phước</h2>
+                <p className="text-sm text-slate-500">Báo giá ống nước Vạn Phước</p>
               </div>
             </div>
           </Link>

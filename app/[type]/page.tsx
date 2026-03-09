@@ -1,20 +1,42 @@
-import { dayData, mongData } from '@/lib/data';
+import { dayData } from '@/data/day';
+import { mongData } from '@/data/mong';
+import { vanphuocData } from '@/data/vanphuoc';
 import { notFound } from 'next/navigation';
-import { ChevronLeft, Search } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import ProductList from './ProductList';
 
 export default async function TypePage({ params }: { params: Promise<{ type: string }> }) {
   const { type } = await params;
   
-  if (type !== 'day' && type !== 'mong') {
+  if (type !== 'day' && type !== 'mong' && type !== 'vanphuoc') {
     notFound();
   }
+  
+  const types = {
+    day: {
+      title: "Loại dày",
+      themeColor: 'emerald',
+      data: dayData,
+      filterField: "name"
+    },
+    mong: {
+      title: "Loại mỏng",
+      themeColor: 'blue',
+      data: mongData,
+      filterField: "name"
+    },
+    vanphuoc: {
+      title: "Ống nhựa Vạn Phước",
+      themeColor: 'yellow',
+      data: vanphuocData,
+      filterField: "spec"
+    }
+  } as const;
 
-  const isDay = type === 'day';
-  const data = isDay ? dayData : mongData;
-  const title = isDay ? 'Loại Dày' : 'Loại Mỏng';
-  const themeColor = isDay ? 'emerald' : 'blue';
+  type AllowedType = 'day' | 'mong' | 'vanphuoc';
+
+  const { title, themeColor, data, filterField } = types[type as AllowedType];
 
   return (
     <main className="min-h-screen bg-slate-50 flex flex-col">
@@ -36,7 +58,7 @@ export default async function TypePage({ params }: { params: Promise<{ type: str
 
       {/* Content */}
       <div className="flex-1 w-full max-w-3xl mx-auto p-4">
-        <ProductList data={data} themeColor={themeColor} />
+        <ProductList data={data} themeColor={themeColor} filterField={filterField} />
       </div>
     </main>
   );
