@@ -15,7 +15,7 @@ export const vanphuocData: Product[] = [
         "spec": "Ø27",
         "priceTax": "Liên hệ",
         "priceDiscount": "Liên hệ",
-        "priceSell": "17.000 đ"
+        "priceSell": "16.000 đ"
     },
     {
         "stt": "3",
@@ -71,7 +71,7 @@ export const vanphuocData: Product[] = [
         "spec": "Ø114",
         "priceTax": "Liên hệ",
         "priceDiscount": "Liên hệ",
-        "priceSell": "95.000 đ"
+        "priceSell": "90.000 đ"
     },
     {
         "stt": "10",
