@@ -6,15 +6,20 @@ import { motion, AnimatePresence } from 'framer-motion';
 const SPLASH_DURATION = 2500; // ms
 
 export default function SplashScreen({ children }: { children: React.ReactNode }) {
-  const [showSplash, setShowSplash] = useState(true);
+  // Initialize state directly from sessionStorage if available to prevent flash on remount
+  const [showSplash, setShowSplash] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return !sessionStorage.getItem('splashSeen');
+    }
+    return true;
+  });
+
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Only show splash once per session
-    const hasSeenSplash = sessionStorage.getItem('splashSeen');
-    if (hasSeenSplash) {
-      setShowSplash(false);
-      return;
-    }
+    setMounted(true);
+    
+    if (!showSplash) return;
 
     const timer = setTimeout(() => {
       setShowSplash(false);
@@ -23,6 +28,8 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
 
     return () => clearTimeout(timer);
   }, []);
+
+  if (!mounted) return null;
 
   return (
     <>
@@ -128,7 +135,7 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
       {/* Main content with fade-in */}
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: showSplash ? 0 : 1 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.1 }}
       >
         {children}
