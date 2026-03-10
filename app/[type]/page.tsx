@@ -6,7 +6,7 @@ import { luoiData } from '@/data/luoi';
 import { dayBoData } from '@/data/day-bo';
 import { notFound } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
-import TransitionLink from '../components/TransitionLink';
+import Link from 'next/link';
 import { TYPE_SLUGS, TYPE_TO_THEME_COLOR, type TypeSlug } from '@/lib/theme';
 import ProductList from './ProductList';
 import GalleryProduct from './GalleryProduct';
@@ -72,12 +72,12 @@ export default async function TypePage({ params }: { params: Promise<{ type: str
       {/* Header */}
       <header className="sticky top-0 z-10 bg-white border-b border-slate-200 shadow-sm">
         <div className="flex items-center h-14 px-4 max-w-3xl mx-auto w-full">
-          <TransitionLink
+          <Link
             href="/"
             className="p-2 -ml-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-colors"
           >
             <ChevronLeft className="w-6 h-6" />
-          </TransitionLink>
+          </Link>
           <h1 className="text-lg font-semibold text-slate-900 ml-2">
             {title}
           </h1>

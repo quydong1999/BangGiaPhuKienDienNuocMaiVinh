@@ -1,7 +1,7 @@
+import Link from 'next/link';
 import Image from 'next/image';
 import { TYPE_SLUGS, TYPE_TO_THEME_COLOR, themeColorClasses, type TypeSlug } from '@/lib/theme';
 import SplashScreen from './components/SplashScreen';
-import TransitionLink from './components/TransitionLink';
 
 const TYPE_TITLES: Record<TypeSlug, string> = {
   'phu-kien-ong-nuoc-dat-hoa-loai-day': 'Phụ kiện Đạt Hòa dày',
@@ -37,7 +37,7 @@ export default function HomePage() {
               const color = TYPE_TO_THEME_COLOR[slug];
               const classes = themeColorClasses[color];
               return (
-                <TransitionLink
+                <Link
                   key={slug}
                   href={`/${slug}`}
                   className="group relative flex flex-col overflow-hidden bg-white shadow-lg hover:shadow-xl border border-slate-200 hover:border-slate-300 transition-all active:scale-[0.98]"
@@ -58,7 +58,7 @@ export default function HomePage() {
                       {TYPE_TITLES[slug]}
                     </p>
                   </div>
-                </TransitionLink>
+                </Link>
               );
             })}
           </div>
