@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 const SPLASH_DURATION = 2500; // ms
 
 export default function SplashScreen({ children }: { children: React.ReactNode }) {
-  // Initialize state directly from sessionStorage if available to prevent flash on remount
   const [showSplash, setShowSplash] = useState(() => {
     if (typeof window !== 'undefined') {
       return !sessionStorage.getItem('splashSeen');
@@ -14,11 +13,7 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
     return true;
   });
 
-  const [mounted, setMounted] = useState(false);
-
   useEffect(() => {
-    setMounted(true);
-    
     if (!showSplash) return;
 
     const timer = setTimeout(() => {
@@ -28,11 +23,6 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
 
     return () => clearTimeout(timer);
   }, []);
-
-  if (!mounted) {
-    // Return children immediately to prevent white flash during hydration
-    return <>{children}</>;
-  }
 
   return (
     <>
@@ -135,14 +125,7 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
         )}
       </AnimatePresence>
 
-      {/* Main content with fade-in */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-      >
-        {children}
-      </motion.div>
+      {children}
     </>
   );
 }
