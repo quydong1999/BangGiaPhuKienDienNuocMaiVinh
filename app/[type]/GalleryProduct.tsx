@@ -53,7 +53,7 @@ export default function GalleryProduct({ data, themeColor }: GalleryProductProps
             key={item.stt}
             type="button"
             onClick={() => setSelected(item)}
-            className={`group relative flex flex-col rounded-xl border bg-white ${theme.border} ${theme.shadow} hover:-translate-y-1 hover:shadow-md transition-all overflow-hidden`}
+            className={`group relative flex flex-col bg-white shadow-sm hover:shadow-md hover:-translate-y-1 transition-all overflow-hidden`}
           >
             <div className="relative w-full aspect-[4/3] bg-slate-100">
               <Image
@@ -65,7 +65,6 @@ export default function GalleryProduct({ data, themeColor }: GalleryProductProps
               />
             </div>
             <div className="p-3 space-y-1 text-left">
-              <div className="text-xs text-slate-500">Mã: {item.stt}</div>
               <div className="text-sm font-semibold text-slate-900 line-clamp-2">
                 {item.name}
               </div>
@@ -96,16 +95,16 @@ export default function GalleryProduct({ data, themeColor }: GalleryProductProps
           onClick={() => setSelected(null)}
         >
           <div
-            className={`relative bg-white rounded-2xl max-w-lg w-full overflow-hidden ${theme.highlight}`}
+            className="relative bg-white max-w-lg w-full overflow-hidden shadow-lg"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative w-full aspect-video bg-slate-100">
+            <div className="relative w-full h-1/2 min-h-[220px] bg-black">
               <Image
                 src={selected.image.src}
                 alt={selected.image.alt}
                 fill
                 sizes="(min-width: 768px) 480px, 100vw"
-                className="object-contain bg-slate-50"
+                className="object-cover"
               />
             </div>
             <div className="p-4 space-y-2">
