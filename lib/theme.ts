@@ -5,7 +5,9 @@ export type ThemeColor =
   | 'teal'
   | 'pink'
   | 'purple'
-  | 'orange';
+  | 'orange'
+  | 'red'
+  | 'slate';
 
 export const TYPE_SLUGS = [
   'phu-kien-ong-nuoc-dat-hoa-loai-day',
@@ -15,6 +17,8 @@ export const TYPE_SLUGS = [
   'ong-nhua-deo',
   'luoi',
   'day-bo',
+  'day-dien-doi-vinh-thinh',
+  'day-dien-nhom-don-vinh-thinh'
 ] as const;
 
 export type TypeSlug = (typeof TYPE_SLUGS)[number];
@@ -28,6 +32,8 @@ export const TYPE_TO_THEME_COLOR: Record<TypeSlug, ThemeColor> = {
   'ong-nhua-deo': 'pink',
   'luoi': 'purple',
   'day-bo': 'orange',
+  'day-dien-doi-vinh-thinh': 'red',
+  'day-dien-nhom-don-vinh-thinh': 'slate',
 };
 
 export const themeColorClasses = {
@@ -93,5 +99,23 @@ export const themeColorClasses = {
     focus: 'focus:ring-orange-500 focus:border-orange-500',
     badge: 'bg-orange-100 text-orange-800',
     linkCard: 'bg-orange-50 border border-orange-100 hover:border-orange-500',
+  },
+  red: {
+    bg: 'bg-red-50',
+    text: 'text-red-700',
+    border: 'border-red-200',
+    borderLight: 'border-red-100',
+    focus: 'focus:ring-red-500 focus:border-red-500',
+    badge: 'bg-red-100 text-red-800',
+    linkCard: 'bg-red-50 border border-red-100 hover:border-red-500',
+  },
+  slate: {
+    bg: 'bg-slate-50',
+    text: 'text-slate-700',
+    border: 'border-slate-200',
+    borderLight: 'border-slate-100',
+    focus: 'focus:ring-slate-500 focus:border-slate-500',
+    badge: 'bg-slate-100 text-slate-800',
+    linkCard: 'bg-slate-50 border border-slate-100 hover:border-slate-500',
   },
 } as const;

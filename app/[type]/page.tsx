@@ -5,6 +5,8 @@ import { ongNuocDatHoaData } from '@/data/ong-nuoc-dat-hoa';
 import { ongNhuaDeoData } from '@/data/ong-nhua-deo';
 import { luoiData } from '@/data/luoi';
 import { dayBoData } from '@/data/day-bo';
+import { dayDienDoiVinhThinhData } from '@/data/day-dien-doi-vinh-thinh';
+import { dayDienNhomDonVinhThinhData } from '@/data/day-dien-nhom-don-vinh-thinh';
 import { notFound } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -65,6 +67,20 @@ export default async function TypePage({ params }: { params: Promise<{ type: str
     "day-bo": {
       title: "Dây bô",
       data: dayBoData,
+      filterField: null,
+      visibleFields: [],
+      layout: "gallery" as const,
+    },
+    "day-dien-doi-vinh-thinh": {
+      title: "Dây điện đôi Vĩnh Thịnh",
+      data: dayDienDoiVinhThinhData,
+      filterField: null,
+      visibleFields: ["name", "spec", "unit", "priceSell"] as const,
+      layout: "table" as const,
+    },
+    "day-dien-nhom-don-vinh-thinh": {
+      title: "Dây điện đơn nhôm Vĩnh Thịnh",
+      data: dayDienNhomDonVinhThinhData,
       filterField: null,
       visibleFields: [],
       layout: "gallery" as const,

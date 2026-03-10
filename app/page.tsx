@@ -10,7 +10,9 @@ const TYPE_TITLES: Record<TypeSlug, string> = {
   'ong-nuoc-dat-hoa': 'Ống Đạt Hòa',
   'ong-nhua-deo': 'Ống nhựa dẻo',
   'luoi': 'Lưới',
-  'day-bo': 'Dây bô'
+  'day-bo': 'Dây bô',
+  'day-dien-doi-vinh-thinh': 'Dây đôi Vĩnh Thịnh',
+  'day-dien-nhom-don-vinh-thinh': 'Dây nhôm đơn Vĩnh Thịnh',
 };
 
 const TYPE_IMAGES: Record<TypeSlug, string> = {
@@ -20,7 +22,9 @@ const TYPE_IMAGES: Record<TypeSlug, string> = {
   'ong-nuoc-dat-hoa': '/categories/ong-nhua-uPvc.jpg',
   'ong-nhua-deo': '/categories/ong-nhua-deo.jpg',
   'luoi': '/categories/luoi.jpg',
-  'day-bo': '/categories/day-bo.jpg'
+  'day-bo': '/categories/day-bo.jpg',
+  'day-dien-doi-vinh-thinh': '/categories/day-dien-doi-vinh-thinh.jpg',
+  'day-dien-nhom-don-vinh-thinh': '/categories/day-dien-nhom-don-vinh-thinh.jpg',
 };
 
 export default function HomePage() {
