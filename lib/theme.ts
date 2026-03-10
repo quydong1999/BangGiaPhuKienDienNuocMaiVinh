@@ -1,4 +1,10 @@
-export type ThemeColor = 'emerald' | 'blue' | 'yellow' | 'pink' | 'purple';
+export type ThemeColor =
+  | 'emerald'
+  | 'blue'
+  | 'yellow'
+  | 'pink'
+  | 'purple'
+  | 'orange';
 
 export const TYPE_SLUGS = [
   'phu-kien-ong-nuoc-dat-hoa-loai-day',
@@ -6,6 +12,7 @@ export const TYPE_SLUGS = [
   'ong-nuoc-van-phuoc',
   'ong-nhua-deo',
   'luoi',
+  'day-bo',
 ] as const;
 
 export type TypeSlug = (typeof TYPE_SLUGS)[number];
@@ -17,6 +24,7 @@ export const TYPE_TO_THEME_COLOR: Record<TypeSlug, ThemeColor> = {
   'ong-nuoc-van-phuoc': 'yellow',
   'ong-nhua-deo': 'pink',
   'luoi': 'purple',
+  'day-bo': 'orange',
 };
 
 export const themeColorClasses = {
@@ -64,5 +72,14 @@ export const themeColorClasses = {
     focus: 'focus:ring-purple-500 focus:border-purple-500',
     badge: 'bg-purple-100 text-purple-800',
     linkCard: 'bg-purple-50 border border-purple-100 hover:border-purple-500',
+  },
+  orange: {
+    bg: 'bg-orange-50',
+    text: 'text-orange-700',
+    border: 'border-orange-200',
+    borderLight: 'border-orange-100',
+    focus: 'focus:ring-orange-500 focus:border-orange-500',
+    badge: 'bg-orange-100 text-orange-800',
+    linkCard: 'bg-orange-50 border border-orange-100 hover:border-orange-500',
   },
 } as const;

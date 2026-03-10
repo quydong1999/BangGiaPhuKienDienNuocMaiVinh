@@ -3,9 +3,10 @@ import { phuKienOngNuocDataHoaLoaiMongData } from '@/data/phu-kien-ong-nuoc-dat-
 import { ongNuocVanPhuocData } from '@/data/ong-nuoc-van-phuoc';
 import { ongNhuaDeoData } from '@/data/ong-nhua-deo';
 import { luoiData } from '@/data/luoi';
+import { dayBoData } from '@/data/day-bo';
 import { notFound } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
-import Link from 'next/link';
+import TransitionLink from '../components/TransitionLink';
 import { TYPE_SLUGS, TYPE_TO_THEME_COLOR, type TypeSlug } from '@/lib/theme';
 import ProductList from './ProductList';
 import GalleryProduct from './GalleryProduct';
@@ -50,9 +51,16 @@ export default async function TypePage({ params }: { params: Promise<{ type: str
       title: "Lưới các loại",
       data: luoiData,
       filterField: null,
-      visibleFields: ["name", "unit", "priceSell"] as const,
+      visibleFields: [],
       layout: "gallery" as const,
     },
+    "day-bo": {
+      title: "Dây bô",
+      data: dayBoData,
+      filterField: null,
+      visibleFields: [],
+      layout: "gallery" as const,
+    }
   } as const;
 
   const config = types[type as TypeSlug];
@@ -64,13 +72,12 @@ export default async function TypePage({ params }: { params: Promise<{ type: str
       {/* Header */}
       <header className="sticky top-0 z-10 bg-white border-b border-slate-200 shadow-sm">
         <div className="flex items-center h-14 px-4 max-w-3xl mx-auto w-full">
-          <Link
+          <TransitionLink
             href="/"
             className="p-2 -ml-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-colors"
-            aria-label="Quay lại"
           >
             <ChevronLeft className="w-6 h-6" />
-          </Link>
+          </TransitionLink>
           <h1 className="text-lg font-semibold text-slate-900 ml-2">
             {title}
           </h1>

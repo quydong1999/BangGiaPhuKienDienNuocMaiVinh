@@ -1,1 +1,28 @@
 @import "tailwindcss";
+
+/* Circle wipe transition animations */
+@keyframes circleWipeExpand {
+  0% {
+    clip-path: circle(0% at 50% 50%);
+  }
+  100% {
+    clip-path: circle(150% at 50% 50%);
+  }
+}
+
+@keyframes circleWipeShrink {
+  0% {
+    clip-path: circle(150% at 50% 50%);
+  }
+  100% {
+    clip-path: circle(0% at 50% 50%);
+  }
+}
+
+.circle-wipe-expand {
+  animation: circleWipeExpand 0.4s ease-in forwards;
+}
+
+.circle-wipe-shrink {
+  animation: circleWipeShrink 0.4s ease-out forwards;
+}
