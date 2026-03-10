@@ -1,5 +1,13 @@
 import Link from 'next/link';
-import { FileText, Layers, Circle } from 'lucide-react';
+import { TYPE_SLUGS, TYPE_TO_THEME_COLOR, themeColorClasses, type TypeSlug } from '@/lib/theme';
+
+const TYPE_TITLES: Record<TypeSlug, string> = {
+  'phu-kien-ong-nuoc-dat-hoa-loai-day': 'Phụ kiện ống nước Đạt Hòa loại dày',
+  'phu-kien-ong-nuoc-dat-hoa-loai-mong': 'Phụ kiện ống nước Đạt Hòa loại mỏng',
+  'ong-nuoc-van-phuoc': 'Ống nhựa Vạn Phước',
+  'ong-nhua-deo': 'Ống nhựa dẻo các loại',
+  'luoi': 'Lưới các loại',
+};
 
 export default function HomePage() {
   return (
@@ -9,66 +17,26 @@ export default function HomePage() {
           <h1 className="text-3xl font-bold tracking-tight text-emerald-600">
             MAI VINH
           </h1>
-          <p className="text-sm text-slate-500 mt-2">
-            Chọn loại sản phẩm để xem bảng giá chi tiết
-          </p>
         </div>
 
         <div className="grid gap-4 mt-8">
-          <Link
-            href="/phu-kien-ong-nuoc-dat-hoa-loai-day"
-            className="group relative flex items-center justify-between p-6 bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-emerald-500 hover:shadow-md transition-all active:scale-[0.98]"
-          >
-            <div className="flex items-center gap-4">
-              <div className="text-left">
-                <h2 className="text-xl font-semibold text-slate-900">Phụ kiện ống nước Đạt Hòa loại dày</h2>
-              </div>
-            </div>
-          </Link>
-
-          <Link
-            href="/phu-kien-ong-nuoc-dat-hoa-loai-mong"
-            className="group relative flex items-center justify-between p-6 bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md transition-all active:scale-[0.98]"
-          >
-            <div className="flex items-center gap-4">
-              <div className="text-left">
-                <h2 className="text-xl font-semibold text-slate-900">Phụ kiện ống nước Đạt Hòa loại mỏng</h2>
-              </div>
-            </div>
-          </Link>
-
-          <Link
-            href="/ong-nuoc-van-phuoc"
-            className="group relative flex items-center justify-between p-6 bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md transition-all active:scale-[0.98]"
-          >
-            <div className="flex items-center gap-4">
-              <div className="text-left">
-                <h2 className="text-xl font-semibold text-slate-900">Ống nước Vạn Phước</h2>
-              </div>
-            </div>
-          </Link>
-
-          <Link
-            href="/ong-nhua-deo"
-            className="group relative flex items-center justify-between p-6 bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md transition-all active:scale-[0.98]"
-          >
-            <div className="flex items-center gap-4">
-              <div className="text-left">
-                <h2 className="text-xl font-semibold text-slate-900">Ống nhựa dẻo các loại</h2>
-              </div>
-            </div>
-          </Link>
-
-          <Link
-            href="/luoi"
-            className="group relative flex items-center justify-between p-6 bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md transition-all active:scale-[0.98]"
-          >
-            <div className="flex items-center gap-4">
-              <div className="text-left">
-                <h2 className="text-xl font-semibold text-slate-900">Lưới các loại</h2>
-              </div>
-            </div>
-          </Link>
+          {TYPE_SLUGS.map((slug) => {
+            const color = TYPE_TO_THEME_COLOR[slug];
+            const classes = themeColorClasses[color].linkCard;
+            return (
+              <Link
+                key={slug}
+                href={`/${slug}`}
+                className={`group relative flex items-center justify-between p-6 shadow-md border ${classes} hover:shadow-lg transition-all active:scale-[0.98]`}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="text-left">
+                    <p className="text-xl text-slate-900">{TYPE_TITLES[slug]}</p>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </main>
