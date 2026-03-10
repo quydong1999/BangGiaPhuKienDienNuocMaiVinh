@@ -3,46 +3,16 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import type { GalleryProduct as GalleryProductType } from '@/types/types';
-
-type ThemeColor = 'emerald' | 'blue' | 'yellow';
+import { themeColorClasses, type ThemeColor } from './theme';
 
 interface GalleryProductProps {
   data: GalleryProductType[];
   themeColor: ThemeColor;
 }
 
-const colorClasses: Record<
-  ThemeColor,
-  {
-    badge: string;
-    border: string;
-    shadow: string;
-    highlight: string;
-  }
-> = {
-  emerald: {
-    badge: 'bg-emerald-100 text-emerald-800',
-    border: 'border-emerald-200',
-    shadow: 'shadow-emerald-100',
-    highlight: 'ring-2 ring-emerald-400',
-  },
-  blue: {
-    badge: 'bg-blue-100 text-blue-800',
-    border: 'border-blue-200',
-    shadow: 'shadow-blue-100',
-    highlight: 'ring-2 ring-blue-400',
-  },
-  yellow: {
-    badge: 'bg-yellow-100 text-yellow-800',
-    border: 'border-yellow-200',
-    shadow: 'shadow-yellow-100',
-    highlight: 'ring-2 ring-yellow-400',
-  },
-};
-
 export default function GalleryProduct({ data, themeColor }: GalleryProductProps) {
   const [selected, setSelected] = useState<GalleryProductType | null>(null);
-  const theme = colorClasses[themeColor];
+  const theme = themeColorClasses[themeColor];
 
   return (
     <div className="space-y-6">

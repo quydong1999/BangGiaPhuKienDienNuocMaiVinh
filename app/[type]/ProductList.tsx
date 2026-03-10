@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import type { Product } from '@/types/types';
+import { themeColorClasses, type ThemeColor } from './theme';
 
 type VisibleField =
   | 'stt'
@@ -14,7 +15,7 @@ type VisibleField =
 
 interface ProductListProps {
   data: Product[];
-  themeColor: 'emerald' | 'blue' | 'yellow';
+  themeColor: ThemeColor;
   filterField: 'name' | 'spec' | null;
   visibleFields: readonly VisibleField[];
 }
@@ -36,38 +37,7 @@ export default function ProductList({ data, themeColor, filterField, visibleFiel
     if (!filterField || selectedField === 'Tất cả') return data;
     return data.filter(item => item[filterField] === selectedField);
   }, [data, selectedField, filterField]);
-
-  const colorClasses = {
-    emerald: {
-      bg: 'bg-emerald-50',
-      text: 'text-emerald-700',
-      border: 'border-emerald-200',
-      focus: 'focus:ring-emerald-500 focus:border-emerald-500',
-      badge: 'bg-emerald-100 text-emerald-800',
-      micActive: 'bg-emerald-100 text-emerald-600 animate-pulse',
-      micInactive: 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-    },
-    blue: {
-      bg: 'bg-blue-50',
-      text: 'text-blue-700',
-      border: 'border-blue-200',
-      focus: 'focus:ring-blue-500 focus:border-blue-500',
-      badge: 'bg-blue-100 text-blue-800',
-      micActive: 'bg-blue-100 text-blue-600 animate-pulse',
-      micInactive: 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-    },
-    yellow: {
-      bg: 'bg-yellow-50',
-      text: 'text-yellow-700',
-      border: 'border-yellow-200',
-      focus: 'focus:ring-yellow-500 focus:border-yellow-500',
-      badge: 'bg-yellow-100 text-yellow-800',
-      micActive: 'bg-yellow-100 text-yellow-600 animate-pulse',
-      micInactive: 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-    }
-  };
-
-  const theme = colorClasses[themeColor];
+  const theme = themeColorClasses[themeColor];
 
   const fieldLabels: Record<VisibleField, string> = {
     stt: 'Số thứ tự',

@@ -6,71 +6,58 @@ import { luoiData } from '@/data/luoi';
 import { notFound } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
+import { TYPE_SLUGS, TYPE_TO_THEME_COLOR, type TypeSlug } from '@/lib/theme';
 import ProductList from './ProductList';
 import GalleryProduct from './GalleryProduct';
 
 export default async function TypePage({ params }: { params: Promise<{ type: string }> }) {
   const { type } = await params;
 
-  const ALLOWED_TYPES = [
-    "phu-kien-ong-nuoc-dat-hoa-loai-day",
-    "phu-kien-ong-nuoc-dat-hoa-loai-mong",
-    "ong-nuoc-van-phuoc",
-    "ong-nhua-deo",
-    "luoi"
-  ] as const;
-
-  type AllowedType = (typeof ALLOWED_TYPES)[number];
-
-  if (!ALLOWED_TYPES.includes(type as AllowedType)) {
+  if (!TYPE_SLUGS.includes(type as TypeSlug)) {
     notFound();
   }
 
   const types = {
     "phu-kien-ong-nuoc-dat-hoa-loai-day": {
       title: "Phụ kiện ống nước Đạt Hòa loại dày",
-      themeColor: 'emerald',
       data: phuKienOngNuocDatHoaLoaiDayData,
-      filterField: "name",
-      visibleFields: ["name", "spec", "priceSell"],
-      layout: "table"
+      filterField: "name" as const,
+      visibleFields: ["name", "spec", "priceSell"] as const,
+      layout: "table" as const,
     },
     "phu-kien-ong-nuoc-dat-hoa-loai-mong": {
       title: "Phụ kiện ống nước Đạt Hòa loại mỏng",
-      themeColor: 'blue',
       data: phuKienOngNuocDataHoaLoaiMongData,
-      filterField: "name",
-      visibleFields: ["name", "spec", "priceSell"],
-      layout: "table"
+      filterField: "name" as const,
+      visibleFields: ["name", "spec", "priceSell"] as const,
+      layout: "table" as const,
     },
     "ong-nuoc-van-phuoc": {
       title: "Ống nhựa Vạn Phước",
-      themeColor: 'yellow',
       data: ongNuocVanPhuocData,
-      filterField: "spec",
-      visibleFields: ["name", "spec", "priceSell"],
-      layout: "table"
+      filterField: null,
+      visibleFields: ["name", "spec", "priceSell"] as const,
+      layout: "table" as const,
     },
     "ong-nhua-deo": {
       title: "Ống nhựa dẻo các loại",
-      themeColor: 'yellow',
       data: ongNhuaDeoData,
-      filterField: "name",
-      visibleFields: ["name", "spec", "unit", "priceSell"],
-      layout: "table"
+      filterField: null,
+      visibleFields: ["name", "spec", "unit", "priceSell"] as const,
+      layout: "table" as const,
     },
     "luoi": {
       title: "Lưới các loại",
-      themeColor: 'yellow',
       data: luoiData,
-      filterField: "name",
-      visibleFields: ["name", "unit", "priceSell"],
-      layout: "gallery"
-    }
+      filterField: null,
+      visibleFields: ["name", "unit", "priceSell"] as const,
+      layout: "gallery" as const,
+    },
   } as const;
 
-  const { title, themeColor, data, filterField, visibleFields, layout } =
-    types[type as AllowedType];
+  const config = types[type as TypeSlug];
+  const { title, data, filterField, visibleFields, layout } = config;
+  const themeColor = TYPE_TO_THEME_COLOR[type as TypeSlug];
 
   return (
     <main className="min-h-screen bg-slate-50 flex flex-col">

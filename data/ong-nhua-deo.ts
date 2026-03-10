@@ -14,7 +14,7 @@ export const ongNhuaDeoData: Product[] = [
         "stt": "2",
         "name": "Ống nhựa dẻo Tây Nguyên (Đen)",
         "spec": "Ø35",
-        "unit": "Cuộn (10kg)",
+        "unit": "Cuộn (14kg)",
         "priceTax": "Liên hệ",
         "priceDiscount": "Liên hệ",
         "priceSell": "320.000 đ"
