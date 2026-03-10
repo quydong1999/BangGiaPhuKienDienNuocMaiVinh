@@ -47,6 +47,28 @@ export default function HomePage() {
               </div>
             </div>
           </Link>
+
+          <Link
+            href="/ong-nhua-deo"
+            className="group relative flex items-center justify-between p-6 bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md transition-all active:scale-[0.98]"
+          >
+            <div className="flex items-center gap-4">
+              <div className="text-left">
+                <h2 className="text-xl font-semibold text-slate-900">Ống nhựa dẻo các loại</h2>
+              </div>
+            </div>
+          </Link>
+
+          <Link
+            href="/luoi"
+            className="group relative flex items-center justify-between p-6 bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md transition-all active:scale-[0.98]"
+          >
+            <div className="flex items-center gap-4">
+              <div className="text-left">
+                <h2 className="text-xl font-semibold text-slate-900">Lưới các loại</h2>
+              </div>
+            </div>
+          </Link>
         </div>
       </div>
     </main>
