@@ -2,6 +2,7 @@ export type ThemeColor =
   | 'emerald'
   | 'blue'
   | 'yellow'
+  | 'teal'
   | 'pink'
   | 'purple'
   | 'orange';
@@ -9,6 +10,7 @@ export type ThemeColor =
 export const TYPE_SLUGS = [
   'phu-kien-ong-nuoc-dat-hoa-loai-day',
   'phu-kien-ong-nuoc-dat-hoa-loai-mong',
+  'ong-nuoc-dat-hoa',
   'ong-nuoc-van-phuoc',
   'ong-nhua-deo',
   'luoi',
@@ -22,6 +24,7 @@ export const TYPE_TO_THEME_COLOR: Record<TypeSlug, ThemeColor> = {
   'phu-kien-ong-nuoc-dat-hoa-loai-day': 'emerald',
   'phu-kien-ong-nuoc-dat-hoa-loai-mong': 'blue',
   'ong-nuoc-van-phuoc': 'yellow',
+  'ong-nuoc-dat-hoa': 'teal',
   'ong-nhua-deo': 'pink',
   'luoi': 'purple',
   'day-bo': 'orange',
@@ -54,6 +57,15 @@ export const themeColorClasses = {
     focus: 'focus:ring-yellow-500 focus:border-yellow-500',
     badge: 'bg-yellow-100 text-yellow-800',
     linkCard: 'bg-yellow-50 border border-yellow-100 hover:border-yellow-500',
+  },
+  teal: {
+    bg: 'bg-teal-50',
+    text: 'text-teal-700',
+    border: 'border-teal-200',
+    borderLight: 'border-teal-100',
+    focus: 'focus:ring-teal-500 focus:border-teal-500',
+    badge: 'bg-teal-100 text-teal-800',
+    linkCard: 'bg-teal-50 border border-teal-100 hover:border-teal-500',
   },
   pink: {
     bg: 'bg-pink-50',

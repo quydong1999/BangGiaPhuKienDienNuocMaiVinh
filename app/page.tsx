@@ -7,6 +7,7 @@ const TYPE_TITLES: Record<TypeSlug, string> = {
   'phu-kien-ong-nuoc-dat-hoa-loai-day': 'Phụ kiện Đạt Hòa dày',
   'phu-kien-ong-nuoc-dat-hoa-loai-mong': 'Phụ kiện Đạt Hòa mỏng',
   'ong-nuoc-van-phuoc': 'Ống Vạn Phước',
+  'ong-nuoc-dat-hoa': 'Ống Đạt Hòa',
   'ong-nhua-deo': 'Ống nhựa dẻo',
   'luoi': 'Lưới',
   'day-bo': 'Dây bô'
@@ -15,7 +16,8 @@ const TYPE_TITLES: Record<TypeSlug, string> = {
 const TYPE_IMAGES: Record<TypeSlug, string> = {
   'phu-kien-ong-nuoc-dat-hoa-loai-day': '/categories/phu-kien-ong-nuoc-dat-hoa.jpg',
   'phu-kien-ong-nuoc-dat-hoa-loai-mong': '/categories/phu-kien-ong-nuoc-dat-hoa.jpg',
-  'ong-nuoc-van-phuoc': '/categories/ong-nhua-van-phuoc.jpg',
+  'ong-nuoc-van-phuoc': '/categories/ong-nhua-uPvc.jpg',
+  'ong-nuoc-dat-hoa': '/categories/ong-nhua-uPvc.jpg',
   'ong-nhua-deo': '/categories/ong-nhua-deo.jpg',
   'luoi': '/categories/luoi.jpg',
   'day-bo': '/categories/day-bo.jpg'

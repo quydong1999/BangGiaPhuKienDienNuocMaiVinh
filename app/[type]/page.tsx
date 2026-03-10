@@ -1,6 +1,7 @@
 import { phuKienOngNuocDatHoaLoaiDayData } from '@/data/phu-kien-ong-nuoc-dat-hoa-loai-day';
 import { phuKienOngNuocDataHoaLoaiMongData } from '@/data/phu-kien-ong-nuoc-dat-hoa-loai-mong';
 import { ongNuocVanPhuocData } from '@/data/ong-nuoc-van-phuoc';
+import { ongNuocDatHoaData } from '@/data/ong-nuoc-dat-hoa';
 import { ongNhuaDeoData } from '@/data/ong-nhua-deo';
 import { luoiData } from '@/data/luoi';
 import { dayBoData } from '@/data/day-bo';
@@ -30,6 +31,13 @@ export default async function TypePage({ params }: { params: Promise<{ type: str
       title: "Phụ kiện ống nước Đạt Hòa loại mỏng",
       data: phuKienOngNuocDataHoaLoaiMongData,
       filterField: "name" as const,
+      visibleFields: ["name", "spec", "priceSell"] as const,
+      layout: "table" as const,
+    },
+    "ong-nuoc-dat-hoa": {
+      title: "Ống nhựa Đạt Hòa",
+      data: ongNuocDatHoaData,
+      filterField: null,
       visibleFields: ["name", "spec", "priceSell"] as const,
       layout: "table" as const,
     },

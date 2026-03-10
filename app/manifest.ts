@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Báo giá Phụ kiện Mai Vinh',
     short_name: 'Mai Vinh',
-    description: 'Báo giá phụ kiện ống nước uPVC Mai Vinh',
+    description: 'Báo giá sản phẩm điện nước',
     start_url: '/',
     display: 'standalone',
     background_color: '#f8fafc',
