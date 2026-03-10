@@ -28,7 +28,7 @@ export default function HomePage() {
     <SplashScreen>
       <main className="min-h-screen bg-slate-50 flex flex-col items-center p-4">
         <div className="w-full max-w-lg space-y-6">
-          <div className="text-center pt-6 pb-2">
+          <div className="sticky top-0 z-10 text-center pt-6 pb-10 bg-gradient-to-b from-slate-50 from-80% to-transparent">
             <h1 className="text-3xl font-bold tracking-tight text-emerald-600">
               MAI VINH
             </h1>
