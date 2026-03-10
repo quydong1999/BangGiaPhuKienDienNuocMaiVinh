@@ -29,7 +29,10 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
     return () => clearTimeout(timer);
   }, []);
 
-  if (!mounted) return null;
+  if (!mounted) {
+    // Return children immediately to prevent white flash during hydration
+    return <>{children}</>;
+  }
 
   return (
     <>
