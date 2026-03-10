@@ -1,9 +1,7 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import type { Product } from '@/types/types';
-import { Mic, MicOff, Loader2 } from 'lucide-react';
-import { useSpeechRecognition } from '@/hooks/use-speech-recognition';
 
 interface ProductListProps {
   data: Product[];
@@ -13,57 +11,12 @@ interface ProductListProps {
 
 export default function ProductList({ data, themeColor, filterField }: ProductListProps) {
   const [selectedField, setSelectedField] = useState<string>('Tất cả');
-  const [speechError, setSpeechError] = useState<string | null>(null);
 
   // Extract unique product names
   const uniqueData = useMemo(() => {
     const _data = new Set(data.map(item => item[filterField]));
     return ['Tất cả', ...Array.from(_data)];
   }, [data]);
-
-  const handleSpeechResult = (text: string) => {
-    setSpeechError(null);
-    const lowerText = text.toLowerCase();
-
-    // Find best match
-    let bestMatch = 'Tất cả';
-    let maxMatchScore = 0;
-
-    for (const item of uniqueData) {
-      if (item === 'Tất cả') continue;
-
-      const lowerItem = item.toLowerCase();
-      if (lowerItem === lowerText) {
-        bestMatch = item;
-        break;
-      }
-
-      // Simple partial match logic
-      if (lowerItem.includes(lowerText) || lowerText.includes(lowerItem)) {
-        const score = Math.min(lowerItem.length, lowerText.length) / Math.max(lowerItem.length, lowerText.length);
-        if (score > maxMatchScore) {
-          maxMatchScore = score;
-          bestMatch = item;
-        }
-      }
-    }
-
-    if (bestMatch !== 'Tất cả') {
-      setSelectedField(bestMatch);
-    } else {
-      setSpeechError(`Không tìm thấy: "${text}"`);
-      setTimeout(() => setSpeechError(null), 3000);
-    }
-  };
-
-  const { isListening, isSupported, startListening, stopListening } = useSpeechRecognition({
-    lang: 'vi-VN',
-    onResult: handleSpeechResult,
-    onError: (err) => {
-      setSpeechError(err);
-      setTimeout(() => setSpeechError(null), 3000);
-    }
-  });
 
   // Filter data based on selected name
   const filteredData = useMemo(() => {
@@ -121,29 +74,12 @@ export default function ProductList({ data, themeColor, filterField }: ProductLi
               <option key={item} value={item}>{item}</option>
             ))}
           </select>
-
-          {isSupported && (
-            <button
-              onClick={isListening ? stopListening : startListening}
-              className={`flex-shrink-0 flex items-center justify-center w-12 rounded-xl transition-colors ${isListening ? theme.micActive : theme.micInactive
-                }`}
-              title={isListening ? "Dừng nghe" : "Tìm kiếm bằng giọng nói"}
-            >
-              {isListening ? <Loader2 className="w-5 h-5 animate-spin" /> : <Mic className="w-5 h-5" />}
-            </button>
-          )}
         </div>
 
         <div className="mt-2 flex justify-between items-center text-sm">
           <span className="text-slate-500">
             Hiển thị {filteredData.length} sản phẩm
           </span>
-          {isListening && (
-            <span className={`font-medium ${theme.text}`}>Đang nghe...</span>
-          )}
-          {speechError && (
-            <span className="text-red-500 font-medium">{speechError}</span>
-          )}
         </div>
       </div>
 

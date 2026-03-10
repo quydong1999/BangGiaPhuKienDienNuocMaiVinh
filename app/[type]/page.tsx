@@ -8,33 +8,39 @@ import ProductList from './ProductList';
 
 export default async function TypePage({ params }: { params: Promise<{ type: string }> }) {
   const { type } = await params;
-  
-  if (type !== 'day' && type !== 'mong' && type !== 'vanphuoc') {
+
+  const ALLOWED_TYPES = [
+    "phu-kien-ong-nuoc-dat-hoa-loai-day",
+    "phu-kien-ong-nuoc-dat-hoa-loai-mong",
+    "ong-nuoc-van-phuoc"
+  ] as const;
+
+  type AllowedType = (typeof ALLOWED_TYPES)[number];
+
+  if (!ALLOWED_TYPES.includes(type as AllowedType)) {
     notFound();
   }
-  
+
   const types = {
-    day: {
+    "phu-kien-ong-nuoc-dat-hoa-loai-day": {
       title: "Loại dày",
       themeColor: 'emerald',
       data: dayData,
       filterField: "name"
     },
-    mong: {
+    "phu-kien-ong-nuoc-dat-hoa-loai-mong": {
       title: "Loại mỏng",
       themeColor: 'blue',
       data: mongData,
       filterField: "name"
     },
-    vanphuoc: {
+    "ong-nuoc-van-phuoc": {
       title: "Ống nhựa Vạn Phước",
       themeColor: 'yellow',
       data: vanphuocData,
       filterField: "spec"
     }
   } as const;
-
-  type AllowedType = 'day' | 'mong' | 'vanphuoc';
 
   const { title, themeColor, data, filterField } = types[type as AllowedType];
 
@@ -43,8 +49,8 @@ export default async function TypePage({ params }: { params: Promise<{ type: str
       {/* Header */}
       <header className="sticky top-0 z-10 bg-white border-b border-slate-200 shadow-sm">
         <div className="flex items-center h-14 px-4 max-w-3xl mx-auto w-full">
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="p-2 -ml-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-colors"
             aria-label="Quay lại"
           >
