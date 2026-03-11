@@ -3,16 +3,13 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import type { GalleryProduct as GalleryProductType } from '@/types/types';
-import { themeColorClasses, type ThemeColor } from './theme';
 
 interface GalleryProductProps {
   data: GalleryProductType[];
-  themeColor: ThemeColor;
 }
 
-export default function GalleryProduct({ data, themeColor }: GalleryProductProps) {
+export default function GalleryProduct({ data }: GalleryProductProps) {
   const [selected, setSelected] = useState<GalleryProductType | null>(null);
-  const theme = themeColorClasses[themeColor];
 
   return (
     <div className="space-y-6">
@@ -41,7 +38,7 @@ export default function GalleryProduct({ data, themeColor }: GalleryProductProps
               {item.spec !== '-' && (
                 <div className="mt-1">
                   <span
-                    className={`inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium ${theme.badge}`}
+                    className={`inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium bg-emerald-100 text-emerald-800`}
                   >
                     {item.spec}
                   </span>
@@ -89,7 +86,7 @@ export default function GalleryProduct({ data, themeColor }: GalleryProductProps
               <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600">
                 {selected.spec !== '-' && (
                   <span
-                    className={`inline-flex items-center px-2 py-0.5 rounded-md font-medium ${theme.badge}`}
+                    className={`inline-flex items-center px-2 py-0.5 rounded-md font-medium bg-emerald-100 text-emerald-800`}
                   >
                     {selected.spec}
                   </span>

@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from 'react';
 import type { Product } from '@/types/types';
-import { themeColorClasses, type ThemeColor } from './theme';
 
 type VisibleField =
   | 'stt'
@@ -15,12 +14,11 @@ type VisibleField =
 
 interface ProductListProps {
   data: Product[];
-  themeColor: ThemeColor;
   filterField: 'name' | 'spec' | null;
   visibleFields: readonly VisibleField[];
 }
 
-export default function ProductList({ data, themeColor, filterField, visibleFields }: ProductListProps) {
+export default function ProductList({ data, filterField, visibleFields }: ProductListProps) {
   const [selectedField, setSelectedField] = useState<string>('Tất cả');
 
   // Extract unique product names
@@ -37,7 +35,6 @@ export default function ProductList({ data, themeColor, filterField, visibleFiel
     if (!filterField || selectedField === 'Tất cả') return data;
     return data.filter(item => item[filterField] === selectedField);
   }, [data, selectedField, filterField]);
-  const theme = themeColorClasses[themeColor];
 
   const fieldLabels: Record<VisibleField, string> = {
     stt: 'Số thứ tự',
@@ -66,7 +63,7 @@ export default function ProductList({ data, themeColor, filterField, visibleFiel
                 id="product-filter"
                 value={selectedField}
                 onChange={(e) => setSelectedField(e.target.value)}
-                className={`block w-full rounded-xl border border-slate-300 shadow-sm py-3 px-4 text-base ${theme.focus} transition-shadow bg-white`}
+                className={`block w-full border border-slate-300 shadow-sm py-3 px-4 text-base focus:ring-emerald-500 focus:border-emerald-500 transition-shadow bg-white`}
               >
                 {uniqueData.map(item => (
                   <option key={item} value={item}>{item}</option>
@@ -84,7 +81,7 @@ export default function ProductList({ data, themeColor, filterField, visibleFiel
       </div>
 
       {/* List */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-white border border-slate-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm whitespace-nowrap">
             <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-medium">
@@ -94,8 +91,8 @@ export default function ProductList({ data, themeColor, filterField, visibleFiel
                     key={field}
                     className={
                       field === 'priceTax' ||
-                      field === 'priceDiscount' ||
-                      field === 'priceSell'
+                        field === 'priceDiscount' ||
+                        field === 'priceSell'
                         ? 'px-4 py-3 text-right'
                         : 'px-4 py-3'
                     }
@@ -118,7 +115,7 @@ export default function ProductList({ data, themeColor, filterField, visibleFiel
                       return (
                         <td key={field} className="px-4 py-3">
                           <span
-                            className={`text-xs font-medium px-2 py-1 rounded-md ${theme.badge}`}
+                            className={`text-xs font-medium px-2 py-1 rounded-md bg-emerald-100 text-emerald-800`}
                           >
                             {value}
                           </span>
@@ -138,8 +135,8 @@ export default function ProductList({ data, themeColor, filterField, visibleFiel
                           isPriceField
                             ? 'px-4 py-3 text-right font-bold text-slate-900'
                             : field === 'stt'
-                            ? 'px-4 py-3 text-slate-900'
-                            : 'px-4 py-3 font-medium text-slate-900'
+                              ? 'px-4 py-3 text-slate-900'
+                              : 'px-4 py-3 font-medium text-slate-900'
                         }
                       >
                         {value}

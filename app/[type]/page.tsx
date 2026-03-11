@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
-import { TYPE_SLUGS, TYPE_TO_THEME_COLOR, type TypeSlug } from '@/lib/theme';
+import { TYPE_SLUGS, type TypeSlug } from '@/types/types'
 import ProductList from './ProductList';
 import GalleryProduct from './GalleryProduct';
 import { TYPE_CONFIG } from './config';
@@ -15,7 +15,6 @@ export default async function TypePage({ params }: { params: Promise<{ type: str
 
   const config = TYPE_CONFIG[type as TypeSlug];
   const { title, data, filterField, visibleFields, layout } = config;
-  const themeColor = TYPE_TO_THEME_COLOR[type as TypeSlug];
 
   return (
     <main className="min-h-screen bg-slate-50 flex flex-col">
@@ -39,12 +38,11 @@ export default async function TypePage({ params }: { params: Promise<{ type: str
         {layout === 'table' ? (
           <ProductList
             data={data}
-            themeColor={themeColor}
             filterField={filterField}
             visibleFields={visibleFields}
           />
         ) : (
-          <GalleryProduct data={data as any} themeColor={themeColor} />
+          <GalleryProduct data={data as any} />
         )}
       </div>
     </main>
