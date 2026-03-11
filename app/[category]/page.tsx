@@ -1,19 +1,19 @@
 import { notFound } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
-import { TYPE_SLUGS, type TypeSlug } from '@/types/types'
+import { CATEGORY_SLUGS, type CategorySlug } from '@/types/types'
 import ProductList from './ProductList';
 import GalleryProduct from './GalleryProduct';
-import { TYPE_CONFIG } from './config';
+import { CATEGORY_CONFIG } from '@/data/categories';
 
-export default async function TypePage({ params }: { params: Promise<{ type: string }> }) {
-  const { type } = await params;
+export default async function TypePage({ params }: { params: Promise<{ category: string }> }) {
+  const { category } = await params;
 
-  if (!TYPE_SLUGS.includes(type as TypeSlug)) {
+  if (!CATEGORY_SLUGS.includes(category as CategorySlug)) {
     notFound();
   }
 
-  const config = TYPE_CONFIG[type as TypeSlug];
+  const config = CATEGORY_CONFIG[category as CategorySlug];
   const { title, data, filterField, visibleFields, layout } = config;
 
   return (

@@ -27,6 +27,7 @@ export default function ProductList({ data, filterField, visibleFields }: Produc
       return ['Tất cả'];
     }
     const _data = new Set(data.map(item => item[filterField]));
+    const uniqueData = Array.from(new Set(data.map(item => item[filterField]).filter(Boolean)));
     return ['Tất cả', ...Array.from(_data)];
   }, [data, filterField]);
 
@@ -66,7 +67,7 @@ export default function ProductList({ data, filterField, visibleFields }: Produc
                 className={`block w-full border border-slate-300 shadow-sm py-3 px-4 text-base focus:ring-emerald-500 focus:border-emerald-500 transition-shadow bg-white`}
               >
                 {uniqueData.map(item => (
-                  <option key={item} value={item}>{item}</option>
+                  <option key={item} value={item ?? ""}>{item}</option>
                 ))}
               </select>
             </div>

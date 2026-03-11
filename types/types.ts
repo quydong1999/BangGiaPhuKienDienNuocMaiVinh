@@ -1,23 +1,16 @@
 export type Product = {
-  stt: string;
+  stt?: string;
   name: string;
-  spec: string;
-  unit: string;
-  priceTax: string;
-  priceDiscount: string;
+  spec?: string;
+  unit?: string;
+  priceTax?: string;
+  priceDiscount?: string;
   priceSell: string;
+  src?: string;
+  alt?: string;
 };
 
-export type ProductImage = {
-  src: string;
-  alt: string;
-};
-
-export type GalleryProduct = Product & {
-  image: ProductImage;
-};
-
-export const TYPE_SLUGS = [
+export const CATEGORY_SLUGS = [
   'phu-kien-ong-nuoc-dat-hoa-loai-day',
   'phu-kien-ong-nuoc-dat-hoa-loai-mong',
   'ong-nuoc-dat-hoa',
@@ -29,4 +22,4 @@ export const TYPE_SLUGS = [
   'day-dien-nhom-don-vinh-thinh'
 ] as const;
 
-export type TypeSlug = (typeof TYPE_SLUGS)[number];
+export type CategorySlug = (typeof CATEGORY_SLUGS)[number];

@@ -1,6 +1,6 @@
-import type { GalleryProduct } from "@/types/types";
+import type { Product } from "@/types/types";
 
-export const dayBoData: GalleryProduct[] = [
+export const dayBoData: Product[] = [
     {
         "stt": "1",
         "name": "Dây bô (Xanh)",
@@ -9,10 +9,8 @@ export const dayBoData: GalleryProduct[] = [
         "priceTax": "Liên hệ",
         "priceDiscount": "Liên hệ",
         "priceSell": "80.000 đ",
-        "image": {
-            "src": "/products/day-bo/day-bo-xanh.jpg",
-            "alt": "Dây bô màu xanh"
-        }
+        "src": "/products/day-bo/day-bo-xanh.jpg",
+        "alt": "Dây bô màu xanh"
     },
     {
         "stt": "2",
@@ -22,9 +20,7 @@ export const dayBoData: GalleryProduct[] = [
         "priceTax": "Liên hệ",
         "priceDiscount": "Liên hệ",
         "priceSell": "80.000 đ",
-        "image": {
-            "src": "/products/day-bo/day-bo-trang.jpg",
-            "alt": "Dây bô màu trắng"
-        }
+        "src": "/products/day-bo/day-bo-trang.jpg",
+        "alt": "Dây bô màu trắng"
     }
 ];

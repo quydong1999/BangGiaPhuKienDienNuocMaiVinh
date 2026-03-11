@@ -1,6 +1,6 @@
-import type { GalleryProduct } from "@/types/types";
+import type { Product } from "@/types/types";
 
-export const luoiData: GalleryProduct[] = [
+export const luoiData: Product[] = [
     {
         "stt": "1",
         "name": "Lưới rào gà nhựa (Đen)",
@@ -9,10 +9,8 @@ export const luoiData: GalleryProduct[] = [
         "priceTax": "Liên hệ",
         "priceDiscount": "Liên hệ",
         "priceSell": "12.000 đ",
-        "image": {
-            "src": "/products/luoi/luoi-rao-ga-den-bang-nhua.jpg",
-            "alt": "Lưới dùng để rào gà bằng nhựa màu đen"
-        }
+        "src": "/products/luoi/luoi-rao-ga-den-bang-nhua.jpg",
+        "alt": "Lưới dùng để rào gà bằng nhựa màu đen"
     },
     {
         "stt": "2",
@@ -22,10 +20,8 @@ export const luoiData: GalleryProduct[] = [
         "priceTax": "Liên hệ",
         "priceDiscount": "Liên hệ",
         "priceSell": "35.000 đ",
-        "image": {
-            "src": "/products/luoi/luoi-rao-ga-xanh-bang-nhua.jpg",
-            "alt": "Lưới dùng để rào gà bằng nhựa màu xanh"
-        }
+        "src": "/products/luoi/luoi-rao-ga-xanh-bang-nhua.jpg",
+        "alt": "Lưới dùng để rào gà bằng nhựa màu xanh"
     },
     {
         "stt": "3",
@@ -35,10 +31,8 @@ export const luoiData: GalleryProduct[] = [
         "priceTax": "Liên hệ",
         "priceDiscount": "Liên hệ",
         "priceSell": "15.000 đ",
-        "image": {
-            "src": "/products/luoi/luoi-rao-ga-xanh-bang-kem.jpg",
-            "alt": "Lưới dùng để rào gà bằng kẽm màu xanh"
-        }
+        "src": "/products/luoi/luoi-rao-ga-xanh-bang-kem.jpg",
+        "alt": "Lưới dùng để rào gà bằng kẽm màu xanh"
     },
     {
         "stt": "4",
@@ -48,10 +42,8 @@ export const luoiData: GalleryProduct[] = [
         "priceTax": "Liên hệ",
         "priceDiscount": "Liên hệ",
         "priceSell": "15.000 đ",
-        "image": {
-            "src": "/products/luoi/luoi-lan-thai.jpg",
-            "alt": "Lưới lan che nắng (Thái)"
-        }
+        "src": "/products/luoi/luoi-lan-thai.jpg",
+        "alt": "Lưới lan che nắng (Thái)"
     },
     {
         "stt": "5",
@@ -61,9 +53,7 @@ export const luoiData: GalleryProduct[] = [
         "priceTax": "Liên hệ",
         "priceDiscount": "Liên hệ",
         "priceSell": "12.000 đ",
-        "image": {
-            "src": "/products/luoi/luoi-lan-thuong.jpg",
-            "alt": "Lưới lan che nắng (thường)"
-        }
+        "src": "/products/luoi/luoi-lan-thuong.jpg",
+        "alt": "Lưới lan che nắng (thường)"
     },
 ];

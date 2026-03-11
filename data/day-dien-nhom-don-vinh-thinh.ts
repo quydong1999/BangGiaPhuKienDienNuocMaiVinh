@@ -1,6 +1,6 @@
-import type { GalleryProduct } from "@/types/types";
+import type { Product } from "@/types/types";
 
-export const dayDienNhomDonVinhThinhData: GalleryProduct[] = [
+export const dayDienNhomDonVinhThinhData: Product[] = [
     {
         "stt": "1",
         "name": "Dây nhôm đơn Vĩnh Thịnh",
@@ -9,9 +9,7 @@ export const dayDienNhomDonVinhThinhData: GalleryProduct[] = [
         "priceTax": "Liên hệ",
         "priceDiscount": "Liên hệ",
         "priceSell": "170.000 đ",
-        "image": {
-            "src": "/categories/day-dien-nhom-don-vinh-thinh.jpg",
-            "alt": "Dây điện nhôm đơn Vĩnh Thịnh"
-        }
+        "src": "/categories/day-dien-nhom-don-vinh-thinh.jpg",
+        "alt": "Dây điện nhôm đơn Vĩnh Thịnh"
     }
 ];

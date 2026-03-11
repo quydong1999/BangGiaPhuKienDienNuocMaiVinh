@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { TYPE_SLUGS } from '@/types/types';
-import { TYPE_CONFIG } from '@/app/[type]/config';
+import { CATEGORY_SLUGS } from '@/types/types';
+import { CATEGORY_CONFIG } from '@/data/categories';
 
 export default function HomePage() {
   return (
@@ -14,8 +14,8 @@ export default function HomePage() {
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          {TYPE_SLUGS.map((slug) => {
-            const config = TYPE_CONFIG[slug];
+          {CATEGORY_SLUGS.map((slug) => {
+            const config = CATEGORY_CONFIG[slug];
             return (
               <Link
                 key={slug}

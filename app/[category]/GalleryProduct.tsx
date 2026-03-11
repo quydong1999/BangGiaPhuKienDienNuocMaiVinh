@@ -2,14 +2,16 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import type { GalleryProduct as GalleryProductType } from '@/types/types';
+import type { Product } from '@/types/types';
 
 interface GalleryProductProps {
-  data: GalleryProductType[];
+  data: Product[];
 }
 
+const imgNotFoundUrl = "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?_=20210521171500";
+
 export default function GalleryProduct({ data }: GalleryProductProps) {
-  const [selected, setSelected] = useState<GalleryProductType | null>(null);
+  const [selected, setSelected] = useState<Product | null>(null);
 
   return (
     <div className="space-y-6">
@@ -24,8 +26,8 @@ export default function GalleryProduct({ data }: GalleryProductProps) {
           >
             <div className="relative w-full aspect-[4/3] bg-slate-100">
               <Image
-                src={item.image.src}
-                alt={item.image.alt}
+                src={item.src ?? imgNotFoundUrl}
+                alt={item.alt ?? ""}
                 fill
                 sizes="(min-width: 768px) 200px, 50vw"
                 className="object-cover group-hover:scale-105 transition-transform"
@@ -67,8 +69,8 @@ export default function GalleryProduct({ data }: GalleryProductProps) {
           >
             <div className="relative w-full h-1/2 min-h-[220px] bg-black">
               <Image
-                src={selected.image.src}
-                alt={selected.image.alt}
+                src={selected.src ?? imgNotFoundUrl}
+                alt={selected.alt ?? ""}
                 fill
                 sizes="(min-width: 768px) 480px, 100vw"
                 className="object-cover"
@@ -93,7 +95,7 @@ export default function GalleryProduct({ data }: GalleryProductProps) {
                 )}
                 <span>Đơn vị: {selected.unit}</span>
               </div>
-              <p className="text-xs text-slate-500">{selected.image.alt}</p>
+              <p className="text-xs text-slate-500">{selected.alt}</p>
             </div>
             <button
               type="button"

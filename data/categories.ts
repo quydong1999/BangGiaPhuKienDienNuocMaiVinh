@@ -8,7 +8,7 @@ import { dayBoData } from '@/data/day-bo';
 import { dayDienDoiVinhThinhData } from '@/data/day-dien-doi-vinh-thinh';
 import { dayDienNhomDonVinhThinhData } from '@/data/day-dien-nhom-don-vinh-thinh';
 
-export const TYPE_CONFIG = {
+export const CATEGORY_CONFIG = {
   "phu-kien-ong-nuoc-dat-hoa-loai-day": {
     title: "Phụ kiện ống nước Đạt Hòa loại dày",
     shortTitle: "Phụ kiện Đạt Hòa dày",
