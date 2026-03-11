@@ -1,30 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { TYPE_SLUGS, type TypeSlug } from '@/types/types';
-
-const TYPE_TITLES: Record<TypeSlug, string> = {
-  'phu-kien-ong-nuoc-dat-hoa-loai-day': 'Phụ kiện Đạt Hòa dày',
-  'phu-kien-ong-nuoc-dat-hoa-loai-mong': 'Phụ kiện Đạt Hòa mỏng',
-  'ong-nuoc-van-phuoc': 'Ống Vạn Phước',
-  'ong-nuoc-dat-hoa': 'Ống Đạt Hòa',
-  'ong-nhua-deo': 'Ống nhựa dẻo',
-  'luoi': 'Lưới',
-  'day-bo': 'Dây bô',
-  'day-dien-doi-vinh-thinh': 'Dây đôi Vĩnh Thịnh',
-  'day-dien-nhom-don-vinh-thinh': 'Dây nhôm đơn Vĩnh Thịnh',
-};
-
-const TYPE_IMAGES: Record<TypeSlug, string> = {
-  'phu-kien-ong-nuoc-dat-hoa-loai-day': '/categories/phu-kien-ong-nuoc-dat-hoa.jpg',
-  'phu-kien-ong-nuoc-dat-hoa-loai-mong': '/categories/phu-kien-ong-nuoc-dat-hoa.jpg',
-  'ong-nuoc-van-phuoc': '/categories/ong-nhua-uPvc.jpg',
-  'ong-nuoc-dat-hoa': '/categories/ong-nhua-uPvc.jpg',
-  'ong-nhua-deo': '/categories/ong-nhua-deo.jpg',
-  'luoi': '/categories/luoi.jpg',
-  'day-bo': '/categories/day-bo.jpg',
-  'day-dien-doi-vinh-thinh': '/categories/day-dien-doi-vinh-thinh.jpg',
-  'day-dien-nhom-don-vinh-thinh': '/categories/day-dien-nhom-don-vinh-thinh.jpg',
-};
+import { TYPE_SLUGS } from '@/types/types';
+import { TYPE_CONFIG } from '@/app/[type]/config';
 
 export default function HomePage() {
   return (
@@ -38,6 +15,7 @@ export default function HomePage() {
 
         <div className="grid grid-cols-2 gap-4">
           {TYPE_SLUGS.map((slug) => {
+            const config = TYPE_CONFIG[slug];
             return (
               <Link
                 key={slug}
@@ -47,8 +25,8 @@ export default function HomePage() {
                 {/* Square image container */}
                 <div className="relative aspect-square w-full">
                   <Image
-                    src={TYPE_IMAGES[slug]}
-                    alt={TYPE_TITLES[slug]}
+                    src={config.image}
+                    alt={config.shortTitle}
                     fill
                     sizes="(max-width: 640px) 50vw, 256px"
                     className="object-cover"
@@ -57,7 +35,7 @@ export default function HomePage() {
                 {/* Title */}
                 <div className="px-2 py-3 bg-white">
                   <p className="text-sm font-medium text-slate-800 text-center leading-tight">
-                    {TYPE_TITLES[slug]}
+                    {config.shortTitle}
                   </p>
                 </div>
               </Link>

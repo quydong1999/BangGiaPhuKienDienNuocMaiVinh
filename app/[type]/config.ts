@@ -11,6 +11,8 @@ import { dayDienNhomDonVinhThinhData } from '@/data/day-dien-nhom-don-vinh-thinh
 export const TYPE_CONFIG = {
   "phu-kien-ong-nuoc-dat-hoa-loai-day": {
     title: "Phụ kiện ống nước Đạt Hòa loại dày",
+    shortTitle: "Phụ kiện Đạt Hòa dày",
+    image: "/categories/phu-kien-ong-nuoc-dat-hoa.jpg",
     data: phuKienOngNuocDatHoaLoaiDayData,
     filterField: "name" as const,
     visibleFields: ["name", "spec", "priceSell"] as const,
@@ -18,6 +20,8 @@ export const TYPE_CONFIG = {
   },
   "phu-kien-ong-nuoc-dat-hoa-loai-mong": {
     title: "Phụ kiện ống nước Đạt Hòa loại mỏng",
+    shortTitle: "Phụ kiện Đạt Hòa mỏng",
+    image: "/categories/phu-kien-ong-nuoc-dat-hoa.jpg",
     data: phuKienOngNuocDataHoaLoaiMongData,
     filterField: "name" as const,
     visibleFields: ["name", "spec", "priceSell"] as const,
@@ -25,6 +29,8 @@ export const TYPE_CONFIG = {
   },
   "ong-nuoc-dat-hoa": {
     title: "Ống nhựa Đạt Hòa",
+    shortTitle: "Ống Đạt Hòa",
+    image: "/categories/ong-nhua-uPvc.jpg",
     data: ongNuocDatHoaData,
     filterField: null,
     visibleFields: ["name", "spec", "priceSell"] as const,
@@ -32,6 +38,8 @@ export const TYPE_CONFIG = {
   },
   "ong-nuoc-van-phuoc": {
     title: "Ống nhựa Vạn Phước",
+    shortTitle: "Ống Vạn Phước",
+    image: "/categories/ong-nhua-uPvc.jpg",
     data: ongNuocVanPhuocData,
     filterField: null,
     visibleFields: ["name", "spec", "priceSell"] as const,
@@ -39,6 +47,8 @@ export const TYPE_CONFIG = {
   },
   "ong-nhua-deo": {
     title: "Ống nhựa dẻo các loại",
+    shortTitle: "Ống nhựa dẻo",
+    image: "/categories/ong-nhua-deo.jpg",
     data: ongNhuaDeoData,
     filterField: null,
     visibleFields: ["name", "spec", "unit", "priceSell"] as const,
@@ -46,6 +56,8 @@ export const TYPE_CONFIG = {
   },
   "luoi": {
     title: "Lưới các loại",
+    shortTitle: "Lưới",
+    image: "/categories/luoi.jpg",
     data: luoiData,
     filterField: null,
     visibleFields: [],
@@ -53,6 +65,8 @@ export const TYPE_CONFIG = {
   },
   "day-bo": {
     title: "Dây bô",
+    shortTitle: "Dây bô",
+    image: "/categories/day-bo.jpg",
     data: dayBoData,
     filterField: null,
     visibleFields: [],
@@ -60,6 +74,8 @@ export const TYPE_CONFIG = {
   },
   "day-dien-doi-vinh-thinh": {
     title: "Dây điện đôi Vĩnh Thịnh",
+    shortTitle: "Dây đôi Vĩnh Thịnh",
+    image: "/categories/day-dien-doi-vinh-thinh.jpg",
     data: dayDienDoiVinhThinhData,
     filterField: null,
     visibleFields: ["name", "spec", "unit", "priceSell"] as const,
@@ -67,6 +83,8 @@ export const TYPE_CONFIG = {
   },
   "day-dien-nhom-don-vinh-thinh": {
     title: "Dây điện đơn nhôm Vĩnh Thịnh",
+    shortTitle: "Dây nhôm đơn Vĩnh Thịnh",
+    image: "/categories/day-dien-nhom-don-vinh-thinh.jpg",
     data: dayDienNhomDonVinhThinhData,
     filterField: null,
     visibleFields: [],
