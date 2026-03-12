@@ -157,13 +157,13 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto flex flex-col">
-        <div className="flex justify-between items-center p-5 border-b sticky top-0 bg-white z-10">
+      <div className="bg-white shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto flex flex-col">
+        <div className="flex justify-between items-center p-5 sticky top-0 bg-white z-10">
           <h2 className="text-xl font-bold text-slate-800">Thêm Danh Mục Mới</h2>
           <button
             onClick={onClose}
             type="button"
-            className="p-1 rounded-full hover:bg-slate-100 text-slate-500 transition-colors"
+            className="p-1 hover:bg-slate-100 text-slate-500 transition-colors"
           >
             <X size={20} />
           </button>
@@ -171,7 +171,7 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
 
         <form onSubmit={handleSubmit(onSubmit)} className="p-5 flex flex-col gap-4">
           {submitError && (
-            <div className="p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-200">
+            <div className="p-3 bg-red-50 text-red-600 text-sm border border-red-200">
               {submitError}
             </div>
           )}
@@ -181,7 +181,7 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
             <input
               {...register("title")}
               type="text"
-              className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none transition-shadow"
+              className="w-full p-2.5 border border-gray-400 focus:ring-2 focus:ring-emerald-500 outline-none transition-shadow"
               placeholder="VD: Phụ kiện ống nước uPVC"
             />
             {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title.message}</p>}
@@ -193,10 +193,10 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
               {...register("slug")}
               readOnly
               type="text"
-              className="w-full p-2.5 border rounded-lg bg-slate-50 focus:ring-0 outline-none transition-shadow text-slate-500 text-sm cursor-not-allowed"
+              className="w-full p-2.5 border border-gray-400 bg-slate-50 focus:ring-0 outline-none transition-shadow text-slate-500 text-sm cursor-not-allowed"
               placeholder="Sẽ tạo tự động từ tên bài viết"
             />
-             {errors.slug && <p className="text-red-500 text-xs mt-1">{errors.slug.message}</p>}
+            {errors.slug && <p className="text-red-500 text-xs mt-1">{errors.slug.message}</p>}
           </div>
 
           <div className="space-y-1">
@@ -208,7 +208,7 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
                 setValue("shortTitle", e.target.value, { shouldValidate: true });
               }}
               type="text"
-              className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none transition-shadow"
+              className="w-full p-2.5 border border-gray-400 focus:ring-2 focus:ring-emerald-500 outline-none transition-shadow"
               placeholder="VD: uPVC Đạt Hoà"
             />
             {errors.shortTitle && <p className="text-red-500 text-xs mt-1">{errors.shortTitle.message}</p>}
@@ -216,7 +216,7 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
 
           <div className="space-y-1">
             <label className="text-sm font-medium text-slate-700">Hình ảnh</label>
-            <div className="relative border-2 border-dashed rounded-lg h-32 flex flex-col items-center justify-center gap-2 hover:bg-slate-50 transition-colors cursor-pointer overflow-hidden bg-slate-50/50">
+            <div className="relative border border-dashed h-32 flex flex-col items-center justify-center gap-2 hover:bg-slate-50 transition-colors cursor-pointer overflow-hidden bg-slate-50/50">
               {previewUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={previewUrl} alt="Preview" className="absolute inset-0 w-full h-full object-contain p-2" />
@@ -232,11 +232,11 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
                 type="file"
                 accept="image/*"
                 onChange={(e) => {
-                   if (e.target.files && e.target.files.length > 0) {
-                      setSelectedFile(e.target.files[0]);
-                   } else {
-                      setSelectedFile(null);
-                   }
+                  if (e.target.files && e.target.files.length > 0) {
+                    setSelectedFile(e.target.files[0]);
+                  } else {
+                    setSelectedFile(null);
+                  }
                 }}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 title=""
@@ -245,8 +245,8 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
             {selectedFile && (
               <div className="flex justify-between items-center mt-2 px-1">
                 <span className="text-xs text-slate-500 truncate max-w-[200px]">{selectedFile.name}</span>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   onClick={(e) => {
                     e.preventDefault();
                     setSelectedFile(null);
@@ -292,7 +292,7 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="radio"
-                     {...register("filterField")}
+                      {...register("filterField")}
                       value="null"
                       className="w-4 h-4 text-emerald-600 focus:ring-emerald-500"
                     />
@@ -317,7 +317,7 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
                     <span className="text-sm text-slate-700">Quy cách</span>
                   </label>
                 </div>
-                 {errors.filterField && <p className="text-red-500 text-xs mt-1">{errors.filterField.message}</p>}
+                {errors.filterField && <p className="text-red-500 text-xs mt-1">{errors.filterField.message}</p>}
               </div>
 
               <div className="space-y-2">
@@ -328,36 +328,36 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
                       type="checkbox"
                       checked
                       readOnly
-                      className="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500"
+                      className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-500"
                     />
                     <span className="text-sm text-slate-700">Tên sản phẩm</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer relative">
+                    <input
+                      type="checkbox"
+                      checked={isSpecVisible}
+                      onChange={(e) => handleVisibleFieldChange("spec", e.target.checked)}
+                      className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-500"
+                    />
+                    <span className="text-sm text-slate-700">Quy cách</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer relative">
+                    <input
+                      type="checkbox"
+                      checked={isUnitVisible}
+                      onChange={(e) => handleVisibleFieldChange("unit", e.target.checked)}
+                      className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-500"
+                    />
+                    <span className="text-sm text-slate-700">Đơn vị</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-not-allowed opacity-70">
                     <input
                       type="checkbox"
                       checked
                       readOnly
-                      className="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500"
+                      className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-500"
                     />
                     <span className="text-sm text-slate-700">Giá bán</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer relative">
-                     <input
-                      type="checkbox"
-                      checked={isSpecVisible}
-                      onChange={(e) => handleVisibleFieldChange("spec", e.target.checked)}
-                      className="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500"
-                    />
-                    <span className="text-sm text-slate-700">Quy cách</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer relative">
-                     <input
-                      type="checkbox"
-                      checked={isUnitVisible}
-                      onChange={(e) => handleVisibleFieldChange("unit", e.target.checked)}
-                      className="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500"
-                    />
-                    <span className="text-sm text-slate-700">Đơn vị</span>
                   </label>
                 </div>
                 {errors.visibleFields && <p className="text-red-500 text-xs mt-1">{errors.visibleFields.message}</p>}
@@ -369,17 +369,17 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2.5 border text-slate-700 font-medium rounded-lg hover:bg-slate-50 transition-colors"
+              className="flex-1 px-4 py-2.5 border text-slate-700 font-medium hover:bg-slate-50 transition-colors"
             >
               Hủy
             </button>
             <button
               type="submit"
               disabled={mutation.isPending}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {mutation.isPending ? (
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white animate-spin" />
               ) : (
                 <>
                   <Plus size={18} />

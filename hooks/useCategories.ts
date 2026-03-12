@@ -43,6 +43,29 @@ export function useCategories() {
   });
 }
 
+const fetchCategory = async (slug: string): Promise<Category> => {
+  const response = await fetch(`/api/categories/${slug}`);
+  if (!response.ok) {
+    if (response.status === 404) {
+       throw new Error('Category not found');
+    }
+    throw new Error('Network response was not ok');
+  }
+  const result = await response.json();
+  if (!result.success) {
+    throw new Error('Failed to fetch category');
+  }
+  return result.data;
+};
+
+export function useCategory(slug: string) {
+  return useQuery({
+    queryKey: ['category', slug],
+    queryFn: () => fetchCategory(slug),
+    enabled: !!slug, // Only run the query if slug is available
+  });
+}
+
 export function useCreateCategory() {
   const queryClient = useQueryClient();
 

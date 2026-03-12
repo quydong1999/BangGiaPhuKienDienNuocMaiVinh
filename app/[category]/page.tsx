@@ -1,18 +1,35 @@
+"use client";
+
 import { notFound } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import ProductList from './ProductList';
 import GalleryProduct from './GalleryProduct';
-import { categoryData } from '@/data/categories';
-import { Category, Product } from '@/types/types';
-export default async function TypePage({ params }: { params: Promise<{ category: string }> }) {
-  const { category } = await params;
+import { useCategory } from '@/hooks/useCategories';
+import { useParams } from 'next/navigation';
+import { FilterField, Product, VisibleField } from '@/types/types';
+import { categoryData as localCategoryData } from '@/data/categories';
 
-  if (!categoryData?.map(item => item.slug).includes(category)) {
+export default function TypePage() {
+  const params = useParams();
+  const categorySlug = params.category as string;
+  const { data: categoryData, isLoading, error } = useCategory(categorySlug);
+
+  if (isLoading) {
+    return (
+      <main className="min-h-screen bg-slate-50 flex flex-col items-center justify-center">
+        <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+        <p className="mt-4 text-slate-500">Đang tải danh mục...</p>
+      </main>
+    );
+  }
+
+  if (error || !categoryData) {
     notFound();
   }
 
-  const { title, data = [], filterField = null, visibleFields = [], layout } = categoryData?.find(item => item.slug === category) as Category;
+  const { title, filterField = null, visibleFields = [], layout } = categoryData;
+  const data: Product[] = localCategoryData.find(item => item.slug === categorySlug)?.data || [];
 
   return (
     <main className="min-h-screen bg-slate-50 flex flex-col">
@@ -36,11 +53,11 @@ export default async function TypePage({ params }: { params: Promise<{ category:
         {layout === 'table' ? (
           <ProductList
             data={data}
-            filterField={filterField}
-            visibleFields={visibleFields}
+            filterField={filterField as FilterField}
+            visibleFields={visibleFields as VisibleField[]}
           />
         ) : (
-          <GalleryProduct data={data as any} />
+          <GalleryProduct data={data as Product[]} />
         )}
       </div>
     </main>
