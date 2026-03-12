@@ -1,20 +1,18 @@
 import { notFound } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
-import { CATEGORY_SLUGS, type CategorySlug } from '@/types/types'
 import ProductList from './ProductList';
 import GalleryProduct from './GalleryProduct';
-import { CATEGORY_CONFIG } from '@/data/categories';
-
+import { categoryData } from '@/data/categories';
+import { Category, Product } from '@/types/types';
 export default async function TypePage({ params }: { params: Promise<{ category: string }> }) {
   const { category } = await params;
 
-  if (!CATEGORY_SLUGS.includes(category as CategorySlug)) {
+  if (!categoryData?.map(item => item.slug).includes(category)) {
     notFound();
   }
 
-  const config = CATEGORY_CONFIG[category as CategorySlug];
-  const { title, data, filterField, visibleFields, layout } = config;
+  const { title, data = [], filterField = null, visibleFields = [], layout } = categoryData?.find(item => item.slug === category) as Category;
 
   return (
     <main className="min-h-screen bg-slate-50 flex flex-col">

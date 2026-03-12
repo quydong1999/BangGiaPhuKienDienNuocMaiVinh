@@ -2,7 +2,7 @@ import type { Product } from "@/types/types";
 
 export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
     {
-        "stt": "1",
+        "_id": "1",
         "name": "Nối",
         "spec": "Ø21",
         "unit": "Cái",
@@ -11,7 +11,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "2.000 đ"
     },
     {
-        "stt": "2",
+        "_id": "2",
         "name": "Nối",
         "spec": "Ø27",
         "unit": "Cái",
@@ -20,7 +20,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "3.000 đ"
     },
     {
-        "stt": "3",
+        "_id": "3",
         "name": "Nối",
         "spec": "Ø34",
         "unit": "Cái",
@@ -29,7 +29,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "4.000 đ"
     },
     {
-        "stt": "4",
+        "_id": "4",
         "name": "Nối",
         "spec": "Ø42",
         "unit": "Cái",
@@ -38,7 +38,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "5.000 đ"
     },
     {
-        "stt": "5",
+        "_id": "5",
         "name": "Nối",
         "spec": "Ø49",
         "unit": "Cái",
@@ -47,7 +47,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "6.000 đ"
     },
     {
-        "stt": "6",
+        "_id": "6",
         "name": "Nối",
         "spec": "Ø60",
         "unit": "Cái",
@@ -56,7 +56,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "7.000 đ"
     },
     {
-        "stt": "7",
+        "_id": "7",
         "name": "Nối",
         "spec": "Ø76",
         "unit": "Cái",
@@ -65,7 +65,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "10.000 đ"
     },
     {
-        "stt": "8",
+        "_id": "8",
         "name": "Nối",
         "spec": "Ø90",
         "unit": "Cái",
@@ -74,7 +74,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "15.000 đ"
     },
     {
-        "stt": "9",
+        "_id": "9",
         "name": "Nối",
         "spec": "Ø110",
         "unit": "Cái",
@@ -83,7 +83,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "25.000 đ"
     },
     {
-        "stt": "10",
+        "_id": "10",
         "name": "Nối",
         "spec": "Ø114",
         "unit": "Cái",
@@ -92,7 +92,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "25.000 đ"
     },
     {
-        "stt": "11",
+        "_id": "11",
         "name": "Lơi",
         "spec": "Ø21",
         "unit": "Cái",
@@ -101,7 +101,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "2.000 đ"
     },
     {
-        "stt": "12",
+        "_id": "12",
         "name": "Lơi",
         "spec": "Ø27",
         "unit": "Cái",
@@ -110,7 +110,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "3.000 đ"
     },
     {
-        "stt": "13",
+        "_id": "13",
         "name": "Lơi",
         "spec": "Ø34",
         "unit": "Cái",
@@ -119,7 +119,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "4.000 đ"
     },
     {
-        "stt": "14",
+        "_id": "14",
         "name": "Lơi",
         "spec": "Ø42",
         "unit": "Cái",
@@ -128,7 +128,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "5.000 đ"
     },
     {
-        "stt": "15",
+        "_id": "15",
         "name": "Lơi",
         "spec": "Ø49",
         "unit": "Cái",
@@ -137,7 +137,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "7.000 đ"
     },
     {
-        "stt": "16",
+        "_id": "16",
         "name": "Lơi",
         "spec": "Ø60",
         "unit": "Cái",
@@ -146,7 +146,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "10.000 đ"
     },
     {
-        "stt": "17",
+        "_id": "17",
         "name": "Lơi",
         "spec": "Ø76",
         "unit": "Cái",
@@ -155,7 +155,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "15.000 đ"
     },
     {
-        "stt": "18",
+        "_id": "18",
         "name": "Lơi",
         "spec": "Ø90",
         "unit": "Cái",
@@ -164,7 +164,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "18.000 đ"
     },
     {
-        "stt": "19",
+        "_id": "19",
         "name": "Lơi",
         "spec": "Ø110",
         "unit": "Cái",
@@ -173,7 +173,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "24.000 đ"
     },
     {
-        "stt": "20",
+        "_id": "20",
         "name": "Lơi",
         "spec": "Ø114",
         "unit": "Cái",
@@ -182,7 +182,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "40.000 đ"
     },
     {
-        "stt": "21",
+        "_id": "21",
         "name": "Lơi",
         "spec": "Ø140",
         "unit": "Cái",
@@ -191,7 +191,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "46.000 đ"
     },
     {
-        "stt": "22",
+        "_id": "22",
         "name": "Lơi",
         "spec": "Ø168",
         "unit": "Cái",
@@ -200,7 +200,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "125.000 đ"
     },
     {
-        "stt": "23",
+        "_id": "23",
         "name": "Co",
         "spec": "Ø21",
         "unit": "Cái",
@@ -209,7 +209,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "2.000 đ"
     },
     {
-        "stt": "24",
+        "_id": "24",
         "name": "Co",
         "spec": "Ø27",
         "unit": "Cái",
@@ -218,7 +218,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "3.000 đ"
     },
     {
-        "stt": "25",
+        "_id": "25",
         "name": "Co",
         "spec": "Ø34",
         "unit": "Cái",
@@ -227,7 +227,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "4.000 đ"
     },
     {
-        "stt": "26",
+        "_id": "26",
         "name": "Co",
         "spec": "Ø42",
         "unit": "Cái",
@@ -236,7 +236,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "6.000 đ"
     },
     {
-        "stt": "27",
+        "_id": "27",
         "name": "Co",
         "spec": "Ø49",
         "unit": "Cái",
@@ -245,7 +245,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "8.000 đ"
     },
     {
-        "stt": "28",
+        "_id": "28",
         "name": "Co",
         "spec": "Ø60",
         "unit": "Cái",
@@ -254,7 +254,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "12.000 đ"
     },
     {
-        "stt": "29",
+        "_id": "29",
         "name": "Co",
         "spec": "Ø76",
         "unit": "Cái",
@@ -263,7 +263,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "15.000 đ"
     },
     {
-        "stt": "30",
+        "_id": "30",
         "name": "Co",
         "spec": "Ø90",
         "unit": "Cái",
@@ -272,7 +272,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "25.000 đ"
     },
     {
-        "stt": "31",
+        "_id": "31",
         "name": "Co",
         "spec": "Ø110",
         "unit": "Cái",
@@ -281,7 +281,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "43.000 đ"
     },
     {
-        "stt": "32",
+        "_id": "32",
         "name": "Co",
         "spec": "Ø114",
         "unit": "Cái",
@@ -290,7 +290,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "45.000 đ"
     },
     {
-        "stt": "33",
+        "_id": "33",
         "name": "Co",
         "spec": "Ø140",
         "unit": "Cái",
@@ -299,7 +299,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "110.000 đ"
     },
     {
-        "stt": "34",
+        "_id": "34",
         "name": "Co",
         "spec": "Ø168",
         "unit": "Cái",
@@ -308,7 +308,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "140.000 đ"
     },
     {
-        "stt": "35",
+        "_id": "35",
         "name": "Co",
         "spec": "Ø220",
         "unit": "Cái",
@@ -317,7 +317,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "Liên hệ"
     },
     {
-        "stt": "36",
+        "_id": "36",
         "name": "Co giảm",
         "spec": "Ø42 x 21",
         "unit": "Cái",
@@ -326,7 +326,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "10.000 đ"
     },
     {
-        "stt": "37",
+        "_id": "37",
         "name": "Co giảm",
         "spec": "Ø49 x 21",
         "unit": "Cái",
@@ -335,7 +335,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "10.000 đ"
     },
     {
-        "stt": "38",
+        "_id": "38",
         "name": "Co giảm",
         "spec": "Ø49 x 34",
         "unit": "Cái",
@@ -344,7 +344,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "10.000 đ"
     },
     {
-        "stt": "39",
+        "_id": "39",
         "name": "Co giảm",
         "spec": "Ø49 x 42",
         "unit": "Cái",
@@ -353,7 +353,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "12.000 đ"
     },
     {
-        "stt": "40",
+        "_id": "40",
         "name": "Co giảm",
         "spec": "Ø49 x 27",
         "unit": "Cái",
@@ -362,7 +362,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "10.000 đ"
     },
     {
-        "stt": "42",
+        "_id": "42",
         "name": "Co giảm",
         "spec": "Ø60 x 27",
         "unit": "Cái",
@@ -371,7 +371,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "12.000 đ"
     },
     {
-        "stt": "41",
+        "_id": "41",
         "name": "Co giảm",
         "spec": "Ø60 x 34",
         "unit": "Cái",
@@ -380,7 +380,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "12.000 đ"
     },
     {
-        "stt": "43",
+        "_id": "43",
         "name": "Co giảm",
         "spec": "Ø60 x 42",
         "unit": "Cái",
@@ -389,7 +389,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "12.000 đ"
     },
     {
-        "stt": "44",
+        "_id": "44",
         "name": "Co giảm",
         "spec": "Ø60 x 49",
         "unit": "Cái",
@@ -398,7 +398,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "12.000 đ"
     },
     {
-        "stt": "45",
+        "_id": "45",
         "name": "Co giảm",
         "spec": "Ø90 x 49",
         "unit": "Cái",
@@ -407,7 +407,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "20.000 đ"
     },
     {
-        "stt": "46",
+        "_id": "46",
         "name": "Co giảm",
         "spec": "Ø90 x 60",
         "unit": "Cái",
@@ -416,7 +416,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "18.000 đ"
     },
     {
-        "stt": "47",
+        "_id": "47",
         "name": "Co giảm",
         "spec": "Ø114 x 60",
         "unit": "Cái",
@@ -425,7 +425,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "30.000 đ"
     },
     {
-        "stt": "48",
+        "_id": "48",
         "name": "Co giảm",
         "spec": "Ø114 x 90",
         "unit": "Cái",
@@ -434,7 +434,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "33.000 đ"
     },
     {
-        "stt": "49",
+        "_id": "49",
         "name": "Tê cong",
         "spec": "Ø49",
         "unit": "Cái",
@@ -443,7 +443,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "20.000 đ"
     },
     {
-        "stt": "50",
+        "_id": "50",
         "name": "Tê cong",
         "spec": "Ø60",
         "unit": "Cái",
@@ -452,7 +452,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "20.000 đ"
     },
     {
-        "stt": "51",
+        "_id": "51",
         "name": "Tê cong",
         "spec": "Ø90",
         "unit": "Cái",
@@ -461,7 +461,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "35.000 đ"
     },
     {
-        "stt": "52",
+        "_id": "52",
         "name": "Tê cong",
         "spec": "Ø114",
         "unit": "Cái",
@@ -470,7 +470,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "65.000 đ"
     },
     {
-        "stt": "53",
+        "_id": "53",
         "name": "Chữ Tê",
         "spec": "Ø16",
         "unit": "Cái",
@@ -479,7 +479,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "3.000 đ"
     },
     {
-        "stt": "54",
+        "_id": "54",
         "name": "Chữ Tê",
         "spec": "Ø21",
         "unit": "Cái",
@@ -488,7 +488,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "4.000 đ"
     },
     {
-        "stt": "55",
+        "_id": "55",
         "name": "Chữ Tê",
         "spec": "Ø27",
         "unit": "Cái",
@@ -497,7 +497,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "4.000 đ"
     },
     {
-        "stt": "56",
+        "_id": "56",
         "name": "Chữ Tê",
         "spec": "Ø34",
         "unit": "Cái",
@@ -506,7 +506,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "5.000 đ"
     },
     {
-        "stt": "57",
+        "_id": "57",
         "name": "Chữ Tê",
         "spec": "Ø42",
         "unit": "Cái",
@@ -515,7 +515,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "7.000 đ"
     },
     {
-        "stt": "58",
+        "_id": "58",
         "name": "Chữ Tê",
         "spec": "Ø49",
         "unit": "Cái",
@@ -524,7 +524,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "10.000 đ"
     },
     {
-        "stt": "59",
+        "_id": "59",
         "name": "Chữ Tê",
         "spec": "Ø60",
         "unit": "Cái",
@@ -533,7 +533,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "15.000 đ"
     },
     {
-        "stt": "60",
+        "_id": "60",
         "name": "Chữ Tê",
         "spec": "Ø76",
         "unit": "Cái",
@@ -542,7 +542,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "20.000 đ"
     },
     {
-        "stt": "61",
+        "_id": "61",
         "name": "Chữ Tê",
         "spec": "Ø90",
         "unit": "Cái",
@@ -551,7 +551,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "26.000 đ"
     },
     {
-        "stt": "62",
+        "_id": "62",
         "name": "Chữ Tê",
         "spec": "Ø110",
         "unit": "Cái",
@@ -560,7 +560,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "45.000 đ"
     },
     {
-        "stt": "63",
+        "_id": "63",
         "name": "Chữ Tê",
         "spec": "Ø114",
         "unit": "Cái",
@@ -569,7 +569,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "55.000 đ"
     },
     {
-        "stt": "64",
+        "_id": "64",
         "name": "Chữ Tê",
         "spec": "Ø140",
         "unit": "Cái",
@@ -578,7 +578,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "98.000 đ"
     },
     {
-        "stt": "65",
+        "_id": "65",
         "name": "Chữ Tê",
         "spec": "Ø168",
         "unit": "Cái",
@@ -587,7 +587,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "190.000 đ"
     },
     {
-        "stt": "66",
+        "_id": "66",
         "name": "Chữ Tê giảm",
         "spec": "Ø27 x 21",
         "unit": "Cái",
@@ -596,7 +596,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "4.000 đ"
     },
     {
-        "stt": "67",
+        "_id": "67",
         "name": "Chữ Tê giảm",
         "spec": "Ø34 x 21",
         "unit": "Cái",
@@ -605,7 +605,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "5.000 đ"
     },
     {
-        "stt": "68",
+        "_id": "68",
         "name": "Chữ Tê giảm",
         "spec": "Ø34 x 27",
         "unit": "Cái",
@@ -614,7 +614,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "5.000 đ"
     },
     {
-        "stt": "69",
+        "_id": "69",
         "name": "Chữ Tê giảm",
         "spec": "Ø49 x 21",
         "unit": "Cái",
@@ -623,7 +623,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "7.000 đ"
     },
     {
-        "stt": "70",
+        "_id": "70",
         "name": "Chữ Tê giảm",
         "spec": "Ø49 x 27",
         "unit": "Cái",
@@ -632,7 +632,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "8.000 đ"
     },
     {
-        "stt": "71",
+        "_id": "71",
         "name": "Chữ Tê giảm",
         "spec": "Ø49 x 34",
         "unit": "Cái",
@@ -641,7 +641,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "8.000 đ"
     },
     {
-        "stt": "72",
+        "_id": "72",
         "name": "Chữ Tê giảm",
         "spec": "Ø49 x 42",
         "unit": "Cái",
@@ -650,7 +650,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "9.000 đ"
     },
     {
-        "stt": "73",
+        "_id": "73",
         "name": "Chữ Tê giảm",
         "spec": "Ø60 x 21",
         "unit": "Cái",
@@ -659,7 +659,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "12.000 đ"
     },
     {
-        "stt": "74",
+        "_id": "74",
         "name": "Chữ Tê giảm",
         "spec": "Ø60 x 27",
         "unit": "Cái",
@@ -668,7 +668,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "12.000 đ"
     },
     {
-        "stt": "75",
+        "_id": "75",
         "name": "Chữ Tê giảm",
         "spec": "Ø60 x 34",
         "unit": "Cái",
@@ -677,7 +677,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "16.000 đ"
     },
     {
-        "stt": "76",
+        "_id": "76",
         "name": "Chữ Tê giảm",
         "spec": "Ø60 x 42",
         "unit": "Cái",
@@ -686,7 +686,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "13.000 đ"
     },
     {
-        "stt": "77",
+        "_id": "77",
         "name": "Chữ Tê giảm",
         "spec": "Ø60 x 49",
         "unit": "Cái",
@@ -695,7 +695,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "13.000 đ"
     },
     {
-        "stt": "78",
+        "_id": "78",
         "name": "Chữ Tê giảm",
         "spec": "Ø90 x 60",
         "unit": "Cái",
@@ -704,7 +704,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "24.000 đ"
     },
     {
-        "stt": "79",
+        "_id": "79",
         "name": "Chữ Tê giảm",
         "spec": "Ø114 x 60",
         "unit": "Cái",
@@ -713,7 +713,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "35.000 đ"
     },
     {
-        "stt": "80",
+        "_id": "80",
         "name": "Chữ Tê giảm",
         "spec": "Ø114 x 90",
         "unit": "Cái",
@@ -722,7 +722,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "47.000 đ"
     },
     {
-        "stt": "81",
+        "_id": "81",
         "name": "Tê cong giảm",
         "spec": "Ø90/60",
         "unit": "Cái",
@@ -731,7 +731,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "28.000 đ"
     },
     {
-        "stt": "82",
+        "_id": "82",
         "name": "Tê cong giảm",
         "spec": "Ø114 x 60",
         "unit": "Cái",
@@ -740,7 +740,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "60.000 đ"
     },
     {
-        "stt": "83",
+        "_id": "83",
         "name": "Tê cong giảm",
         "spec": "Ø168 x 114",
         "unit": "Cái",
@@ -749,7 +749,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "180.000 đ"
     },
     {
-        "stt": "84",
+        "_id": "84",
         "name": "Tê cong giảm",
         "spec": "Ø220 x 114",
         "unit": "Cái",
@@ -758,7 +758,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "210.000 đ"
     },
     {
-        "stt": "85",
+        "_id": "85",
         "name": "Tê cong kiểm tra (có nắp)",
         "spec": "Ø90",
         "unit": "Cái",
@@ -767,7 +767,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "Liên hệ"
     },
     {
-        "stt": "86",
+        "_id": "86",
         "name": "Tê cong kiểm tra (có nắp)",
         "spec": "Ø114",
         "unit": "Cái",
@@ -776,7 +776,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "Liên hệ"
     },
     {
-        "stt": "87",
+        "_id": "87",
         "name": "Tê kiểm tra (có nắp)",
         "spec": "Ø60",
         "unit": "Cái",
@@ -785,7 +785,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "Liên hệ"
     },
     {
-        "stt": "88",
+        "_id": "88",
         "name": "Tê kiểm tra (có nắp)",
         "spec": "Ø90",
         "unit": "Cái",
@@ -794,7 +794,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "Liên hệ"
     },
     {
-        "stt": "89",
+        "_id": "89",
         "name": "Tê kiểm tra (có nắp)",
         "spec": "Ø114",
         "unit": "Cái",
@@ -803,7 +803,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "Liên hệ"
     },
     {
-        "stt": "90",
+        "_id": "90",
         "name": "Ngã ba",
         "spec": "Ø21",
         "unit": "Cái",
@@ -812,7 +812,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "Liên hệ"
     },
     {
-        "stt": "91",
+        "_id": "91",
         "name": "Ngã ba",
         "spec": "Ø27",
         "unit": "Cái",
@@ -821,7 +821,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "Liên hệ"
     },
     {
-        "stt": "92",
+        "_id": "92",
         "name": "Ngã ba",
         "spec": "Ø34",
         "unit": "Cái",
@@ -830,7 +830,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "Liên hệ"
     },
     {
-        "stt": "93",
+        "_id": "93",
         "name": "Giảm",
         "spec": "Ø27 x 21",
         "unit": "Cái",
@@ -839,7 +839,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "3.000 đ"
     },
     {
-        "stt": "94",
+        "_id": "94",
         "name": "Giảm",
         "spec": "Ø34 x 21",
         "unit": "Cái",
@@ -848,7 +848,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "3.000 đ"
     },
     {
-        "stt": "95",
+        "_id": "95",
         "name": "Giảm",
         "spec": "Ø34 x 27",
         "unit": "Cái",
@@ -857,7 +857,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "3.000 đ"
     },
     {
-        "stt": "96",
+        "_id": "96",
         "name": "Giảm",
         "spec": "Ø42 x 21",
         "unit": "Cái",
@@ -866,7 +866,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "4.000 đ"
     },
     {
-        "stt": "97",
+        "_id": "97",
         "name": "Giảm",
         "spec": "Ø42 x 27",
         "unit": "Cái",
@@ -875,7 +875,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "4.000 đ"
     },
     {
-        "stt": "98",
+        "_id": "98",
         "name": "Giảm",
         "spec": "Ø42 x 34",
         "unit": "Cái",
@@ -884,7 +884,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "5.000 đ"
     },
     {
-        "stt": "99",
+        "_id": "99",
         "name": "Giảm",
         "spec": "Ø49 x 21",
         "unit": "Cái",
@@ -893,7 +893,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "5.000 đ"
     },
     {
-        "stt": "100",
+        "_id": "100",
         "name": "Giảm",
         "spec": "Ø49 x 27",
         "unit": "Cái",
@@ -902,7 +902,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "5.000 đ"
     },
     {
-        "stt": "101",
+        "_id": "101",
         "name": "Giảm",
         "spec": "Ø49 x 34",
         "unit": "Cái",
@@ -911,7 +911,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "6.000 đ"
     },
     {
-        "stt": "102",
+        "_id": "102",
         "name": "Giảm",
         "spec": "Ø49 x 42",
         "unit": "Cái",
@@ -920,7 +920,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "6.000 đ"
     },
     {
-        "stt": "103",
+        "_id": "103",
         "name": "Giảm",
         "spec": "Ø60 x 21",
         "unit": "Cái",
@@ -929,7 +929,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "6.000 đ"
     },
     {
-        "stt": "104",
+        "_id": "104",
         "name": "Giảm",
         "spec": "Ø60 x 27",
         "unit": "Cái",
@@ -938,7 +938,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "6.000 đ"
     },
     {
-        "stt": "105",
+        "_id": "105",
         "name": "Giảm",
         "spec": "Ø60 x 34",
         "unit": "Cái",
@@ -947,7 +947,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "6.000 đ"
     },
     {
-        "stt": "106",
+        "_id": "106",
         "name": "Giảm",
         "spec": "Ø60 x 42",
         "unit": "Cái",
@@ -956,7 +956,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "6.000 đ"
     },
     {
-        "stt": "107",
+        "_id": "107",
         "name": "Giảm",
         "spec": "Ø60 x 49",
         "unit": "Cái",
@@ -965,7 +965,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "6.000 đ"
     },
     {
-        "stt": "108",
+        "_id": "108",
         "name": "Giảm",
         "spec": "Ø76 x 27",
         "unit": "Cái",
@@ -974,7 +974,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "10.000 đ"
     },
     {
-        "stt": "109",
+        "_id": "109",
         "name": "Giảm",
         "spec": "Ø76 x 42",
         "unit": "Cái",
@@ -983,7 +983,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "10.000 đ"
     },
     {
-        "stt": "110",
+        "_id": "110",
         "name": "Giảm",
         "spec": "Ø76 x 49",
         "unit": "Cái",
@@ -992,7 +992,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "10.000 đ"
     },
     {
-        "stt": "111",
+        "_id": "111",
         "name": "Giảm",
         "spec": "Ø76 x 60",
         "unit": "Cái",
@@ -1001,7 +1001,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "10.000 đ"
     },
     {
-        "stt": "112",
+        "_id": "112",
         "name": "Giảm",
         "spec": "Ø90 x 27",
         "unit": "Cái",
@@ -1010,7 +1010,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "15.000 đ"
     },
     {
-        "stt": "113",
+        "_id": "113",
         "name": "Giảm",
         "spec": "Ø90 x 34",
         "unit": "Cái",
@@ -1019,7 +1019,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "15.000 đ"
     },
     {
-        "stt": "114",
+        "_id": "114",
         "name": "Giảm",
         "spec": "Ø90 x 42",
         "unit": "Cái",
@@ -1028,7 +1028,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "15.000 đ"
     },
     {
-        "stt": "115",
+        "_id": "115",
         "name": "Giảm",
         "spec": "Ø90 x 49",
         "unit": "Cái",
@@ -1037,7 +1037,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "15.000 đ"
     },
     {
-        "stt": "116",
+        "_id": "116",
         "name": "Giảm",
         "spec": "Ø90 x 60",
         "unit": "Cái",
@@ -1046,7 +1046,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "15.000 đ"
     },
     {
-        "stt": "117",
+        "_id": "117",
         "name": "Giảm",
         "spec": "Ø114 x 34",
         "unit": "Cái",
@@ -1055,7 +1055,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "25.000 đ"
     },
     {
-        "stt": "118",
+        "_id": "118",
         "name": "Giảm",
         "spec": "Ø114 x 42",
         "unit": "Cái",
@@ -1064,7 +1064,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "27.000 đ"
     },
     {
-        "stt": "119",
+        "_id": "119",
         "name": "Giảm",
         "spec": "Ø114 x 49",
         "unit": "Cái",
@@ -1073,7 +1073,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "25.000 đ"
     },
     {
-        "stt": "120",
+        "_id": "120",
         "name": "Giảm",
         "spec": "Ø114 x 60",
         "unit": "Cái",
@@ -1082,7 +1082,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "20.000 đ"
     },
     {
-        "stt": "121",
+        "_id": "121",
         "name": "Giảm",
         "spec": "Ø114 x 76",
         "unit": "Cái",
@@ -1091,7 +1091,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "25.000 đ"
     },
     {
-        "stt": "122",
+        "_id": "122",
         "name": "Giảm",
         "spec": "Ø114 x 90",
         "unit": "Cái",
@@ -1100,7 +1100,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "23.000 đ"
     },
     {
-        "stt": "123",
+        "_id": "123",
         "name": "Giảm",
         "spec": "Ø140 x 90",
         "unit": "Cái",
@@ -1109,7 +1109,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "38.000 đ"
     },
     {
-        "stt": "124",
+        "_id": "124",
         "name": "Bít",
         "spec": "Ø21",
         "unit": "Cái",
@@ -1118,7 +1118,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "2.000 đ"
     },
     {
-        "stt": "125",
+        "_id": "125",
         "name": "Bít",
         "spec": "Ø27",
         "unit": "Cái",
@@ -1127,7 +1127,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "2.000 đ"
     },
     {
-        "stt": "126",
+        "_id": "126",
         "name": "Bít",
         "spec": "Ø34",
         "unit": "Cái",
@@ -1136,7 +1136,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "3.000 đ"
     },
     {
-        "stt": "127",
+        "_id": "127",
         "name": "Bít",
         "spec": "Ø42",
         "unit": "Cái",
@@ -1145,7 +1145,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "4.000 đ"
     },
     {
-        "stt": "128",
+        "_id": "128",
         "name": "Bít",
         "spec": "Ø49",
         "unit": "Cái",
@@ -1154,7 +1154,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "5.000 đ"
     },
     {
-        "stt": "129",
+        "_id": "129",
         "name": "Bít",
         "spec": "Ø60",
         "unit": "Cái",
@@ -1163,7 +1163,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "6.000 đ"
     },
     {
-        "stt": "130",
+        "_id": "130",
         "name": "Bít",
         "spec": "Ø76",
         "unit": "Cái",
@@ -1172,7 +1172,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "8.000 đ"
     },
     {
-        "stt": "131",
+        "_id": "131",
         "name": "Bít",
         "spec": "Ø90",
         "unit": "Cái",
@@ -1181,7 +1181,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "10.000 đ"
     },
     {
-        "stt": "132",
+        "_id": "132",
         "name": "Bít",
         "spec": "Ø114",
         "unit": "Cái",
@@ -1190,7 +1190,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "16.000 đ"
     },
     {
-        "stt": "133",
+        "_id": "133",
         "name": "Chữ Y",
         "spec": "Ø21",
         "unit": "Cái",
@@ -1199,7 +1199,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "7.000 đ"
     },
     {
-        "stt": "134",
+        "_id": "134",
         "name": "Chữ Y",
         "spec": "Ø27",
         "unit": "Cái",
@@ -1208,7 +1208,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "8.000 đ"
     },
     {
-        "stt": "135",
+        "_id": "135",
         "name": "Chữ Y",
         "spec": "Ø34",
         "unit": "Cái",
@@ -1217,7 +1217,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "10.000 đ"
     },
     {
-        "stt": "136",
+        "_id": "136",
         "name": "Chữ Y",
         "spec": "Ø42",
         "unit": "Cái",
@@ -1226,7 +1226,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "10.000 đ"
     },
     {
-        "stt": "137",
+        "_id": "137",
         "name": "Chữ Y",
         "spec": "Ø49",
         "unit": "Cái",
@@ -1235,7 +1235,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "14.000 đ"
     },
     {
-        "stt": "138",
+        "_id": "138",
         "name": "Chữ Y",
         "spec": "Ø60",
         "unit": "Cái",
@@ -1244,7 +1244,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "20.000 đ"
     },
     {
-        "stt": "139",
+        "_id": "139",
         "name": "Chữ Y",
         "spec": "Ø76",
         "unit": "Cái",
@@ -1253,7 +1253,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "32.000 đ"
     },
     {
-        "stt": "140",
+        "_id": "140",
         "name": "Chữ Y",
         "spec": "Ø90",
         "unit": "Cái",
@@ -1262,7 +1262,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "40.000 đ"
     },
     {
-        "stt": "141",
+        "_id": "141",
         "name": "Chữ Y",
         "spec": "Ø110",
         "unit": "Cái",
@@ -1271,7 +1271,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "75.000 đ"
     },
     {
-        "stt": "142",
+        "_id": "142",
         "name": "Chữ Y",
         "spec": "Ø114",
         "unit": "Cái",
@@ -1280,7 +1280,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "70.000 đ"
     },
     {
-        "stt": "143",
+        "_id": "143",
         "name": "Chữ Y",
         "spec": "Ø140",
         "unit": "Cái",
@@ -1289,7 +1289,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "175.000 đ"
     },
     {
-        "stt": "144",
+        "_id": "144",
         "name": "Chữ Y",
         "spec": "Ø168",
         "unit": "Cái",
@@ -1298,7 +1298,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "350.000 đ"
     },
     {
-        "stt": "145",
+        "_id": "145",
         "name": "Chữ Y giảm",
         "spec": "Ø90 x 60",
         "unit": "Cái",
@@ -1307,7 +1307,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "30.000 đ"
     },
     {
-        "stt": "146",
+        "_id": "146",
         "name": "Chữ Y giảm",
         "spec": "Ø114 x 60",
         "unit": "Cái",
@@ -1316,7 +1316,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "50.000 đ"
     },
     {
-        "stt": "147",
+        "_id": "147",
         "name": "Chữ Y giảm",
         "spec": "Ø114 x 90",
         "unit": "Cái",
@@ -1325,7 +1325,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "55.000 đ"
     },
     {
-        "stt": "148",
+        "_id": "148",
         "name": "Con thỏ",
         "spec": "Ø42",
         "unit": "Cái",
@@ -1334,7 +1334,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "Liên hệ"
     },
     {
-        "stt": "149",
+        "_id": "149",
         "name": "Con thỏ",
         "spec": "Ø49",
         "unit": "Cái",
@@ -1343,7 +1343,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "Liên hệ"
     },
     {
-        "stt": "150",
+        "_id": "150",
         "name": "Con thỏ",
         "spec": "Ø60",
         "unit": "Cái",
@@ -1352,7 +1352,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "Liên hệ"
     },
     {
-        "stt": "151",
+        "_id": "151",
         "name": "Con thỏ",
         "spec": "Ø90",
         "unit": "Cái",
@@ -1361,7 +1361,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "Liên hệ"
     },
     {
-        "stt": "152",
+        "_id": "152",
         "name": "Lúppê bầu",
         "spec": "Ø21",
         "unit": "Cái",
@@ -1370,7 +1370,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "Liên hệ"
     },
     {
-        "stt": "153",
+        "_id": "153",
         "name": "Lúppê bầu",
         "spec": "Ø27",
         "unit": "Cái",
@@ -1379,7 +1379,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "Liên hệ"
     },
     {
-        "stt": "154",
+        "_id": "154",
         "name": "Lúppê bầu",
         "spec": "Ø49",
         "unit": "Cái",
@@ -1388,7 +1388,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "Liên hệ"
     },
     {
-        "stt": "155",
+        "_id": "155",
         "name": "Lúppê thẳng",
         "spec": "Ø34",
         "unit": "Cái",
@@ -1397,7 +1397,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "Liên hệ"
     },
     {
-        "stt": "156",
+        "_id": "156",
         "name": "Lúppê thẳng",
         "spec": "Ø42",
         "unit": "Cái",
@@ -1406,7 +1406,7 @@ export const phuKienOngNuocDataHoaLoaiMongData: Product[] = [
         "priceSell": "Liên hệ"
     },
     {
-        "stt": "157",
+        "_id": "157",
         "name": "Lúppê thẳng",
         "spec": "Ø60",
         "unit": "Cái",

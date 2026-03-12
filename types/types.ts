@@ -1,25 +1,46 @@
+export type VisibleField =
+  | '_id'
+  | 'name'
+  | 'spec'
+  | 'unit'
+  | 'priceTax'
+  | 'priceDiscount'
+  | 'priceSell';
+
+export type FilterField =
+  | '_id'
+  | 'name'
+  | 'spec';
+
+  export type CloudinaryImage = {
+    public_id: string;
+    url: string;
+    secure_url?: string;
+    width?: number;
+    height?: number;
+    format?: string;
+  };
+
+export type Category = {
+  _id: string,
+  slug: string;
+  title: string;
+  shortTitle: string;
+  image?: CloudinaryImage;
+  data?: Product[];
+  filterField?: FilterField | null;
+  visibleFields?: VisibleField[];
+  layout: "table" | "gallery";
+}
+
 export type Product = {
-  stt?: string;
+  _id: string,
   name: string;
   spec?: string;
   unit?: string;
   priceTax?: string;
   priceDiscount?: string;
   priceSell: string;
-  src?: string;
+  image?: CloudinaryImage;
   alt?: string;
 };
-
-export const CATEGORY_SLUGS = [
-  'phu-kien-ong-nuoc-dat-hoa-loai-day',
-  'phu-kien-ong-nuoc-dat-hoa-loai-mong',
-  'ong-nuoc-dat-hoa',
-  'ong-nuoc-van-phuoc',
-  'ong-nhua-deo',
-  'luoi',
-  'day-bo',
-  'day-dien-doi-vinh-thinh',
-  'day-dien-nhom-don-vinh-thinh'
-] as const;
-
-export type CategorySlug = (typeof CATEGORY_SLUGS)[number];

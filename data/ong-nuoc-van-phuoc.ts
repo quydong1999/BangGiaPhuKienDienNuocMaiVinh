@@ -2,7 +2,7 @@ import type { Product } from "@/types/types";
 
 export const ongNuocVanPhuocData: Product[] = [
     {
-        "stt": "1",
+        "_id": "1",
         "name": "Ống Vạn Phước",
         "spec": "Ø21",
         "unit": "Ống",
@@ -11,7 +11,7 @@ export const ongNuocVanPhuocData: Product[] = [
         "priceSell": "13.000 đ"
     },
     {
-        "stt": "2",
+        "_id": "2",
         "name": "Ống Vạn Phước",
         "spec": "Ø27",
         "unit": "Ống",
@@ -20,7 +20,7 @@ export const ongNuocVanPhuocData: Product[] = [
         "priceSell": "16.000 đ"
     },
     {
-        "stt": "3",
+        "_id": "3",
         "name": "Ống Vạn Phước",
         "spec": "Ø34",
         "unit": "Ống",
@@ -29,7 +29,7 @@ export const ongNuocVanPhuocData: Product[] = [
         "priceSell": "20.000 đ"
     },
     {
-        "stt": "4",
+        "_id": "4",
         "name": "Ống Vạn Phước",
         "spec": "Ø42",
         "unit": "Ống",
@@ -38,7 +38,7 @@ export const ongNuocVanPhuocData: Product[] = [
         "priceSell": "28.000 đ"
     },
     {
-        "stt": "5",
+        "_id": "5",
         "name": "Ống Vạn Phước",
         "spec": "Ø49",
         "unit": "Ống",
@@ -47,7 +47,7 @@ export const ongNuocVanPhuocData: Product[] = [
         "priceSell": "32.000 đ"
     },
     {
-        "stt": "6",
+        "_id": "6",
         "name": "Ống Vạn Phước",
         "spec": "Ø60",
         "unit": "Ống",
@@ -56,7 +56,7 @@ export const ongNuocVanPhuocData: Product[] = [
         "priceSell": "43.000 đ"
     },
     {
-        "stt": "7",
+        "_id": "7",
         "name": "Ống Vạn Phước",
         "spec": "Ø76",
         "unit": "Ống",
@@ -65,7 +65,7 @@ export const ongNuocVanPhuocData: Product[] = [
         "priceSell": "Liên hệ"
     },
     {
-        "stt": "8",
+        "_id": "8",
         "name": "Ống Vạn Phước",
         "spec": "Ø90",
         "unit": "Ống",
@@ -74,7 +74,7 @@ export const ongNuocVanPhuocData: Product[] = [
         "priceSell": "60.000 đ"
     },
     {
-        "stt": "9",
+        "_id": "9",
         "name": "Ống Vạn Phước",
         "spec": "Ø114",
         "unit": "Ống",
@@ -83,7 +83,7 @@ export const ongNuocVanPhuocData: Product[] = [
         "priceSell": "90.000 đ"
     },
     {
-        "stt": "10",
+        "_id": "10",
         "name": "Ống Vạn Phước",
         "spec": "Ø140",
         "unit": "Ống",
@@ -92,7 +92,7 @@ export const ongNuocVanPhuocData: Product[] = [
         "priceSell": "110.000 đ"
     },
     {
-        "stt": "10",
+        "_id": "10",
         "name": "Ống Vạn Phước",
         "spec": "Ø168",
         "unit": "Ống",

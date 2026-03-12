@@ -2,7 +2,7 @@ import type { Product } from "@/types/types";
 
 export const ongNuocDatHoaData: Product[] = [
     {
-        "stt": "1",
+        "_id": "1",
         "name": "Ống Đạt Hòa",
         "spec": "Ø21 x 3,00",
         "unit": "Ống",
@@ -11,7 +11,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "50.000 đ"
     },
     {
-        "stt": "2",
+        "_id": "2",
         "name": "Ống Đạt Hòa",
         "spec": "Ø21 x 1,70",
         "unit": "Ống",
@@ -20,7 +20,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "33.000 đ"
     },
     {
-        "stt": "3",
+        "_id": "3",
         "name": "Ống Đạt Hòa",
         "spec": "Ø21 x 1,40",
         "unit": "Ống",
@@ -29,7 +29,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "28.000 đ"
     },
     {
-        "stt": "4",
+        "_id": "4",
         "name": "Ống Đạt Hòa",
         "spec": "Ø27 x 3,00",
         "unit": "Ống",
@@ -38,7 +38,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "65.000 đ"
     },
     {
-        "stt": "5",
+        "_id": "5",
         "name": "Ống Đạt Hòa",
         "spec": "Ø27 x 1,80",
         "unit": "Ống",
@@ -47,7 +47,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "44.000 đ"
     },
     {
-        "stt": "6",
+        "_id": "6",
         "name": "Ống Đạt Hòa",
         "spec": "Ø34 x 3,00",
         "unit": "Ống",
@@ -56,7 +56,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "84.000 đ"
     },
     {
-        "stt": "7",
+        "_id": "7",
         "name": "Ống Đạt Hòa",
         "spec": "Ø34 x 1,90",
         "unit": "Ống",
@@ -65,7 +65,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "58.000 đ"
     },
     {
-        "stt": "8",
+        "_id": "8",
         "name": "Ống Đạt Hòa",
         "spec": "Ø42 x 3,00",
         "unit": "Ống",
@@ -74,7 +74,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "110.000 đ"
     },
     {
-        "stt": "9",
+        "_id": "9",
         "name": "Ống Đạt Hòa",
         "spec": "Ø42 x 2,10",
         "unit": "Ống",
@@ -83,7 +83,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "80.000 đ"
     },
     {
-        "stt": "10",
+        "_id": "10",
         "name": "Ống Đạt Hòa",
         "spec": "Ø42 x 1,70",
         "unit": "Ống",
@@ -92,7 +92,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "65.000 đ"
     },
     {
-        "stt": "11",
+        "_id": "11",
         "name": "Ống Đạt Hòa",
         "spec": "Ø49 x 2,80",
         "unit": "Ống",
@@ -101,7 +101,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "120.000 đ"
     },
     {
-        "stt": "12",
+        "_id": "12",
         "name": "Ống Đạt Hòa",
         "spec": "Ø49 x 2,40",
         "unit": "Ống",
@@ -110,7 +110,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "105.000 đ"
     },
     {
-        "stt": "13",
+        "_id": "13",
         "name": "Ống Đạt Hòa",
         "spec": "Ø49 x 1,90",
         "unit": "Ống",
@@ -119,7 +119,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "88.000 đ"
     },
     {
-        "stt": "14",
+        "_id": "14",
         "name": "Ống Đạt Hòa",
         "spec": "Ø60 x 3,00",
         "unit": "Ống",
@@ -128,7 +128,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "160.000 đ"
     },
     {
-        "stt": "15",
+        "_id": "15",
         "name": "Ống Đạt Hòa",
         "spec": "Ø60 x 2,30",
         "unit": "Ống",
@@ -137,7 +137,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "120.000 đ"
     },
     {
-        "stt": "16",
+        "_id": "16",
         "name": "Ống Đạt Hòa",
         "spec": "Ø60 x 1,90",
         "unit": "Ống",
@@ -146,7 +146,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "110.000 đ"
     },
     {
-        "stt": "17",
+        "_id": "17",
         "name": "Ống Đạt Hòa",
         "spec": "Ø76 x 3,00",
         "unit": "Ống",
@@ -155,7 +155,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "210.000 đ"
     },
     {
-        "stt": "18",
+        "_id": "18",
         "name": "Ống Đạt Hòa",
         "spec": "Ø76 x 2,50",
         "unit": "Ống",
@@ -164,7 +164,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "180.000 đ"
     },
     {
-        "stt": "19",
+        "_id": "19",
         "name": "Ống Đạt Hòa",
         "spec": "Ø76 x 1,80",
         "unit": "Ống",
@@ -173,7 +173,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "130.000 đ"
     },
     {
-        "stt": "20",
+        "_id": "20",
         "name": "Ống Đạt Hòa",
         "spec": "Ø90 x 3,00",
         "unit": "Ống",
@@ -182,7 +182,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "245.000 đ"
     },
     {
-        "stt": "21",
+        "_id": "21",
         "name": "Ống Đạt Hòa",
         "spec": "Ø90 x 2,60",
         "unit": "Ống",
@@ -191,7 +191,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "221.000 đ"
     },
     {
-        "stt": "22",
+        "_id": "22",
         "name": "Ống Đạt Hòa",
         "spec": "Ø90 x 2,10",
         "unit": "Ống",
@@ -200,7 +200,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "170.000 đ"
     },
     {
-        "stt": "23",
+        "_id": "23",
         "name": "Ống Đạt Hòa",
         "spec": "Ø90 x 1,65",
         "unit": "Ống",
@@ -209,7 +209,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "135.000 đ"
     },
     {
-        "stt": "24",
+        "_id": "24",
         "name": "Ống Đạt Hòa",
         "spec": "Ø114 x 2,90",
         "unit": "Ống",
@@ -218,7 +218,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "300.000 đ"
     },
     {
-        "stt": "25",
+        "_id": "25",
         "name": "Ống Đạt Hòa",
         "spec": "Ø114 x 2,40",
         "unit": "Ống",
@@ -227,7 +227,7 @@ export const ongNuocDatHoaData: Product[] = [
         "priceSell": "250.000 đ"
     },
     {
-        "stt": "26",
+        "_id": "26",
         "name": "Ống Đạt Hòa",
         "spec": "Ø168 x 3,50",
         "unit": "Ống",

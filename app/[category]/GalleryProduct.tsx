@@ -19,14 +19,14 @@ export default function GalleryProduct({ data }: GalleryProductProps) {
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         {data.map((item) => (
           <button
-            key={item.stt}
+            key={item._id}
             type="button"
             onClick={() => setSelected(item)}
             className={`group relative flex flex-col bg-white shadow-sm hover:shadow-md hover:-translate-y-1 transition-all overflow-hidden`}
           >
             <div className="relative w-full aspect-[4/3] bg-slate-100">
               <Image
-                src={item.src ?? imgNotFoundUrl}
+                src={item.image?.secure_url ?? imgNotFoundUrl}
                 alt={item.alt ?? ""}
                 fill
                 sizes="(min-width: 768px) 200px, 50vw"
@@ -69,7 +69,7 @@ export default function GalleryProduct({ data }: GalleryProductProps) {
           >
             <div className="relative w-full h-1/2 min-h-[220px] bg-black">
               <Image
-                src={selected.src ?? imgNotFoundUrl}
+                src={selected.image?.secure_url ?? imgNotFoundUrl}
                 alt={selected.alt ?? ""}
                 fill
                 sizes="(min-width: 768px) 480px, 100vw"

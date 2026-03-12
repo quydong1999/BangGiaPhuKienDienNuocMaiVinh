@@ -1,20 +1,11 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import type { Product } from '@/types/types';
-
-type VisibleField =
-  | 'stt'
-  | 'name'
-  | 'spec'
-  | 'unit'
-  | 'priceTax'
-  | 'priceDiscount'
-  | 'priceSell';
+import type { Product, FilterField, VisibleField } from '@/types/types';
 
 interface ProductListProps {
   data: Product[];
-  filterField: 'name' | 'spec' | null;
+  filterField: FilterField | null;
   visibleFields: readonly VisibleField[];
 }
 
@@ -27,7 +18,6 @@ export default function ProductList({ data, filterField, visibleFields }: Produc
       return ['Tất cả'];
     }
     const _data = new Set(data.map(item => item[filterField]));
-    const uniqueData = Array.from(new Set(data.map(item => item[filterField]).filter(Boolean)));
     return ['Tất cả', ...Array.from(_data)];
   }, [data, filterField]);
 
@@ -38,7 +28,7 @@ export default function ProductList({ data, filterField, visibleFields }: Produc
   }, [data, selectedField, filterField]);
 
   const fieldLabels: Record<VisibleField, string> = {
-    stt: 'Số thứ tự',
+    _id: 'Mã số',
     name: 'Tên',
     spec: 'Quy cách',
     unit: 'Đơn vị',
@@ -106,11 +96,11 @@ export default function ProductList({ data, filterField, visibleFields }: Produc
             <tbody className="divide-y divide-slate-200">
               {filteredData.map((item, index) => (
                 <tr
-                  key={`${item.stt}-${index}`}
+                  key={`${item._id}-${index}`}
                   className="hover:bg-slate-50 transition-colors"
                 >
                   {visibleFields.map((field) => {
-                    const value = item[field as keyof Product];
+                    const value = item[field as VisibleField];
 
                     if (field === 'spec') {
                       return (
@@ -135,7 +125,7 @@ export default function ProductList({ data, filterField, visibleFields }: Produc
                         className={
                           isPriceField
                             ? 'px-4 py-3 text-right font-bold text-slate-900'
-                            : field === 'stt'
+                            : field === '_id'
                               ? 'px-4 py-3 text-slate-900'
                               : 'px-4 py-3 font-medium text-slate-900'
                         }
