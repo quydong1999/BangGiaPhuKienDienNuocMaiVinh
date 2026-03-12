@@ -1,19 +1,23 @@
 "use client";
 
+import { useState } from 'react';
 import { notFound } from 'next/navigation';
-import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
+import { ChevronLeft, Plus } from 'lucide-react';
 import ProductList from './ProductList';
 import GalleryProduct from './GalleryProduct';
+import { ProductFormModal } from '@/components/ProductFormModal';
 import { useCategory } from '@/hooks/useCategories';
+import { useProducts } from '@/hooks/useProducts';
 import { useParams } from 'next/navigation';
 import { FilterField, Product, VisibleField } from '@/types/types';
-import { categoryData as localCategoryData } from '@/data/categories';
 
 export default function TypePage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const params = useParams();
   const categorySlug = params.category as string;
   const { data: categoryData, isLoading, error } = useCategory(categorySlug);
+  const { data: productsData, isLoading: isProductsLoading } = useProducts(categoryData?._id);
 
   if (isLoading) {
     return (
@@ -28,8 +32,18 @@ export default function TypePage() {
     notFound();
   }
 
+
+  if (isProductsLoading) {
+    return (
+      <main className="min-h-screen bg-slate-50 flex flex-col items-center justify-center">
+        <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+        <p className="mt-4 text-slate-500">Đang tải sản phẩm...</p>
+      </main>
+    );
+  }
+
   const { title, filterField = null, visibleFields = [], layout } = categoryData;
-  const data: Product[] = localCategoryData.find(item => item.slug === categorySlug)?.data || [];
+  const data = (productsData || []) as any as Product[];
 
   return (
     <main className="min-h-screen bg-slate-50 flex flex-col">
@@ -60,6 +74,22 @@ export default function TypePage() {
           <GalleryProduct data={data as Product[]} />
         )}
       </div>
+
+      {/* Floating Action Button */}
+      <button
+        onClick={() => setIsModalOpen(true)}
+        className="fixed bottom-6 right-6 p-4 bg-emerald-600 text-white rounded-full shadow-lg hover:bg-emerald-700 hover:shadow-xl hover:-translate-y-1 transition-all z-40 active:scale-95 flex items-center justify-center"
+        aria-label="Thêm sản phẩm mới"
+      >
+        <Plus size={28} />
+      </button>
+
+      {/* Product Creation Modal */}
+      <ProductFormModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)}
+        categoryId={categoryData._id}
+      />
     </main>
   );
 }

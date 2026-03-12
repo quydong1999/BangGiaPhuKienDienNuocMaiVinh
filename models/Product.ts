@@ -4,8 +4,6 @@ const ProductSchema = new Schema({
   name: { type: String, required: true },
   spec: String,
   unit: String,
-  priceTax: String,
-  priceDiscount: String,
   priceSell: { type: String, required: true },
   image: {
     public_id: String,

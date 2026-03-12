@@ -27,7 +27,7 @@ export default function GalleryProduct({ data }: GalleryProductProps) {
             <div className="relative w-full aspect-[4/3] bg-slate-100">
               <Image
                 src={item.image?.secure_url ?? imgNotFoundUrl}
-                alt={item.alt ?? ""}
+                alt={""}
                 fill
                 sizes="(min-width: 768px) 200px, 50vw"
                 className="object-cover group-hover:scale-105 transition-transform"
@@ -37,7 +37,7 @@ export default function GalleryProduct({ data }: GalleryProductProps) {
               <div className="text-sm font-semibold text-slate-900 line-clamp-2">
                 {item.name}
               </div>
-              {item.spec !== '-' && (
+              {item.spec && item.spec !== '-' && (
                 <div className="mt-1">
                   <span
                     className={`inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium bg-emerald-100 text-emerald-800`}
@@ -47,7 +47,7 @@ export default function GalleryProduct({ data }: GalleryProductProps) {
                 </div>
               )}
               <div className="mt-1 flex items-baseline justify-between">
-                <span className="text-xs text-slate-500">{item.unit}</span>
+                <span className="text-xs text-slate-500">Đơn vị: {item.unit}</span>
                 <span className="text-sm font-bold text-slate-900">
                   {item.priceSell}
                 </span>
@@ -70,7 +70,7 @@ export default function GalleryProduct({ data }: GalleryProductProps) {
             <div className="relative w-full h-1/2 min-h-[220px] bg-black">
               <Image
                 src={selected.image?.secure_url ?? imgNotFoundUrl}
-                alt={selected.alt ?? ""}
+                alt={""}
                 fill
                 sizes="(min-width: 768px) 480px, 100vw"
                 className="object-cover"
@@ -86,7 +86,7 @@ export default function GalleryProduct({ data }: GalleryProductProps) {
                 </span>
               </div>
               <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600">
-                {selected.spec !== '-' && (
+                {selected.spec && selected.spec !== '-' && (
                   <span
                     className={`inline-flex items-center px-2 py-0.5 rounded-md font-medium bg-emerald-100 text-emerald-800`}
                   >
@@ -95,7 +95,6 @@ export default function GalleryProduct({ data }: GalleryProductProps) {
                 )}
                 <span>Đơn vị: {selected.unit}</span>
               </div>
-              <p className="text-xs text-slate-500">{selected.alt}</p>
             </div>
             <button
               type="button"

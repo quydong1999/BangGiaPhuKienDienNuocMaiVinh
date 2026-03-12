@@ -28,12 +28,9 @@ export default function ProductList({ data, filterField, visibleFields }: Produc
   }, [data, selectedField, filterField]);
 
   const fieldLabels: Record<VisibleField, string> = {
-    _id: 'Mã số',
     name: 'Tên',
     spec: 'Quy cách',
     unit: 'Đơn vị',
-    priceTax: 'Giá sau thuế',
-    priceDiscount: 'Giá CK',
     priceSell: 'Giá bán',
   };
 
@@ -81,9 +78,7 @@ export default function ProductList({ data, filterField, visibleFields }: Produc
                   <th
                     key={field}
                     className={
-                      field === 'priceTax' ||
-                        field === 'priceDiscount' ||
-                        field === 'priceSell'
+                      field === 'priceSell'
                         ? 'px-4 py-3 text-right'
                         : 'px-4 py-3'
                     }
@@ -114,20 +109,13 @@ export default function ProductList({ data, filterField, visibleFields }: Produc
                       );
                     }
 
-                    const isPriceField =
-                      field === 'priceTax' ||
-                      field === 'priceDiscount' ||
-                      field === 'priceSell';
 
                     return (
                       <td
                         key={field}
                         className={
-                          isPriceField
-                            ? 'px-4 py-3 text-right font-bold text-slate-900'
-                            : field === '_id'
-                              ? 'px-4 py-3 text-slate-900'
-                              : 'px-4 py-3 font-medium text-slate-900'
+                          field === 'priceSell' ?
+                            'px-4 py-3 text-right font-bold text-slate-900' : 'px-4 py-3 font-medium text-slate-900'
                         }
                       >
                         {value}
