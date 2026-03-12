@@ -6,6 +6,7 @@ import { X, Upload, Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import imageCompression from "browser-image-compression";
 
 // Zod Schema Definition
 const productSchema = z.object({
@@ -31,6 +32,7 @@ interface ProductFormModalProps {
 export function ProductFormModal({ isOpen, onClose, categoryId }: ProductFormModalProps) {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isCompressing, setIsCompressing] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const {
@@ -186,9 +188,30 @@ export function ProductFormModal({ isOpen, onClose, categoryId }: ProductFormMod
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => {
+                onChange={async (e) => {
                   if (e.target.files && e.target.files.length > 0) {
-                    setSelectedFile(e.target.files[0]);
+                    const imageFile = e.target.files[0];
+                    
+                    // Nén ảnh nếu file lớn hơn 1MB
+                    if (imageFile.size > 1024 * 1024) {
+                      setIsCompressing(true);
+                      try {
+                        const options = {
+                          maxSizeMB: 1,
+                          maxWidthOrHeight: 1920,
+                          useWebWorker: true
+                        };
+                        const compressedFile = await imageCompression(imageFile, options);
+                        setSelectedFile(compressedFile);
+                      } catch (error) {
+                        console.error("Compression error:", error);
+                        setSelectedFile(imageFile);
+                      } finally {
+                        setIsCompressing(false);
+                      }
+                    } else {
+                      setSelectedFile(imageFile);
+                    }
                   } else {
                     setSelectedFile(null);
                   }
@@ -224,10 +247,10 @@ export function ProductFormModal({ isOpen, onClose, categoryId }: ProductFormMod
             </button>
             <button
               type="submit"
-              disabled={mutation.isPending}
+              disabled={mutation.isPending || isCompressing}
               className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              {mutation.isPending ? (
+              {mutation.isPending || isCompressing ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white animate-spin" />
               ) : (
                 <>
