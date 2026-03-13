@@ -1,17 +1,33 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import Product from '@/models/Product';
-import mongoose from 'mongoose'; // Cần để convert string sang ObjectId nếu cần
+import mongoose from 'mongoose';
+import { redis, CACHE_KEYS, DEFAULT_TTL } from '@/lib/redis';
 
 export async function GET(req: Request) {
     try {
-        await connectDB();
         const { searchParams } = new URL(req.url);
         const query = searchParams.get('q');
 
         if (!query || query.length < 2) {
             return NextResponse.json({ success: true, data: [] });
         }
+
+        // 1. Thử lấy từ Redis
+        console.log(`--- Đang kiểm tra cache Redis cho Search: ${query}... ---`);
+        const cachedResults = await redis.get(CACHE_KEYS.SEARCH_QUERY(query));
+
+        if (cachedResults) {
+            console.log(`--- Cache Hit! Trả về dữ liệu từ Redis cho query: ${query}. ---`);
+            return NextResponse.json({
+                success: true,
+                data: cachedResults,
+                source: 'cache'
+            }, { status: 200 });
+        }
+
+        console.log(`--- Cache Miss! Đang thực hiện tìm kiếm MongoDB cho query: ${query}... ---`);
+        await connectDB();
 
         const results = await Product.aggregate([
             // Bước 1: Tìm kiếm bằng Atlas Search
@@ -79,9 +95,14 @@ export async function GET(req: Request) {
             }
         ]);
 
+        // 2. Lưu vào Redis (TTL ngắn hơn cho tìm kiếm?)
+        console.log(`--- Đang lưu kết quả Search cho query: ${query} vào Redis... ---`);
+        await redis.set(CACHE_KEYS.SEARCH_QUERY(query), results, { ex: 1800 }); // 30 phút
+
         return NextResponse.json({
             success: true,
-            data: results
+            data: results,
+            source: 'database'
         });
 
     } catch (error: any) {

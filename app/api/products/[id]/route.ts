@@ -4,6 +4,7 @@ import { connectDB } from '@/lib/mongodb';
 import Product from '@/models/Product';
 import Category from '@/models/Category';
 import { uploadImage, deleteImage } from '@/lib/cloudinary';
+import { redis, CACHE_KEYS } from '@/lib/redis';
 
 export async function PATCH(
     req: Request,
@@ -67,6 +68,16 @@ export async function PATCH(
 
         const updatedProduct = await Product.findByIdAndUpdate(id, updateData, { new: true });
 
+        // 6. Xóa cache Redis
+        console.log(`--- Đang xóa cache Redis cho Products của category: ${categoryId}... ---`);
+        await redis.del(CACHE_KEYS.PRODUCTS_BY_CATEGORY(categoryId));
+        await redis.del(CACHE_KEYS.PRODUCTS_ALL);
+        
+        if (existingProduct.categoryId.toString() !== categoryId) {
+            console.log(`--- Đang xóa cache Redis cho Products của category cũ: ${existingProduct.categoryId}... ---`);
+            await redis.del(CACHE_KEYS.PRODUCTS_BY_CATEGORY(existingProduct.categoryId.toString()));
+        }
+
         // Revalidate
         try {
             const category = await Category.findById(categoryId);
@@ -126,6 +137,12 @@ export async function DELETE(
         }
 
         await Product.findByIdAndDelete(id);
+
+        // 6. Xóa cache Redis
+        const categoryId = productToDelete.categoryId.toString();
+        console.log(`--- Đang xóa cache Redis cho Products của category: ${categoryId}... ---`);
+        await redis.del(CACHE_KEYS.PRODUCTS_BY_CATEGORY(categoryId));
+        await redis.del(CACHE_KEYS.PRODUCTS_ALL);
 
         // Revalidate
         try {
