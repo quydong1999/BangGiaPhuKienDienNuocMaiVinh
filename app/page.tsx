@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { connectDB } from '@/lib/mongodb';
 import Category from '@/models/Category';
 import { AddCategoryButton } from '@/components/AddCategoryButton';
+import { PendingCategorySkeleton } from '@/components/PendingSkeletons';
 
 import { unstable_cache } from 'next/cache';
 
@@ -58,6 +59,7 @@ async function CategoryGrid() {
           </Link>
         );
       })}
+      <PendingCategorySkeleton />
     </div>
   );
 }

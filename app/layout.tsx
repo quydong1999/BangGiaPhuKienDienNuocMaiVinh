@@ -1,6 +1,7 @@
 import type {Metadata, Viewport} from 'next';
 import './globals.css';
 import QueryProvider from '@/components/providers/query-provider';
+import { SkeletonProvider } from '@/components/providers/skeleton-provider';
 
 export const metadata: Metadata = {
   title: 'Báo giá Phụ kiện Mai Vinh',
@@ -26,7 +27,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
     <html lang="vi">
       <body className="bg-slate-50 text-slate-900 antialiased" suppressHydrationWarning>
         <QueryProvider>
-          {children}
+          <SkeletonProvider>
+            {children}
+          </SkeletonProvider>
         </QueryProvider>
       </body>
     </html>

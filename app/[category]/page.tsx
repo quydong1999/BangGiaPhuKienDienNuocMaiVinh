@@ -55,11 +55,12 @@ async function ProductContent({ categoryId, categorySlug, layout, filterField, v
         data={products}
         filterField={filterField as FilterField}
         visibleFields={visibleFields as VisibleField[]}
+        categoryId={categoryId}
       />
     );
   }
 
-  return <GalleryProduct data={products} />;
+  return <GalleryProduct data={products} categoryId={categoryId} />;
 }
 
 function ProductSkeleton({ layout }: { layout: string }) {

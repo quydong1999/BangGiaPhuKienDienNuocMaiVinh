@@ -3,14 +3,16 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import type { Product } from '@/types/types';
+import { PendingProductSkeleton } from '@/components/PendingSkeletons';
 
 interface GalleryProductProps {
   data: Product[];
+  categoryId: string;
 }
 
 const imgNotFoundUrl = "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?_=20210521171500";
 
-export default function GalleryProduct({ data }: GalleryProductProps) {
+export default function GalleryProduct({ data, categoryId }: GalleryProductProps) {
   const [selected, setSelected] = useState<Product | null>(null);
 
   return (
@@ -55,6 +57,7 @@ export default function GalleryProduct({ data }: GalleryProductProps) {
             </div>
           </button>
         ))}
+        <PendingProductSkeleton categoryId={categoryId} layout="gallery" />
       </div>
 
       {/* Modal preview */}

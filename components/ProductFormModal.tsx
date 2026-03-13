@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useCreateProduct } from "@/hooks/useProducts";
+import { useSkeleton } from "@/components/providers/skeleton-provider";
 import { X, Upload, Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,6 +33,7 @@ interface ProductFormModalProps {
 
 export function ProductFormModal({ isOpen, onClose, categoryId }: ProductFormModalProps) {
   const router = useRouter();
+  const { setPendingProductCategoryId, startRefresh } = useSkeleton();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isCompressing, setIsCompressing] = useState(false);
@@ -98,14 +100,24 @@ export function ProductFormModal({ isOpen, onClose, categoryId }: ProductFormMod
 
     mutation.mutate(formData, {
       onSuccess: () => {
-        router.refresh();
-        onClose();
+        setPendingProductCategoryId(categoryId);
+        startRefresh(() => {
+          router.refresh();
+          onClose();
+        });
       },
       onError: (err: any) => {
         setSubmitError(err.message);
       }
     });
   };
+
+  // Reset pending state when modal closed
+  useEffect(() => {
+    if (!isOpen) {
+      setPendingProductCategoryId(null);
+    }
+  }, [isOpen, setPendingProductCategoryId]);
 
   if (!isOpen) return null;
 

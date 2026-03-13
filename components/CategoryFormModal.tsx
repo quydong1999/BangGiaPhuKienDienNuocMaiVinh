@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useCreateCategory } from "@/hooks/useCategories";
+import { useSkeleton } from "@/components/providers/skeleton-provider";
 import { X, Upload, Plus } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -41,6 +42,7 @@ const generateSlug = (text: string) => {
 
 export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
   const router = useRouter();
+  const { setIsAddingCategory, startRefresh } = useSkeleton();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [shortTitleEdited, setShortTitleEdited] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -137,14 +139,28 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
 
     mutation.mutate(formData, {
       onSuccess: () => {
-        router.refresh();
-        onClose();
+        setIsAddingCategory(true);
+        startRefresh(() => {
+          router.refresh();
+          onClose();
+          // We don't set setIsAddingCategory(false) immediately. 
+          // It will be reset when the refresh finishes (via useEffect or by being a fresh server update)
+        });
       },
       onError: (err: any) => {
         setSubmitError(err.message);
       }
     });
   };
+
+  // Reset isAddingCategory when the modal is fully closed and refresh might be done 
+  // or use a better way to sync. Actually if we use router.refresh in startRefresh, 
+  // the 'isRefreshing' state in provider will be true until it finishes.
+  useEffect(() => {
+    if (!isOpen) {
+      setIsAddingCategory(false);
+    }
+  }, [isOpen, setIsAddingCategory]);
 
   const handleVisibleFieldChange = (field: string, isChecked: boolean) => {
     const currentFields = watchVisibleFields || [];

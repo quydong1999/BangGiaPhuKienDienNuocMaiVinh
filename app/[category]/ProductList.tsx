@@ -2,14 +2,16 @@
 
 import { useState, useMemo } from 'react';
 import type { Product, FilterField, VisibleField } from '@/types/types';
+import { PendingProductSkeleton } from '@/components/PendingSkeletons';
 
 interface ProductListProps {
   data: Product[];
   filterField: FilterField | null;
   visibleFields: readonly VisibleField[];
+  categoryId: string;
 }
 
-export default function ProductList({ data, filterField, visibleFields }: ProductListProps) {
+export default function ProductList({ data, filterField, visibleFields, categoryId }: ProductListProps) {
   const [selectedField, setSelectedField] = useState<string>('Tất cả');
 
   // Extract unique product names
@@ -124,6 +126,11 @@ export default function ProductList({ data, filterField, visibleFields }: Produc
                   })}
                 </tr>
               ))}
+              <PendingProductSkeleton 
+                categoryId={categoryId} 
+                layout="table" 
+                visibleFieldsCount={visibleFields.length} 
+              />
             </tbody>
           </table>
         </div>
