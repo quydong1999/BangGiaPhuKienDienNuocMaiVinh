@@ -9,8 +9,8 @@ export type FilterField =
   | 'spec';
 
 export type CloudinaryImage = {
-  public_id: string;
-  url: string;
+  public_id?: string;
+  url?: string;
   secure_url?: string;
   width?: number;
   height?: number;

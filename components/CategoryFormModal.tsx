@@ -184,7 +184,8 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
           <button
             onClick={onClose}
             type="button"
-            className="p-1 hover:bg-slate-100 text-slate-500 transition-colors"
+            disabled={mutation.isPending || isCompressing}
+            className="p-1 hover:bg-slate-100 text-slate-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <X size={20} />
           </button>
@@ -202,7 +203,8 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
             <input
               {...register("title")}
               type="text"
-              className="w-full p-2.5 border border-gray-400 focus:ring-2 focus:ring-emerald-500 outline-none transition-shadow"
+              disabled={mutation.isPending || isCompressing}
+              className="w-full p-2.5 border border-gray-400 focus:ring-2 focus:ring-emerald-500 outline-none transition-shadow disabled:bg-slate-100 disabled:text-slate-500"
               placeholder="VD: Phụ kiện ống nước uPVC"
             />
             {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title.message}</p>}
@@ -224,12 +226,13 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
             <label className="text-sm font-medium text-slate-700">Tên rút gọn (Hiển thị lưới) <span className="text-red-500">*</span></label>
             <input
               {...register("shortTitle")}
+              disabled={mutation.isPending || isCompressing}
               onChange={(e) => {
                 setShortTitleEdited(true);
                 setValue("shortTitle", e.target.value, { shouldValidate: true });
               }}
               type="text"
-              className="w-full p-2.5 border border-gray-400 focus:ring-2 focus:ring-emerald-500 outline-none transition-shadow"
+              className="w-full p-2.5 border border-gray-400 focus:ring-2 focus:ring-emerald-500 outline-none transition-shadow disabled:bg-slate-100 disabled:text-slate-500"
               placeholder="VD: uPVC Đạt Hoà"
             />
             {errors.shortTitle && <p className="text-red-500 text-xs mt-1">{errors.shortTitle.message}</p>}
@@ -252,6 +255,7 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
               <input
                 type="file"
                 accept="image/*"
+                disabled={mutation.isPending || isCompressing}
                 onChange={async (e) => {
                   if (e.target.files && e.target.files.length > 0) {
                     const imageFile = e.target.files[0];
@@ -289,11 +293,12 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
                 <span className="text-xs text-slate-500 truncate max-w-[200px]">{selectedFile.name}</span>
                 <button
                   type="button"
+                  disabled={mutation.isPending || isCompressing}
                   onClick={(e) => {
                     e.preventDefault();
                     setSelectedFile(null);
                   }}
-                  className="text-xs text-red-500 hover:text-red-700 font-medium"
+                  className="text-xs text-red-500 hover:text-red-700 font-medium disabled:opacity-50"
                 >
                   Xóa ảnh
                 </button>
@@ -308,8 +313,9 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
                 <input
                   type="radio"
                   {...register("layout")}
+                  disabled={mutation.isPending || isCompressing}
                   value="table"
-                  className="w-4 h-4 text-emerald-600 focus:ring-emerald-500"
+                  className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 disabled:opacity-50"
                 />
                 <span className="text-sm text-slate-700">Bảng dữ liệu</span>
               </label>
@@ -317,8 +323,9 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
                 <input
                   type="radio"
                   {...register("layout")}
+                  disabled={mutation.isPending || isCompressing}
                   value="gallery"
-                  className="w-4 h-4 text-emerald-600 focus:ring-emerald-500"
+                  className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 disabled:opacity-50"
                 />
                 <span className="text-sm text-slate-700">Thư viện ảnh</span>
               </label>
@@ -335,8 +342,9 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
                     <input
                       type="radio"
                       {...register("filterField")}
+                      disabled={mutation.isPending || isCompressing}
                       value="null"
-                      className="w-4 h-4 text-emerald-600 focus:ring-emerald-500"
+                      className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 disabled:opacity-50"
                     />
                     <span className="text-sm text-slate-700">Không lọc</span>
                   </label>
@@ -344,8 +352,9 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
                     <input
                       type="radio"
                       {...register("filterField")}
+                      disabled={mutation.isPending || isCompressing}
                       value="name"
-                      className="w-4 h-4 text-emerald-600 focus:ring-emerald-500"
+                      className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 disabled:opacity-50"
                     />
                     <span className="text-sm text-slate-700">Tên sản phẩm</span>
                   </label>
@@ -353,8 +362,9 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
                     <input
                       type="radio"
                       {...register("filterField")}
+                      disabled={mutation.isPending || isCompressing}
                       value="spec"
-                      className="w-4 h-4 text-emerald-600 focus:ring-emerald-500"
+                      className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 disabled:opacity-50"
                     />
                     <span className="text-sm text-slate-700">Quy cách</span>
                   </label>
@@ -378,8 +388,9 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
                     <input
                       type="checkbox"
                       checked={isSpecVisible}
+                      disabled={mutation.isPending || isCompressing}
                       onChange={(e) => handleVisibleFieldChange("spec", e.target.checked)}
-                      className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-500"
+                      className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-500 disabled:opacity-50"
                     />
                     <span className="text-sm text-slate-700">Quy cách</span>
                   </label>
@@ -387,8 +398,9 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
                     <input
                       type="checkbox"
                       checked={isUnitVisible}
+                      disabled={mutation.isPending || isCompressing}
                       onChange={(e) => handleVisibleFieldChange("unit", e.target.checked)}
-                      className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-500"
+                      className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-500 disabled:opacity-50"
                     />
                     <span className="text-sm text-slate-700">Đơn vị</span>
                   </label>
@@ -411,7 +423,8 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2.5 border text-slate-700 font-medium hover:bg-slate-50 transition-colors"
+              disabled={mutation.isPending || isCompressing}
+              className="flex-1 px-4 py-2.5 border text-slate-700 font-medium hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Hủy
             </button>

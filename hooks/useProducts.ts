@@ -1,21 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-
-// Định nghĩa kiểu dữ liệu cho Product dựa trên Mongoose Model của bạn
-export interface Product {
-    _id: string;
-    name: string;
-    spec?: string;
-    unit?: string;
-    image?: {
-        public_id?: string;
-        url?: string;
-        secure_url?: string;
-    };
-    priceSell: string,
-    categoryId: string;
-    createdAt?: string;
-    updatedAt?: string;
-}
+import { Product } from "@/types/types";
 
 export interface ProductsResponse {
     success: boolean;

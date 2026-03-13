@@ -40,7 +40,7 @@ export async function GET(req: Request) {
                 }
             },
             // Bước 2: Giới hạn kết quả trước khi Join để tối ưu hiệu năng
-            { $limit: 15 },
+            { $limit: 30 },
 
             // Bước 3: Join với collection categories
             {

@@ -1,5 +1,6 @@
 "use client";
 
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useCreateProduct, useUpdateProduct, useDeleteProduct } from "@/hooks/useProducts";
@@ -46,6 +47,7 @@ export function ProductFormModal({
   initialData,
   showImageField = true
 }: ProductFormModalProps) {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const { setPendingProductCategoryId, startRefresh } = useSkeleton();
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -129,6 +131,7 @@ export function ProductFormModal({
     if (isEdit && initialData) {
       updateMutation.mutate({ id: initialData._id, formData }, {
         onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["products", categoryId] });
           setPendingProductCategoryId(categoryId);
           startRefresh(() => {
             router.refresh();
@@ -142,6 +145,7 @@ export function ProductFormModal({
     } else {
       createMutation.mutate(formData, {
         onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["products", categoryId] });
           setPendingProductCategoryId(categoryId);
           startRefresh(() => {
             router.refresh();
@@ -160,6 +164,7 @@ export function ProductFormModal({
     if (window.confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
       deleteMutation.mutate(initialData._id, {
         onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["products", categoryId] });
           setPendingProductCategoryId(categoryId);
           startRefresh(() => {
             router.refresh();
@@ -192,7 +197,8 @@ export function ProductFormModal({
           <button
             onClick={onClose}
             type="button"
-            className="p-1 hover:bg-slate-100 text-slate-500 transition-colors"
+            disabled={isPending || isCompressing}
+            className="p-1 hover:bg-slate-100 text-slate-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <X size={20} />
           </button>
@@ -210,7 +216,8 @@ export function ProductFormModal({
             <input
               {...register("name")}
               type="text"
-              className="w-full p-2.5 border border-gray-400 focus:ring-2 focus:ring-emerald-500 outline-none transition-shadow"
+              disabled={isPending || isCompressing}
+              className="w-full p-2.5 border border-gray-400 focus:ring-2 focus:ring-emerald-500 outline-none transition-shadow disabled:bg-slate-100 disabled:text-slate-500"
               placeholder="VD: Co 90 uPVC"
             />
             {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
@@ -221,7 +228,8 @@ export function ProductFormModal({
             <input
               {...register("spec")}
               type="text"
-              className="w-full p-2.5 border border-gray-400 focus:ring-2 focus:ring-emerald-500 outline-none transition-shadow"
+              disabled={isPending || isCompressing}
+              className="w-full p-2.5 border border-gray-400 focus:ring-2 focus:ring-emerald-500 outline-none transition-shadow disabled:bg-slate-100 disabled:text-slate-500"
               placeholder="VD: Ø21"
             />
             {errors.spec && <p className="text-red-500 text-xs mt-1">{errors.spec.message}</p>}
@@ -232,7 +240,8 @@ export function ProductFormModal({
             <input
               {...register("unit")}
               type="text"
-              className="w-full p-2.5 border border-gray-400 focus:ring-2 focus:ring-emerald-500 outline-none transition-shadow"
+              disabled={isPending || isCompressing}
+              className="w-full p-2.5 border border-gray-400 focus:ring-2 focus:ring-emerald-500 outline-none transition-shadow disabled:bg-slate-100 disabled:text-slate-500"
               placeholder="VD: Cái, Mét, Cuộn"
             />
             {errors.unit && <p className="text-red-500 text-xs mt-1">{errors.unit.message}</p>}
@@ -243,7 +252,8 @@ export function ProductFormModal({
             <input
               {...register("priceSell", { valueAsNumber: true })}
               type="number"
-              className="w-full p-2.5 border border-gray-400 focus:ring-2 focus:ring-emerald-500 outline-none transition-shadow"
+              disabled={isPending || isCompressing}
+              className="w-full p-2.5 border border-gray-400 focus:ring-2 focus:ring-emerald-500 outline-none transition-shadow disabled:bg-slate-100 disabled:text-slate-500"
               placeholder="VD: 1200000"
             />
             {errors.priceSell && <p className="text-red-500 text-xs mt-1">{errors.priceSell.message}</p>}
@@ -267,6 +277,7 @@ export function ProductFormModal({
                 <input
                   type="file"
                   accept="image/*"
+                  disabled={isPending || isCompressing}
                   onChange={async (e) => {
                     if (e.target.files && e.target.files.length > 0) {
                       const imageFile = e.target.files[0];
@@ -304,11 +315,12 @@ export function ProductFormModal({
                   <span className="text-xs text-slate-500 truncate max-w-[200px]">{selectedFile.name}</span>
                   <button
                     type="button"
+                    disabled={isPending || isCompressing}
                     onClick={(e) => {
                       e.preventDefault();
                       setSelectedFile(null);
                     }}
-                    className="text-xs text-red-500 hover:text-red-700 font-medium"
+                    className="text-xs text-red-500 hover:text-red-700 font-medium disabled:opacity-50"
                   >
                     Xóa ảnh
                   </button>
@@ -349,7 +361,8 @@ export function ProductFormModal({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="flex-1 px-4 py-2.5 border text-slate-700 font-medium hover:bg-slate-50 transition-colors"
+                  disabled={isPending || isCompressing}
+                  className="flex-1 px-4 py-2.5 border text-slate-700 font-medium hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Hủy
                 </button>

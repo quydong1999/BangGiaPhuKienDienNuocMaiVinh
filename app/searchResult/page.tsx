@@ -57,14 +57,12 @@ function SearchResults() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-medium text-slate-800">
-          Kết quả cho: <span className="font-bold text-emerald-600">"{query}"</span>
-        </h2>
-        <span className="text-sm text-slate-500">
-          Tìm thấy {results.length} sản phẩm
-        </span>
-      </div>
+      <h2 className="text-lg font-medium text-slate-800">
+        Kết quả cho: <span className="font-bold text-emerald-600">"{query}"</span>
+      </h2>
+      <span className="text-sm text-slate-500">
+        Tìm thấy {results.length} sản phẩm
+      </span>
 
       {results.length > 0 ? (
         <div className="bg-white border border-slate-200 shadow-sm overflow-hidden rounded-lg">
