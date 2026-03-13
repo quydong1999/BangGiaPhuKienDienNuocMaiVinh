@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import type { Product, FilterField, VisibleField } from '@/types/types';
 import { PendingProductSkeleton } from '@/components/PendingSkeletons';
+import { ProductFormModal } from '@/components/ProductFormModal';
 
 interface ProductListProps {
   data: Product[];
@@ -13,6 +14,24 @@ interface ProductListProps {
 
 export default function ProductList({ data, filterField, visibleFields, categoryId }: ProductListProps) {
   const [selectedField, setSelectedField] = useState<string>('Tất cả');
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
+  const isLongPress = useRef(false);
+
+  const startLongPress = (product: Product) => {
+    isLongPress.current = false;
+    longPressTimer.current = setTimeout(() => {
+      isLongPress.current = true;
+      setEditingProduct(product);
+    }, 500); // 0.5 second
+  };
+
+  const cancelLongPress = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  };
 
   // Extract unique product names
   const uniqueData = useMemo(() => {
@@ -96,12 +115,22 @@ export default function ProductList({ data, filterField, visibleFields, category
                   key={`${item._id}-${index}`}
                   className="hover:bg-slate-50 transition-colors"
                 >
-                  {visibleFields.map((field) => {
+                  {visibleFields.map((field, fIndex) => {
                     const value = item[field as VisibleField];
 
                     if (field === 'spec') {
                       return (
-                        <td key={field} className="px-4 py-3">
+                        <td 
+                          key={field} 
+                          className="px-4 py-3"
+                          {...(fIndex === 0 ? {
+                            onMouseDown: () => startLongPress(item),
+                            onMouseUp: cancelLongPress,
+                            onMouseLeave: cancelLongPress,
+                            onTouchStart: () => startLongPress(item),
+                            onTouchEnd: cancelLongPress,
+                          } : {})}
+                        >
                           <span
                             className={`text-xs font-medium px-2 py-1 rounded-md bg-emerald-100 text-emerald-800`}
                           >
@@ -119,6 +148,13 @@ export default function ProductList({ data, filterField, visibleFields, category
                           field === 'priceSell' ?
                             'px-4 py-3 text-right font-bold text-slate-900' : 'px-4 py-3 font-medium text-slate-900'
                         }
+                        {...(fIndex === 0 ? {
+                          onMouseDown: () => startLongPress(item),
+                          onMouseUp: cancelLongPress,
+                          onMouseLeave: cancelLongPress,
+                          onTouchStart: () => startLongPress(item),
+                          onTouchEnd: cancelLongPress,
+                        } : {})}
                       >
                         {value}
                       </td>
@@ -141,6 +177,15 @@ export default function ProductList({ data, filterField, visibleFields, category
           Không tìm thấy sản phẩm nào.
         </div>
       )}
+
+      {/* Edit Modal */}
+      <ProductFormModal
+        isOpen={!!editingProduct}
+        onClose={() => setEditingProduct(null)}
+        categoryId={categoryId}
+        initialData={editingProduct}
+        showImageField={false}
+      />
     </div>
   );
 }

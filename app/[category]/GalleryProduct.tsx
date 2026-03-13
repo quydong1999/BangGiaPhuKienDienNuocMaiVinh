@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 import type { Product } from '@/types/types';
 import { PendingProductSkeleton } from '@/components/PendingSkeletons';
+import { ProductFormModal } from '@/components/ProductFormModal';
 
 interface GalleryProductProps {
   data: Product[];
@@ -14,6 +15,30 @@ const imgNotFoundUrl = "https://upload.wikimedia.org/wikipedia/commons/a/a3/Imag
 
 export default function GalleryProduct({ data, categoryId }: GalleryProductProps) {
   const [selected, setSelected] = useState<Product | null>(null);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
+  const isLongPress = useRef(false);
+
+  const startLongPress = (product: Product) => {
+    isLongPress.current = false;
+    longPressTimer.current = setTimeout(() => {
+      isLongPress.current = true;
+      setEditingProduct(product);
+    }, 500); // 0.5 second
+  };
+
+  const cancelLongPress = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  };
+
+  const handleProductClick = (product: Product) => {
+    if (!isLongPress.current) {
+      setSelected(product);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -23,8 +48,13 @@ export default function GalleryProduct({ data, categoryId }: GalleryProductProps
           <button
             key={item._id}
             type="button"
-            onClick={() => setSelected(item)}
-            className={`group relative flex flex-col bg-white shadow-sm hover:shadow-md hover:-translate-y-1 transition-all overflow-hidden`}
+            onClick={() => handleProductClick(item)}
+            onMouseDown={() => startLongPress(item)}
+            onMouseUp={cancelLongPress}
+            onMouseLeave={cancelLongPress}
+            onTouchStart={() => startLongPress(item)}
+            onTouchEnd={cancelLongPress}
+            className={`group relative flex flex-col bg-white shadow-sm hover:shadow-md hover:-translate-y-1 transition-all overflow-hidden active:scale-95`}
           >
             <div className="relative w-full aspect-[4/3] bg-slate-100">
               <Image
@@ -110,6 +140,14 @@ export default function GalleryProduct({ data, categoryId }: GalleryProductProps
           </div>
         </div>
       )}
+
+      {/* Edit Modal */}
+      <ProductFormModal
+        isOpen={!!editingProduct}
+        onClose={() => setEditingProduct(null)}
+        categoryId={categoryId}
+        initialData={editingProduct}
+      />
     </div>
   );
 }

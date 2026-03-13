@@ -6,9 +6,10 @@ import { ProductFormModal } from './ProductFormModal';
 
 interface AddProductButtonProps {
   categoryId: string;
+  showImageField?: boolean;
 }
 
-export function AddProductButton({ categoryId }: AddProductButtonProps) {
+export function AddProductButton({ categoryId, showImageField = true }: AddProductButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -25,6 +26,7 @@ export function AddProductButton({ categoryId }: AddProductButtonProps) {
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)}
         categoryId={categoryId}
+        showImageField={showImageField}
       />
     </>
   );

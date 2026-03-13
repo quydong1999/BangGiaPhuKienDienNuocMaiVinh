@@ -19,7 +19,7 @@ export async function GET(req: Request) {
         }
 
         console.log("--- Đang truy vấn Products... ---");
-        const products = await Product.find(filter).sort({ createdAt: -1 });
+        const products = await Product.find(filter).sort({ name: 1, spec: 1 });
 
         return NextResponse.json({
             success: true,

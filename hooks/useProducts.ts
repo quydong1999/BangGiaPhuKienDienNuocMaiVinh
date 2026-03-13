@@ -89,3 +89,49 @@ export function useCreateProduct() {
         },
     });
 }
+
+export function useUpdateProduct() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ id, formData }: { id: string, formData: FormData }) => {
+            const response = await fetch(`/api/products/${id}`, {
+                method: "PATCH",
+                body: formData,
+            });
+
+            const result = await response.json();
+            if (!response.ok) {
+                throw new Error(result.message || result.error || "Có lỗi xảy ra khi cập nhật sản phẩm");
+            }
+            return result.data;
+        },
+        onSuccess: (data) => {
+            // Invalidate all product related queries
+            queryClient.invalidateQueries({ queryKey: ["products"] });
+            queryClient.invalidateQueries({ queryKey: ["product", data._id] });
+        },
+    });
+}
+
+export function useDeleteProduct() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (id: string) => {
+            const response = await fetch(`/api/products/${id}`, {
+                method: "DELETE",
+            });
+
+            const result = await response.json();
+            if (!response.ok) {
+                throw new Error(result.message || result.error || "Có lỗi xảy ra khi xóa sản phẩm");
+            }
+            return result;
+        },
+        onSuccess: () => {
+            // Invalidate all product related queries
+            queryClient.invalidateQueries({ queryKey: ["products"] });
+        },
+    });
+}

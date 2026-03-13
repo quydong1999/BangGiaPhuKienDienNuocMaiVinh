@@ -25,7 +25,7 @@ const getCachedCategory = (slug: string) => unstable_cache(
 const getCachedProducts = (categoryId: string, slug: string) => unstable_cache(
   async () => {
     await connectDB();
-    const data = await Product.find({ categoryId }).sort({ createdAt: -1 }).lean();
+    const data = await Product.find({ categoryId }).sort({ name: 1, spec: 1 }).lean();
     return JSON.parse(JSON.stringify(data));
   },
   [`products-${slug}`],
@@ -130,7 +130,10 @@ export default async function TypePage({ params }: { params: Promise<{ category:
         </Suspense>
       </div>
 
-      <AddProductButton categoryId={categoryData._id.toString()} />
+      <AddProductButton 
+        categoryId={categoryData._id.toString()} 
+        showImageField={layout !== 'table'}
+      />
     </main>
   );
 }
