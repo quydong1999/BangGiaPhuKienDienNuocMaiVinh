@@ -7,11 +7,11 @@ import { uploadImage, deleteImage } from '@/lib/cloudinary';
 
 export async function PATCH(
     req: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         await connectDB();
-        const { id } = params;
+        const { id } = await params;
 
         const formData = await req.formData();
         const name = formData.get('name') as string;
@@ -106,11 +106,11 @@ export async function PATCH(
 
 export async function DELETE(
     req: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         await connectDB();
-        const { id } = params;
+        const { id } = await params;
 
         const productToDelete = await Product.findById(id);
         if (!productToDelete) {
