@@ -1,0 +1,31 @@
+"use client";
+
+import { useState } from 'react';
+import { Plus } from 'lucide-react';
+import { ProductFormModal } from './ProductFormModal';
+
+interface AddProductButtonProps {
+  categoryId: string;
+}
+
+export function AddProductButton({ categoryId }: AddProductButtonProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  return (
+    <>
+      <button
+        onClick={() => setIsModalOpen(true)}
+        className="fixed bottom-6 right-6 p-4 bg-emerald-600 text-white rounded-full shadow-lg hover:bg-emerald-700 hover:shadow-xl hover:-translate-y-1 transition-all z-40 active:scale-95 flex items-center justify-center"
+        aria-label="Thêm sản phẩm mới"
+      >
+        <Plus size={28} />
+      </button>
+
+      <ProductFormModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)}
+        categoryId={categoryId}
+      />
+    </>
+  );
+}

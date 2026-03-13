@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { connectDB } from '@/lib/mongodb';
 import Category from '@/models/Category';
 import { uploadImage } from '@/lib/cloudinary';
@@ -95,6 +96,9 @@ export async function POST(req: Request) {
     };
 
     const newCategory = await Category.create(categoryToCreate);
+
+    // Revalidate the homepage to show the new category
+    revalidatePath('/');
 
     return NextResponse.json(
       {

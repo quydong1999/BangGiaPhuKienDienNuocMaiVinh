@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useCreateCategory } from "@/hooks/useCategories";
 import { X, Upload, Plus } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
@@ -39,6 +40,7 @@ const generateSlug = (text: string) => {
 };
 
 export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
+  const router = useRouter();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [shortTitleEdited, setShortTitleEdited] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -135,6 +137,7 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
 
     mutation.mutate(formData, {
       onSuccess: () => {
+        router.refresh();
         onClose();
       },
       onError: (err: any) => {

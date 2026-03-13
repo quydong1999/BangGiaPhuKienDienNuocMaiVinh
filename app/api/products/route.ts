@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { connectDB } from '@/lib/mongodb';
 import Product from '@/models/Product';
+import Category from '@/models/Category';
 import { uploadImage } from '@/lib/cloudinary';
 
 export async function GET(req: Request) {
@@ -83,6 +85,16 @@ export async function POST(req: Request) {
         };
 
         const newProduct = await Product.create(productToCreate);
+
+        // Revalidate the category page
+        try {
+            const category = await Category.findById(categoryId);
+            if (category) {
+                revalidatePath(`/${category.slug}`);
+            }
+        } catch (revalidateError) {
+            console.error("Lỗi revalidate:", revalidateError);
+        }
 
         return NextResponse.json(
             {
