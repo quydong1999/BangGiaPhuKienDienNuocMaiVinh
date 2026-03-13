@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import type { Product, FilterField, VisibleField } from '@/types/types';
 import { PendingProductSkeleton } from '@/components/PendingSkeletons';
 import { ProductFormModal } from '@/components/ProductFormModal';
@@ -15,23 +16,21 @@ interface ProductListProps {
 export default function ProductList({ data, filterField, visibleFields, categoryId }: ProductListProps) {
   const [selectedField, setSelectedField] = useState<string>('Tất cả');
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
-  const isLongPress = useRef(false);
+  const searchParams = useSearchParams();
 
-  const startLongPress = (product: Product) => {
-    isLongPress.current = false;
-    longPressTimer.current = setTimeout(() => {
-      isLongPress.current = true;
-      setEditingProduct(product);
-    }, 500); // 0.5 second
-  };
-
-  const cancelLongPress = () => {
-    if (longPressTimer.current) {
-      clearTimeout(longPressTimer.current);
-      longPressTimer.current = null;
+  useEffect(() => {
+    const productId = searchParams.get('productId');
+    if (productId) {
+      const element = document.getElementById(`product-${productId}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        element.classList.add('bg-emerald-50');
+        setTimeout(() => {
+          element.classList.remove('bg-emerald-50');
+        }, 3000);
+      }
     }
-  };
+  }, [searchParams]);
 
   // Extract unique product names
   const uniqueData = useMemo(() => {
@@ -110,9 +109,10 @@ export default function ProductList({ data, filterField, visibleFields, category
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
-              {filteredData.map((item, index) => (
+                {filteredData.map((item, index) => (
                 <tr
                   key={`${item._id}-${index}`}
+                  id={`product-${item._id}`}
                   className="hover:bg-slate-50 transition-colors"
                 >
                   {visibleFields.map((field, fIndex) => {
@@ -124,11 +124,7 @@ export default function ProductList({ data, filterField, visibleFields, category
                           key={field} 
                           className="px-4 py-3"
                           {...(fIndex === 0 ? {
-                            onMouseDown: () => startLongPress(item),
-                            onMouseUp: cancelLongPress,
-                            onMouseLeave: cancelLongPress,
-                            onTouchStart: () => startLongPress(item),
-                            onTouchEnd: cancelLongPress,
+                            onDoubleClick: () => setEditingProduct(item),
                           } : {})}
                         >
                           <span
@@ -149,11 +145,7 @@ export default function ProductList({ data, filterField, visibleFields, category
                             'px-4 py-3 text-right font-bold text-slate-900' : 'px-4 py-3 font-medium text-slate-900'
                         }
                         {...(fIndex === 0 ? {
-                          onMouseDown: () => startLongPress(item),
-                          onMouseUp: cancelLongPress,
-                          onMouseLeave: cancelLongPress,
-                          onTouchStart: () => startLongPress(item),
-                          onTouchEnd: cancelLongPress,
+                          onDoubleClick: () => setEditingProduct(item),
                         } : {})}
                       >
                         {value}

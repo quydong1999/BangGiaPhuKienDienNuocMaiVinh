@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 import type { Product } from '@/types/types';
 import { PendingProductSkeleton } from '@/components/PendingSkeletons';
 import { ProductFormModal } from '@/components/ProductFormModal';
@@ -16,27 +17,31 @@ const imgNotFoundUrl = "https://upload.wikimedia.org/wikipedia/commons/a/a3/Imag
 export default function GalleryProduct({ data, categoryId }: GalleryProductProps) {
   const [selected, setSelected] = useState<Product | null>(null);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
-  const isLongPress = useRef(false);
+  const clickTimer = useRef<NodeJS.Timeout | null>(null);
+  const searchParams = useSearchParams();
 
-  const startLongPress = (product: Product) => {
-    isLongPress.current = false;
-    longPressTimer.current = setTimeout(() => {
-      isLongPress.current = true;
-      setEditingProduct(product);
-    }, 500); // 0.5 second
-  };
-
-  const cancelLongPress = () => {
-    if (longPressTimer.current) {
-      clearTimeout(longPressTimer.current);
-      longPressTimer.current = null;
+  useEffect(() => {
+    const productId = searchParams.get('productId');
+    if (productId && data.length > 0) {
+      const product = data.find(p => p._id === productId);
+      if (product) {
+        setSelected(product);
+      }
     }
-  };
+  }, [searchParams, data]);
 
   const handleProductClick = (product: Product) => {
-    if (!isLongPress.current) {
-      setSelected(product);
+    if (clickTimer.current) {
+      // If a second click happens within 300ms, it's a double click
+      clearTimeout(clickTimer.current);
+      clickTimer.current = null;
+      setEditingProduct(product);
+    } else {
+      // First click: start timer
+      clickTimer.current = setTimeout(() => {
+        setSelected(product);
+        clickTimer.current = null;
+      }, 300);
     }
   };
 
@@ -49,11 +54,6 @@ export default function GalleryProduct({ data, categoryId }: GalleryProductProps
             key={item._id}
             type="button"
             onClick={() => handleProductClick(item)}
-            onMouseDown={() => startLongPress(item)}
-            onMouseUp={cancelLongPress}
-            onMouseLeave={cancelLongPress}
-            onTouchStart={() => startLongPress(item)}
-            onTouchEnd={cancelLongPress}
             className={`group relative flex flex-col bg-white shadow-sm hover:shadow-md hover:-translate-y-1 transition-all overflow-hidden active:scale-95`}
           >
             <div className="relative w-full aspect-[4/3] bg-slate-100">

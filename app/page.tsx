@@ -5,7 +5,7 @@ import { connectDB } from '@/lib/mongodb';
 import Category from '@/models/Category';
 import { AddCategoryButton } from '@/components/AddCategoryButton';
 import { PendingCategorySkeleton } from '@/components/PendingSkeletons';
-
+import { HomeHeader } from '@/components/HomeHeader';
 import { unstable_cache } from 'next/cache';
 
 const imgNotFoundUrl = "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?_=20210521171500";
@@ -83,11 +83,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-slate-50 flex flex-col items-center p-4 relative pb-24">
       <div className="w-full max-w-5xl space-y-6">
-        <div className="sticky top-0 z-10 text-center pt-6 pb-10 bg-gradient-to-b from-slate-50 from-80% to-transparent">
-          <h1 className="text-3xl font-bold tracking-tight text-emerald-600">
-            MAI VINH
-          </h1>
-        </div>
+        <HomeHeader />
 
         <Suspense fallback={<GridSkeleton />}>
           <CategoryGrid />
