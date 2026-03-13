@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { connectDB } from '@/lib/mongodb';
 import Product from '@/models/Product';
 import Category from '@/models/Category';
@@ -91,6 +91,7 @@ export async function POST(req: Request) {
             const category = await Category.findById(categoryId);
             if (category) {
                 revalidatePath(`/${category.slug}`);
+                revalidateTag(`products-${category.slug}`);
             }
         } catch (revalidateError) {
             console.error("Lỗi revalidate:", revalidateError);
