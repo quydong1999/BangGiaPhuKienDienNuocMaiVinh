@@ -56,6 +56,6 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   };
 }
 
-export default function SearchResultPage() {
+export default function SearchPage() {
   return <SearchContent />;
 }

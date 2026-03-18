@@ -29,7 +29,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim().length >= 2) {
-      router.push(`/searchResult?q=${encodeURIComponent(query.trim())}`);
+      router.push(`/search?q=${encodeURIComponent(query.trim())}`);
       onClose();
     }
   };
