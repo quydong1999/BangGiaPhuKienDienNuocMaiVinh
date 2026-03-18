@@ -59,7 +59,7 @@ export default function GalleryProduct({ data, categoryId }: GalleryProductProps
             <div className="relative w-full aspect-[4/3] bg-slate-100">
               <Image
                 src={item.image?.secure_url ?? imgNotFoundUrl}
-                alt={""}
+                alt={item.name}
                 fill
                 sizes="(min-width: 768px) 200px, 50vw"
                 className="object-cover group-hover:scale-105 transition-transform"
@@ -103,7 +103,7 @@ export default function GalleryProduct({ data, categoryId }: GalleryProductProps
             <div className="relative w-full h-1/2 min-h-[220px] bg-black">
               <Image
                 src={selected.image?.secure_url ?? imgNotFoundUrl}
-                alt={""}
+                alt={selected.name}
                 fill
                 sizes="(min-width: 768px) 480px, 100vw"
                 className="object-cover"

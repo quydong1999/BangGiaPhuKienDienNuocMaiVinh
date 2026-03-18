@@ -57,7 +57,7 @@ export default function ProductList({ data, filterField, visibleFields, category
   return (
     <div className="space-y-6">
       {/* Filter */}
-      <div className="sticky top-14 z-10 bg-slate-50 pt-2 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
+      <nav aria-label="Bộ lọc sản phẩm" className="sticky top-14 z-10 bg-slate-50 pt-2 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
         {filterField && (
           <>
             <label
@@ -86,12 +86,13 @@ export default function ProductList({ data, filterField, visibleFields, category
             Hiển thị {filteredData.length} sản phẩm
           </span>
         </div>
-      </div>
+      </nav>
 
       {/* List */}
       <div className="bg-white border border-slate-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm whitespace-nowrap">
+            <caption className="sr-only">Bảng danh sách sản phẩm</caption>
             <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-medium">
               <tr>
                 {visibleFields.map((field) => (

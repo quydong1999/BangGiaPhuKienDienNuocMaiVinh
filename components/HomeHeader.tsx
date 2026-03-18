@@ -9,7 +9,7 @@ export function HomeHeader() {
 
   return (
     <>
-      <div className="sticky top-0 z-10 flex items-center justify-between pt-6 pb-10 bg-gradient-to-b from-slate-50 from-80% to-transparent">
+      <header className="sticky top-0 z-10 flex items-center justify-between pt-6 pb-10 bg-gradient-to-b from-slate-50 from-80% to-transparent">
         <div className="w-10" /> {/* Spacer */}
         <h1 className="text-3xl font-bold tracking-tight text-emerald-600 flex-1 text-center">
           MAI VINH
@@ -21,7 +21,7 @@ export function HomeHeader() {
         >
           <Search size={24} />
         </button>
-      </div>
+      </header>
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </>
   );

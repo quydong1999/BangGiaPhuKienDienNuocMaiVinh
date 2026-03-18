@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import QueryProvider from '@/components/providers/query-provider';
 import { SkeletonProvider } from '@/components/providers/skeleton-provider';
+import BusinessSchema from '@/components/providers/BusinessSchema';
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -49,6 +50,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="vi">
       <body className="bg-slate-50 text-slate-900 antialiased" suppressHydrationWarning>
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-white focus:text-emerald-600">
+          Chuyển đến nội dung chính
+        </a>
+        <BusinessSchema />
         <QueryProvider>
           <SkeletonProvider>
             {children}

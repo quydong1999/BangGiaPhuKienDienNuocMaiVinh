@@ -55,7 +55,7 @@ function SearchResults() {
   }
 
   return (
-    <div className="space-y-6">
+    <section aria-label="Kết quả tìm kiếm" className="space-y-6">
       <h2 className="text-lg font-medium text-slate-800">
         Kết quả cho: <span className="font-bold text-emerald-600">"{query}"</span>
       </h2>
@@ -67,6 +67,7 @@ function SearchResults() {
         <div className="bg-white border border-slate-200 shadow-sm overflow-hidden rounded-lg">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm whitespace-nowrap">
+              <caption className="sr-only">Bảng kết quả tìm kiếm sản phẩm</caption>
               <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-medium">
                 <tr>
                   <th className="px-4 py-3">Tên sản phẩm</th>
@@ -116,7 +117,7 @@ function SearchResults() {
           <p className="text-slate-500 font-medium">Không tìm thấy sản phẩm nào phù hợp.</p>
         </div>
       )}
-    </div>
+    </section>
   );
 }
 
@@ -124,7 +125,7 @@ export default function SearchContent() {
   const router = useRouter();
 
   return (
-    <main className="min-h-screen bg-slate-50 flex flex-col">
+    <main id="main-content" className="min-h-screen bg-slate-50 flex flex-col">
       <header className="sticky top-0 z-10 bg-white border-b border-slate-200 shadow-sm">
         <div className="flex items-center h-14 px-4 max-w-6xl mx-auto w-full">
           <button

@@ -32,7 +32,7 @@ async function CategoryGrid() {
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+    <nav aria-label="Danh mục sản phẩm" className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
       {categories.map((category: any) => {
         return (
           <Link
@@ -44,7 +44,7 @@ async function CategoryGrid() {
             <div className="relative aspect-square w-full">
               <Image
                 src={category.image?.secure_url || category.image?.url || imgNotFoundUrl}
-                alt={category.shortTitle || category.title}
+                alt={`Danh mục ${category.shortTitle || category.title}`}
                 fill
                 sizes="(max-width: 640px) 50vw, 256px"
                 className="object-cover"
@@ -60,7 +60,7 @@ async function CategoryGrid() {
         );
       })}
       <PendingCategorySkeleton />
-    </div>
+    </nav>
   );
 }
 
@@ -81,13 +81,16 @@ function GridSkeleton() {
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-slate-50 flex flex-col items-center p-4 relative pb-24">
+    <main id="main-content" className="min-h-screen bg-slate-50 flex flex-col items-center p-4 relative pb-24">
       <div className="w-full max-w-5xl space-y-6">
         <HomeHeader />
 
-        <Suspense fallback={<GridSkeleton />}>
-          <CategoryGrid />
-        </Suspense>
+        <section aria-label="Danh mục sản phẩm">
+          <h2 className="sr-only">Danh mục sản phẩm</h2>
+          <Suspense fallback={<GridSkeleton />}>
+            <CategoryGrid />
+          </Suspense>
+        </section>
       </div>
 
       <AddCategoryButton />
