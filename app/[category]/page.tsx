@@ -21,17 +21,17 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
     };
   }
   return {
-    title: `${categoryData.title} chính hãng | Điện nước Mai Vinh - Đề Gi - Bình Định`,
-    description: `Cập nhật báo giá mới nhất cho sản phẩm ${categoryData.title} chính hãng tại cửa hàng Điện nước Mai Vinh - Đề Gi - Bình Định. Chuyên phân phối sỉ lẻ phụ kiện điện nước uy tín, chất lượng.`,
+    title: `${categoryData.title} chính hãng | Điện nước Mai Vinh - Bình Định`,
+    description: `Cập nhật báo giá mới nhất cho sản phẩm ${categoryData.title} chính hãng tại cửa hàng Điện nước Mai Vinh - Bình Định. Chuyên cung cấp sỉ, lẻ tất cả các loại thiết bị, phụ kiện, sản phẩm điện nước gia dụng tại nhà chuyên nghiệp, uy tín, chất lượng.`,
     keywords: [`phụ kiện`, `ống nước`, `uPVC`, `Mai Vinh`, `điện nước`, `dây điện`, `báo giá`, `Đồng Lâm`, `Thắng Kiên`, `Cát Khánh`, `Điện nước Mai Vinh`, `${categoryData.title}`],
     openGraph: {
-      title: `${categoryData.title} chính hãng | Điện nước Mai Vinh - Đề Gi - Bình Định`,
-      description: `Cập nhật báo giá mới nhất cho sản phẩm ${categoryData.title} chính hãng tại cửa hàng Điện nước Mai Vinh - Đề Gi - Bình Định. Chuyên phân phối sỉ lẻ phụ kiện điện nước uy tín, chất lượng.`,
+      title: `${categoryData.title} chính hãng | Điện nước Mai Vinh - Bình Định`,
+      description: `Cập nhật báo giá mới nhất cho sản phẩm ${categoryData.title} chính hãng tại cửa hàng Điện nước Mai Vinh - Bình Định. Chuyên cung cấp sỉ, lẻ tất cả các loại thiết bị, phụ kiện, sản phẩm điện nước gia dụng tại nhà chuyên nghiệp, uy tín, chất lượng.`,
       url: `${baseUrl}/${categoryData.slug}`,
-      siteName: 'Báo giá điện nước Mai Vinh - Đề Gi - Bình Định',
+      siteName: 'Báo giá điện nước Mai Vinh - Bình Định',
       images: [
         {
-          url: `${baseUrl}/diennuocmaivinh.png`,
+          url: `${baseUrl}/diennuocmaivinh.webp`,
           width: 1200,
           height: 630,
           alt: 'Báo giá điện nước Mai Vinh',

@@ -9,7 +9,7 @@ export default function BusinessSchema() {
                     "@context": "https://schema.org",
                     "@type": "LocalBusiness",
                     "name": "Điện nước Mai Vinh",
-                    "image": `${baseUrl}/diennuocmaivinh.png`,
+                    "image": `${baseUrl}/diennuocmaivinh.webp`,
                     "telephone": "0982390943",
                     "address": {
                         "@type": "PostalAddress",

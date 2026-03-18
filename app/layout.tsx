@@ -8,19 +8,19 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | Điện nước Mai Vinh - Đề Gi - Bình Định',
-    default: 'Báo giá các thiết bị, phụ kiện điện nước gia dụng chuyên nghiệp | Điện nước Mai Vinh - Đề Gi - Bình Định',
+    template: '%s | Điện nước Mai Vinh - Bình Định',
+    default: 'Báo giá các thiết bị, phụ kiện điện nước gia dụng chuyên nghiệp | Điện nước Mai Vinh - Bình Định',
   },
-  description: 'Chuyên cung cấp sỉ, lẻ tất cả các loại thiết bị, phụ kiện, sản phẩm điện nước gia dụng tại nhà chuyên nghiệp',
+  description: 'Chuyên cung cấp sỉ, lẻ tất cả các loại thiết bị, phụ kiện, sản phẩm điện nước gia dụng tại nhà chuyên nghiệp, uy tín, chất lượng.',
   keywords: ['phụ kiện', 'ống nước', 'uPVC', 'Mai Vinh', 'điện nước', 'dây điện', 'báo giá', 'Đồng Lâm', 'Thắng Kiên', 'Cát Khánh', 'Điện nước Mai Vinh'],
   openGraph: {
-    title: 'Báo giá điện nước Mai Vinh | Điện nước Mai Vinh - Đề Gi - Bình Định',
-    description: 'Chuyên cung cấp sỉ, lẻ tất cả các loại thiết bị, phụ kiện, sản phẩm điện nước gia dụng tại nhà chuyên nghiệp',
+    title: 'Báo giá điện nước Mai Vinh | Điện nước Mai Vinh - Bình Định',
+    description: 'Chuyên cung cấp sỉ, lẻ tất cả các loại thiết bị, phụ kiện, sản phẩm điện nước gia dụng tại nhà chuyên nghiệp, uy tín, chất lượng.',
     url: `${baseUrl}`,
-    siteName: 'Báo giá điện nước Mai Vinh - Đề Gi - Bình Định',
+    siteName: 'Báo giá điện nước Mai Vinh - Bình Định',
     images: [
       {
-        url: `${baseUrl}/diennuocmaivinh.png`,
+        url: `${baseUrl}/diennuocmaivinh.webp`,
         width: 1200,
         height: 630,
         alt: 'Báo giá điện nước Mai Vinh',

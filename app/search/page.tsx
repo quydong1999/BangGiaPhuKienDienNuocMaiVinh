@@ -7,8 +7,8 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
 
   if (!query) {
     return {
-      title: 'Tìm kiếm sản phẩm điện nước | Điện nước Mai Vinh - Đề Gi - Bình Định',
-      description: 'Tìm kiếm nhanh chóng các thiết bị, phụ kiện điện nước chính hãng tại hệ thống cửa hàng Điện nước Mai Vinh - Đề Gi - Bình Định. Cung cấp báo giá sỉ lẻ đa dạng mặt hàng.',
+      title: 'Tìm kiếm sản phẩm điện nước | Điện nước Mai Vinh - Bình Định',
+      description: 'Tìm kiếm nhanh chóng các thiết bị, phụ kiện điện nước chính hãng tại hệ thống cửa hàng Điện nước Mai Vinh - Bình Định. Chuyên cung cấp sỉ, lẻ tất cả các loại thiết bị, phụ kiện, sản phẩm điện nước gia dụng tại nhà chuyên nghiệp, uy tín, chất lượng.',
       robots: {
         index: false,
         follow: true,
@@ -20,17 +20,17 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   }
 
   return {
-    title: `Kết quả tìm kiếm sản phẩm: "${query}" | Điện nước Mai Vinh - Đề Gi - Bình Định`,
-    description: `Tổng hợp chi tiết kết quả tìm kiếm cho các sản phẩm "${query}" chính hãng tại cửa hàng Điện nước Mai Vinh - Đề Gi - Bình Định. Cam kết giá cả cạnh tranh, chất lượng uy tín.`,
+    title: `Kết quả tìm kiếm sản phẩm: "${query}" | Điện nước Mai Vinh - Bình Định`,
+    description: `Tổng hợp chi tiết kết quả tìm kiếm cho các sản phẩm "${query}" chính hãng tại cửa hàng Điện nước Mai Vinh - Bình Định. Chuyên cung cấp sỉ, lẻ tất cả các loại thiết bị, phụ kiện, sản phẩm điện nước gia dụng tại nhà chuyên nghiệp, uy tín, chất lượng.`,
     keywords: [`phụ kiện`, `ống nước`, `uPVC`, `Mai Vinh`, `điện nước`, `dây điện`, `báo giá`, `Đồng Lâm`, `Thắng Kiên`, `Cát Khánh`, `Điện nước Mai Vinh`, `${query}`],
     openGraph: {
-      title: `Kết quả tìm kiếm sản phẩm: "${query}" | Điện nước Mai Vinh - Đề Gi - Bình Định`,
-      description: `Tổng hợp chi tiết kết quả tìm kiếm cho các sản phẩm "${query}" chính hãng tại cửa hàng Điện nước Mai Vinh - Đề Gi - Bình Định. Cam kết giá cả cạnh tranh, chất lượng uy tín.`,
+      title: `Kết quả tìm kiếm sản phẩm: "${query}" | Điện nước Mai Vinh - Bình Định`,
+      description: `Tổng hợp chi tiết kết quả tìm kiếm cho các sản phẩm "${query}" chính hãng tại cửa hàng Điện nước Mai Vinh - Bình Định. Chuyên cung cấp sỉ, lẻ tất cả các loại thiết bị, phụ kiện, sản phẩm điện nước gia dụng tại nhà chuyên nghiệp, uy tín, chất lượng.`,
       url: `${baseUrl}/search?q=${encodeURIComponent(query)}`,
-      siteName: 'Báo giá điện nước Mai Vinh - Đề Gi - Bình Định',
+      siteName: 'Báo giá điện nước Mai Vinh - Bình Định',
       images: [
         {
-          url: `${baseUrl}/diennuocmaivinh.png`,
+          url: `${baseUrl}/diennuocmaivinh.webp`,
           width: 1200,
           height: 630,
           alt: 'Báo giá điện nước Mai Vinh',
