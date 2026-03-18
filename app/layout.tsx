@@ -1,8 +1,15 @@
 import type { Metadata, Viewport } from 'next';
+import { Inter } from 'next/font/google';
 import './globals.css';
 import QueryProvider from '@/components/providers/query-provider';
 import { SkeletonProvider } from '@/components/providers/skeleton-provider';
 import BusinessSchema from '@/components/providers/BusinessSchema';
+
+const inter = Inter({
+  subsets: ['vietnamese'],
+  display: 'swap',
+  variable: '--font-inter',
+});
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -42,14 +49,17 @@ export const viewport: Viewport = {
   themeColor: '#059669',
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
+  maximumScale: 5,
   userScalable: true,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="vi">
-      <body className="bg-slate-50 text-slate-900 antialiased" suppressHydrationWarning>
+    <html lang="vi" className={`${inter.variable}`}>
+      <head>
+        <link rel="preconnect" href="https://res.cloudinary.com" />
+      </head>
+      <body className={`bg-slate-50 text-slate-900 antialiased font-sans`} suppressHydrationWarning>
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-white focus:text-emerald-600">
           Chuyển đến nội dung chính
         </a>

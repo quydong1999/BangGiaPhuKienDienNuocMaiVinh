@@ -49,7 +49,7 @@ async function CategoryGrid() {
                 fill
                 sizes="(max-width: 640px) 50vw, 256px"
                 className="object-cover"
-                priority={index < 4}
+                priority={index === 0}
                 {...getBlurPlaceholder(category.image?.secure_url || category.image?.url)}
               />
             </div>
@@ -74,7 +74,7 @@ function GridSkeleton() {
         <div key={i} className="animate-pulse bg-white border border-slate-200">
           <div className="aspect-square bg-slate-200" />
           <div className="p-3">
-             <div className="h-4 bg-slate-200 rounded w-3/4 mx-auto" />
+            <div className="h-4 bg-slate-200 rounded w-3/4 mx-auto" />
           </div>
         </div>
       ))}

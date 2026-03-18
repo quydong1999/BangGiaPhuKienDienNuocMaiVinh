@@ -66,7 +66,7 @@ export default function GalleryProduct({ data, categoryId }: GalleryProductProps
                 fill
                 sizes="(min-width: 768px) 200px, 50vw"
                 className="object-cover group-hover:scale-105 transition-transform"
-                priority={index < 4}
+                priority={index === 0}
                 {...getBlurPlaceholder(item.image?.secure_url)}
               />
             </div>
