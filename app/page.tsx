@@ -34,7 +34,7 @@ async function CategoryGrid() {
 
   return (
     <nav aria-label="Danh mục sản phẩm" className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-      {categories.map((category: any) => {
+      {categories.map((category: any, index: number) => {
         return (
           <Link
             key={category.slug}
@@ -49,6 +49,7 @@ async function CategoryGrid() {
                 fill
                 sizes="(max-width: 640px) 50vw, 256px"
                 className="object-cover"
+                priority={index < 4}
                 {...getBlurPlaceholder(category.image?.secure_url || category.image?.url)}
               />
             </div>

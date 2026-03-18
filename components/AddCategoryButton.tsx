@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
-import { CategoryFormModal } from './CategoryFormModal';
+import dynamic from 'next/dynamic';
+
+const CategoryFormModal = dynamic(() => import('./CategoryFormModal').then(mod => mod.CategoryFormModal), { ssr: false });
 
 export function AddCategoryButton() {
   const [isModalOpen, setIsModalOpen] = useState(false);

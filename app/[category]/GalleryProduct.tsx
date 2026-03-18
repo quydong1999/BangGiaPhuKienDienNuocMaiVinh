@@ -6,7 +6,9 @@ import { useSearchParams } from 'next/navigation';
 import { getBlurPlaceholder } from '@/lib/image-blur';
 import type { Product } from '@/types/types';
 import { PendingProductSkeleton } from '@/components/PendingSkeletons';
-import { ProductFormModal } from '@/components/ProductFormModal';
+import dynamic from 'next/dynamic';
+
+const ProductFormModal = dynamic(() => import('@/components/ProductFormModal').then(mod => mod.ProductFormModal), { ssr: false });
 
 interface GalleryProductProps {
   data: Product[];
@@ -50,7 +52,7 @@ export default function GalleryProduct({ data, categoryId }: GalleryProductProps
     <div className="space-y-6">
       {/* Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {data.map((item) => (
+        {data.map((item, index) => (
           <button
             key={item._id}
             type="button"
@@ -64,6 +66,7 @@ export default function GalleryProduct({ data, categoryId }: GalleryProductProps
                 fill
                 sizes="(min-width: 768px) 200px, 50vw"
                 className="object-cover group-hover:scale-105 transition-transform"
+                priority={index < 4}
                 {...getBlurPlaceholder(item.image?.secure_url)}
               />
             </div>

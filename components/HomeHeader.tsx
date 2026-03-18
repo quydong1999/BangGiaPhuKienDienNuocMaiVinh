@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 import { Search } from 'lucide-react';
-import { SearchModal } from './SearchModal';
+import dynamic from 'next/dynamic';
+
+const SearchModal = dynamic(() => import('./SearchModal').then(mod => mod.SearchModal), { ssr: false });
 
 export function HomeHeader() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);

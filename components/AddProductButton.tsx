@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
-import { ProductFormModal } from './ProductFormModal';
+import dynamic from 'next/dynamic';
+
+const ProductFormModal = dynamic(() => import('./ProductFormModal').then(mod => mod.ProductFormModal), { ssr: false });
 
 interface AddProductButtonProps {
   categoryId: string;
