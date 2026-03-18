@@ -3,7 +3,7 @@
 import { useProducts } from '@/hooks/useProducts';
 import ProductList from './ProductList';
 import GalleryProduct from './GalleryProduct';
-import { FilterField, VisibleField } from '@/types/types';
+import { FilterField, Product, VisibleField } from '@/types/types';
 
 interface ProductContainerProps {
   categoryId: string;
@@ -11,6 +11,7 @@ interface ProductContainerProps {
   layout: string;
   filterField: any;
   visibleFields: any;
+  initialProducts: Product[];
 }
 
 function ProductSkeleton({ layout }: { layout: string }) {
@@ -44,9 +45,10 @@ export default function ProductContainer({
   categorySlug, 
   layout, 
   filterField, 
-  visibleFields 
+  visibleFields,
+  initialProducts 
 }: ProductContainerProps) {
-  const { data: products, isLoading, error } = useProducts(categoryId);
+  const { data: products, isLoading, error } = useProducts(categoryId, initialProducts);
 
   if (isLoading) {
     return <ProductSkeleton layout={layout} />;

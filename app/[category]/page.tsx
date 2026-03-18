@@ -4,10 +4,51 @@ import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
 import ProductContainer from './ProductContainer';
 import { AddProductButton } from '@/components/AddProductButton';
+import CategorySchema from '@/components/CategorySchema';
 import { connectDB } from '@/lib/mongodb';
 import Category from '@/models/Category';
-
+import Product from '@/models/Product';
 import { unstable_cache } from 'next/cache';
+
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
+export async function generateMetadata({ params }: { params: { category: string } }) {
+  const { category: categorySlug } = params;
+  const categoryData = await getCachedCategory(categorySlug);
+  if (!categoryData) {
+    return {
+      title: 'Not Found',
+    };
+  }
+  return {
+    title: `${categoryData.title} | Điện nước Mai Vinh`,
+    description: `Báo giá tất cả sản phẩm thuộc danh mục ${categoryData.title} tại cửa hàng Mai Vinh`,
+    keywords: [`phụ kiện`, `ống nước`, `uPVC`, `Mai Vinh`, `điện nước`, `dây điện`, `báo giá`, `Đồng Lâm`, `Thắng Kiên`, `Cát Khánh`, `Điện nước Mai Vinh`, `${categoryData.title}`],
+    openGraph: {
+      title: `${categoryData.title} | Điện nước Mai Vinh`,
+      description: `Báo giá tất cả sản phẩm thuộc danh mục ${categoryData.title} tại cửa hàng Mai Vinh`,
+      url: `${baseUrl}/${categoryData.slug}`,
+      siteName: 'Báo giá điện nước Mai Vinh',
+      images: [
+        {
+          url: `${baseUrl}/diennuocmaivinh.png`,
+          width: 1200,
+          height: 630,
+          alt: 'Báo giá điện nước Mai Vinh',
+        },
+      ],
+      locale: 'vi_VN',
+      phoneNumbers: ['0982390943', '0976576443'],
+      type: 'website',
+      countryName: 'Việt Nam',
+    },
+    manifest: '/manifest.json',
+    alternates: {
+      canonical: `${baseUrl}/${categoryData.slug}`,
+    },
+    metadataBase: new URL(`${baseUrl}`),
+  };
+}
 
 const getCachedCategory = (slug: string) => unstable_cache(
   async () => {
@@ -17,7 +58,17 @@ const getCachedCategory = (slug: string) => unstable_cache(
   },
   [`category-${slug}`],
   { tags: [`category-${slug}`, 'categories'] }
-)( );
+)();
+
+const getCachedProducts = (categoryId: string) => unstable_cache(
+  async () => {
+    await connectDB();
+    const data = await Product.find({ categoryId }).lean();
+    return JSON.parse(JSON.stringify(data));
+  },
+  [`products-${categoryId}`],
+  { tags: [`products-${categoryId}`, 'products'] }
+)();
 
 export async function generateStaticParams() {
   await connectDB();
@@ -29,18 +80,21 @@ export async function generateStaticParams() {
 
 export default async function TypePage({ params }: { params: Promise<{ category: string }> }) {
   const { category: categorySlug } = await params;
-  
+
   const categoryData = await getCachedCategory(categorySlug);
-  
+
   if (!categoryData) {
     notFound();
   }
-  
+
   const { _id, title, filterField = null, visibleFields = [], layout } = categoryData;
   const categoryId = _id.toString();
 
+  const products = await getCachedProducts(categoryId);
+
   return (
     <main className="min-h-screen bg-slate-50 flex flex-col">
+      <CategorySchema category={categoryData} products={products} />
       {/* Header - Shown immediately (SSG) */}
       <header className="sticky top-0 z-10 bg-white border-b border-slate-200 shadow-sm">
         <div className="flex items-center h-14 px-4 max-w-6xl mx-auto w-full">
@@ -58,17 +112,18 @@ export default async function TypePage({ params }: { params: Promise<{ category:
 
       {/* Content - Client-side fetching via ProductContainer */}
       <div className="flex-1 w-full max-w-6xl mx-auto p-4">
-        <ProductContainer 
-          categoryId={categoryId} 
+        <ProductContainer
+          categoryId={categoryId}
           categorySlug={categorySlug}
-          layout={layout} 
-          filterField={filterField} 
-          visibleFields={visibleFields} 
+          layout={layout}
+          filterField={filterField}
+          visibleFields={visibleFields}
+          initialProducts={products}
         />
       </div>
 
-      <AddProductButton 
-        categoryId={categoryId} 
+      <AddProductButton
+        categoryId={categoryId}
         showImageField={layout !== 'table'}
       />
     </main>

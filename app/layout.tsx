@@ -1,17 +1,40 @@
-import type {Metadata, Viewport} from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import QueryProvider from '@/components/providers/query-provider';
 import { SkeletonProvider } from '@/components/providers/skeleton-provider';
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
 export const metadata: Metadata = {
-  title: 'Báo giá Phụ kiện Mai Vinh',
-  description: 'Báo giá phụ kiện ống nước uPVC Mai Vinh',
-  manifest: '/manifest.json',
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'default',
-    title: 'Mai Vinh',
+  title: {
+    template: '%s | Điện nước Mai Vinh',
+    default: 'Báo giá điện nước Mai Vinh | Điện nước Mai Vinh',
   },
+  description: 'Báo giá tất cả các sản phẩm điện nước tại cửa hàng Mai Vinh',
+  keywords: ['phụ kiện', 'ống nước', 'uPVC', 'Mai Vinh', 'điện nước', 'dây điện', 'báo giá', 'Đồng Lâm', 'Thắng Kiên', 'Cát Khánh', 'Điện nước Mai Vinh'],
+  openGraph: {
+    title: 'Báo giá điện nước Mai Vinh | Điện nước Mai Vinh',
+    description: 'Báo giá tất cả các sản phẩm điện nước tại cửa hàng Mai Vinh',
+    url: `${baseUrl}`,
+    siteName: 'Báo giá điện nước Mai Vinh',
+    images: [
+      {
+        url: `${baseUrl}/diennuocmaivinh.png`,
+        width: 1200,
+        height: 630,
+        alt: 'Báo giá điện nước Mai Vinh',
+      },
+    ],
+    locale: 'vi_VN',
+    phoneNumbers: ['0982390943', '0976576443'],
+    type: 'website',
+    countryName: 'Việt Nam',
+  },
+  manifest: '/manifest.json',
+  alternates: {
+    canonical: `${baseUrl}`,
+  },
+  metadataBase: new URL(`${baseUrl}`),
 };
 
 export const viewport: Viewport = {
@@ -22,7 +45,7 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
-export default function RootLayout({children}: {children: React.ReactNode}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="vi">
       <body className="bg-slate-50 text-slate-900 antialiased" suppressHydrationWarning>

@@ -20,11 +20,12 @@ const fetchProducts = async (categoryId?: string): Promise<Product[]> => {
     return result.data;
 };
 
-export function useProducts(categoryId?: string) {
+export function useProducts(categoryId?: string, initialData?: Product[]) {
     return useQuery({
         queryKey: ['products', categoryId],
         queryFn: () => fetchProducts(categoryId),
         enabled: !!categoryId, // Only run the query if categoryId is available
+        initialData,
     });
 }
 
