@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { getBlurPlaceholder } from '@/lib/image-blur';
 import { connectDB } from '@/lib/mongodb';
 import Category from '@/models/Category';
 import { AddCategoryButton } from '@/components/AddCategoryButton';
@@ -48,6 +49,7 @@ async function CategoryGrid() {
                 fill
                 sizes="(max-width: 640px) 50vw, 256px"
                 className="object-cover"
+                {...getBlurPlaceholder(category.image?.secure_url || category.image?.url)}
               />
             </div>
             {/* Title */}

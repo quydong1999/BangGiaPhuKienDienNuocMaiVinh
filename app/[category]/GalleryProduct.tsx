@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
+import { getBlurPlaceholder } from '@/lib/image-blur';
 import type { Product } from '@/types/types';
 import { PendingProductSkeleton } from '@/components/PendingSkeletons';
 import { ProductFormModal } from '@/components/ProductFormModal';
@@ -63,6 +64,7 @@ export default function GalleryProduct({ data, categoryId }: GalleryProductProps
                 fill
                 sizes="(min-width: 768px) 200px, 50vw"
                 className="object-cover group-hover:scale-105 transition-transform"
+                {...getBlurPlaceholder(item.image?.secure_url)}
               />
             </div>
             <div className="p-3 space-y-1 text-left">
@@ -107,6 +109,7 @@ export default function GalleryProduct({ data, categoryId }: GalleryProductProps
                 fill
                 sizes="(min-width: 768px) 480px, 100vw"
                 className="object-cover"
+                {...getBlurPlaceholder(selected.image?.secure_url, 800, 600)}
               />
             </div>
             <div className="p-4 space-y-2">
