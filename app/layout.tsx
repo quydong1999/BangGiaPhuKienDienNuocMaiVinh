@@ -8,16 +8,16 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | Điện nước Mai Vinh',
-    default: 'Báo giá điện nước Mai Vinh | Điện nước Mai Vinh',
+    template: '%s | Điện nước Mai Vinh - Đề Gi - Bình Định',
+    default: 'Báo giá các thiết bị, phụ kiện điện nước gia dụng chuyên nghiệp | Điện nước Mai Vinh - Đề Gi - Bình Định',
   },
-  description: 'Báo giá tất cả các sản phẩm điện nước tại cửa hàng Mai Vinh',
+  description: 'Chuyên cung cấp sỉ, lẻ tất cả các loại thiết bị, phụ kiện, sản phẩm điện nước gia dụng tại nhà chuyên nghiệp',
   keywords: ['phụ kiện', 'ống nước', 'uPVC', 'Mai Vinh', 'điện nước', 'dây điện', 'báo giá', 'Đồng Lâm', 'Thắng Kiên', 'Cát Khánh', 'Điện nước Mai Vinh'],
   openGraph: {
-    title: 'Báo giá điện nước Mai Vinh | Điện nước Mai Vinh',
-    description: 'Báo giá tất cả các sản phẩm điện nước tại cửa hàng Mai Vinh',
+    title: 'Báo giá điện nước Mai Vinh | Điện nước Mai Vinh - Đề Gi - Bình Định',
+    description: 'Chuyên cung cấp sỉ, lẻ tất cả các loại thiết bị, phụ kiện, sản phẩm điện nước gia dụng tại nhà chuyên nghiệp',
     url: `${baseUrl}`,
-    siteName: 'Báo giá điện nước Mai Vinh',
+    siteName: 'Báo giá điện nước Mai Vinh - Đề Gi - Bình Định',
     images: [
       {
         url: `${baseUrl}/diennuocmaivinh.png`,

@@ -7,8 +7,8 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
 
   if (!query) {
     return {
-      title: 'Tìm kiếm | Điện nước Mai Vinh',
-      description: 'Tìm kiếm sản phẩm',
+      title: 'Tìm kiếm sản phẩm điện nước | Điện nước Mai Vinh - Đề Gi - Bình Định',
+      description: 'Tìm kiếm nhanh chóng các thiết bị, phụ kiện điện nước chính hãng tại hệ thống cửa hàng Điện nước Mai Vinh - Đề Gi - Bình Định. Cung cấp báo giá sỉ lẻ đa dạng mặt hàng.',
       robots: {
         index: false,
         follow: true,
@@ -20,14 +20,14 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   }
 
   return {
-    title: `Kết quả tìm kiếm: "${query}" | Điện nước Mai Vinh`,
-    description: `Kết quả tìm kiếm: "${query}"`,
+    title: `Kết quả tìm kiếm sản phẩm: "${query}" | Điện nước Mai Vinh - Đề Gi - Bình Định`,
+    description: `Tổng hợp chi tiết kết quả tìm kiếm cho các sản phẩm "${query}" chính hãng tại cửa hàng Điện nước Mai Vinh - Đề Gi - Bình Định. Cam kết giá cả cạnh tranh, chất lượng uy tín.`,
     keywords: [`phụ kiện`, `ống nước`, `uPVC`, `Mai Vinh`, `điện nước`, `dây điện`, `báo giá`, `Đồng Lâm`, `Thắng Kiên`, `Cát Khánh`, `Điện nước Mai Vinh`, `${query}`],
     openGraph: {
-      title: `Kết quả tìm kiếm: "${query}" | Điện nước Mai Vinh`,
-      description: `Kết quả tìm kiếm: "${query}"`,
+      title: `Kết quả tìm kiếm sản phẩm: "${query}" | Điện nước Mai Vinh - Đề Gi - Bình Định`,
+      description: `Tổng hợp chi tiết kết quả tìm kiếm cho các sản phẩm "${query}" chính hãng tại cửa hàng Điện nước Mai Vinh - Đề Gi - Bình Định. Cam kết giá cả cạnh tranh, chất lượng uy tín.`,
       url: `${baseUrl}/search?q=${encodeURIComponent(query)}`,
-      siteName: 'Báo giá điện nước Mai Vinh',
+      siteName: 'Báo giá điện nước Mai Vinh - Đề Gi - Bình Định',
       images: [
         {
           url: `${baseUrl}/diennuocmaivinh.png`,
