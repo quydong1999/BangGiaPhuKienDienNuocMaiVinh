@@ -60,9 +60,10 @@ export function ProductFormModal({
     handleSubmit,
     setValue,
     reset,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
+    mode: "onChange",
     defaultValues: {
       name: "",
       spec: "",
@@ -343,7 +344,7 @@ export function ProductFormModal({
                 </button>
                 <button
                   type="submit"
-                  disabled={isPending || isCompressing}
+                  disabled={isPending || isCompressing || !isValid}
                   className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {isPending || isCompressing ? (
@@ -368,7 +369,7 @@ export function ProductFormModal({
                 </button>
                 <button
                   type="submit"
-                  disabled={isPending || isCompressing}
+                  disabled={isPending || isCompressing || !isValid}
                   className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {isPending || isCompressing ? (

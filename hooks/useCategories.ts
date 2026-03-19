@@ -87,3 +87,49 @@ export function useCreateCategory() {
     },
   });
 }
+
+export function useUpdateCategory() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ slug, formData }: { slug: string; formData: FormData }) => {
+      const response = await fetch(`/api/categories/${slug}`, {
+        method: "PATCH",
+        body: formData,
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message || "Có lỗi xảy ra khi cập nhật danh mục");
+      }
+      return result;
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+      queryClient.invalidateQueries({ queryKey: ["category", variables.slug] });
+    },
+  });
+}
+
+export function useDeleteCategory() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (slug: string) => {
+      const response = await fetch(`/api/categories/${slug}`, {
+        method: "DELETE",
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message || "Có lỗi xảy ra khi xóa danh mục");
+      }
+      return result;
+    },
+    onSuccess: (_, slug) => {
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+      queryClient.invalidateQueries({ queryKey: ["category", slug] });
+    },
+  });
+}
+

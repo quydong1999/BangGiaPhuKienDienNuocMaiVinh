@@ -1,17 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { useCreateCategory } from "@/hooks/useCategories";
+import { useCreateCategory, useUpdateCategory, useDeleteCategory, useCategories } from "@/hooks/useCategories";
 import { useSkeleton } from "@/components/providers/skeleton-provider";
-import { X, Upload, Plus } from "lucide-react";
+import { X, Upload, Plus, Save, Trash2 } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import imageCompression from "browser-image-compression";
 
-// Zod Schema Definition
-const categorySchema = z.object({
+const baseCategorySchema = z.object({
   title: z.string().min(1, { message: "Tên danh mục không được bỏ trống" }),
   slug: z.string().min(1, { message: "Đường dẫn không được bỏ trống" }),
   shortTitle: z.string().min(1, { message: "Tên rút gọn không được bỏ trống" }),
@@ -21,11 +20,13 @@ const categorySchema = z.object({
   visibleFields: z.array(z.string()),
 });
 
-type CategoryFormValues = z.infer<typeof categorySchema>;
+type CategoryFormValues = z.infer<typeof baseCategorySchema>;
 
 interface CategoryFormModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialData?: any;
+  productCount?: number;
 }
 
 const generateSlug = (text: string) => {
@@ -40,7 +41,7 @@ const generateSlug = (text: string) => {
     .replace(/^-+|-+$/g, "");
 };
 
-export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
+export function CategoryFormModal({ isOpen, onClose, initialData, productCount }: CategoryFormModalProps) {
   const router = useRouter();
   const { setIsAddingCategory, startRefresh } = useSkeleton();
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -49,6 +50,25 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
   const [isCompressing, setIsCompressing] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
+  const isEdit = !!initialData;
+
+  const { data: existingCategories } = useCategories();
+  const existingSlugs = useMemo(() => {
+    return existingCategories ? existingCategories.map((c: any) => c.slug) : [];
+  }, [existingCategories]);
+
+  const schema = useMemo(() => {
+    return baseCategorySchema.extend({
+      slug: z.string().min(1, { message: "Đường dẫn không được bỏ trống" }).refine(
+        (val) => {
+          if (isEdit && initialData?.slug === val) return true;
+          return !existingSlugs.includes(val);
+        },
+        { message: "Đường dẫn (Slug) này đã tồn tại" }
+      )
+    });
+  }, [existingSlugs, isEdit, initialData?.slug]);
+
   const {
     register,
     handleSubmit,
@@ -56,9 +76,10 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
     setValue,
     control,
     reset,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<CategoryFormValues>({
-    resolver: zodResolver(categorySchema),
+    resolver: zodResolver(schema),
+    mode: "onChange",
     defaultValues: {
       title: "",
       slug: "",
@@ -76,20 +97,33 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
   // Reset form when modal opens
   useEffect(() => {
     if (isOpen) {
-      reset({
-        title: "",
-        slug: "",
-        shortTitle: "",
-        layout: "table",
-        filterField: "null",
-        visibleFields: ["name", "priceSell", "spec"], // mặc định có 2 thằng bắt buộc và spec
-      });
-      setShortTitleEdited(false);
+      if (initialData) {
+        reset({
+          title: initialData.title,
+          slug: initialData.slug,
+          shortTitle: initialData.shortTitle,
+          layout: initialData.layout || "table",
+          filterField: initialData.filterField || "null",
+          visibleFields: initialData.visibleFields || ["name", "priceSell", "spec"],
+        });
+        setPreviewUrl(initialData.image?.secure_url || null);
+        setShortTitleEdited(true);
+      } else {
+        reset({
+          title: "",
+          slug: "",
+          shortTitle: "",
+          layout: "table",
+          filterField: "null",
+          visibleFields: ["name", "priceSell", "spec"],
+        });
+        setPreviewUrl(null);
+        setShortTitleEdited(false);
+      }
       setSubmitError(null);
       setSelectedFile(null);
-      setPreviewUrl(null);
     }
-  }, [isOpen, reset]);
+  }, [isOpen, reset, initialData]);
 
   // Handle object url memory cleanup
   useEffect(() => {
@@ -117,7 +151,11 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
     }
   }, [watchTitle, setValue, shortTitleEdited]);
 
-  const mutation = useCreateCategory();
+  const createMutation = useCreateCategory();
+  const updateMutation = useUpdateCategory();
+  const deleteMutation = useDeleteCategory();
+
+  const isPending = createMutation.isPending || updateMutation.isPending || deleteMutation.isPending;
 
   const onSubmit = (data: CategoryFormValues) => {
     setSubmitError(null);
@@ -137,20 +175,53 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
       data.visibleFields.forEach(field => formData.append("visibleFields", field));
     }
 
-    mutation.mutate(formData, {
-      onSuccess: () => {
-        setIsAddingCategory(true);
-        startRefresh(() => {
-          router.refresh();
-          onClose();
-          // We don't set setIsAddingCategory(false) immediately. 
-          // It will be reset when the refresh finishes (via useEffect or by being a fresh server update)
-        });
-      },
-      onError: (err: any) => {
-        setSubmitError(err.message);
-      }
-    });
+    if (isEdit && initialData) {
+      updateMutation.mutate({ slug: initialData.slug, formData }, {
+        onSuccess: () => {
+          setIsAddingCategory(true);
+          startRefresh(() => {
+            router.refresh();
+            onClose();
+          });
+        },
+        onError: (err: any) => {
+          setSubmitError(err.message);
+        }
+      });
+    } else {
+      createMutation.mutate(formData, {
+        onSuccess: () => {
+          setIsAddingCategory(true);
+          startRefresh(() => {
+            router.refresh();
+            onClose();
+          });
+        },
+        onError: (err: any) => {
+          setSubmitError(err.message);
+        }
+      });
+    }
+  };
+
+  const handleDelete = () => {
+    if (!initialData) return;
+    if (productCount && productCount > 0) return;
+    
+    if (window.confirm("Bạn có chắc chắn muốn xóa danh mục này?")) {
+      deleteMutation.mutate(initialData.slug, {
+        onSuccess: () => {
+          setIsAddingCategory(true);
+          startRefresh(() => {
+            router.refresh();
+            onClose();
+          });
+        },
+        onError: (err: any) => {
+          setSubmitError(err.message);
+        }
+      });
+    }
   };
 
   // Reset isAddingCategory when the modal is fully closed and refresh might be done 
@@ -180,11 +251,13 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
       <div className="bg-white shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto flex flex-col">
         <div className="flex justify-between items-center p-5 sticky top-0 bg-white z-10">
-          <h2 className="text-xl font-bold text-slate-800">Thêm Danh Mục Mới</h2>
+          <h2 className="text-xl font-bold text-slate-800">
+            {isEdit ? "Chỉnh Sửa Danh Mục" : "Thêm Danh Mục Mới"}
+          </h2>
           <button
             onClick={onClose}
             type="button"
-            disabled={mutation.isPending || isCompressing}
+            disabled={isPending || isCompressing}
             className="p-1 hover:bg-slate-100 text-slate-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <X size={20} />
@@ -203,7 +276,7 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
             <input
               {...register("title")}
               type="text"
-              disabled={mutation.isPending || isCompressing}
+              disabled={isPending || isCompressing}
               className="w-full p-2.5 border border-gray-400 focus:ring-2 focus:ring-emerald-500 outline-none transition-shadow disabled:bg-slate-100 disabled:text-slate-500"
               placeholder="VD: Phụ kiện ống nước uPVC"
             />
@@ -226,7 +299,7 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
             <label className="text-sm font-medium text-slate-700">Tên rút gọn (Hiển thị lưới) <span className="text-red-500">*</span></label>
             <input
               {...register("shortTitle")}
-              disabled={mutation.isPending || isCompressing}
+              disabled={isPending || isCompressing}
               onChange={(e) => {
                 setShortTitleEdited(true);
                 setValue("shortTitle", e.target.value, { shouldValidate: true });
@@ -255,7 +328,7 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
               <input
                 type="file"
                 accept="image/*"
-                disabled={mutation.isPending || isCompressing}
+                disabled={isPending || isCompressing}
                 onChange={async (e) => {
                   if (e.target.files && e.target.files.length > 0) {
                     const imageFile = e.target.files[0];
@@ -293,7 +366,7 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
                 <span className="text-xs text-slate-500 truncate max-w-[200px]">{selectedFile.name}</span>
                 <button
                   type="button"
-                  disabled={mutation.isPending || isCompressing}
+                  disabled={isPending || isCompressing}
                   onClick={(e) => {
                     e.preventDefault();
                     setSelectedFile(null);
@@ -313,7 +386,7 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
                 <input
                   type="radio"
                   {...register("layout")}
-                  disabled={mutation.isPending || isCompressing}
+                  disabled={isPending || isCompressing}
                   value="table"
                   className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 disabled:opacity-50"
                 />
@@ -323,7 +396,7 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
                 <input
                   type="radio"
                   {...register("layout")}
-                  disabled={mutation.isPending || isCompressing}
+                  disabled={isPending || isCompressing}
                   value="gallery"
                   className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 disabled:opacity-50"
                 />
@@ -342,7 +415,7 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
                     <input
                       type="radio"
                       {...register("filterField")}
-                      disabled={mutation.isPending || isCompressing}
+                      disabled={isPending || isCompressing}
                       value="null"
                       className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 disabled:opacity-50"
                     />
@@ -352,7 +425,7 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
                     <input
                       type="radio"
                       {...register("filterField")}
-                      disabled={mutation.isPending || isCompressing}
+                      disabled={isPending || isCompressing}
                       value="name"
                       className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 disabled:opacity-50"
                     />
@@ -362,7 +435,7 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
                     <input
                       type="radio"
                       {...register("filterField")}
-                      disabled={mutation.isPending || isCompressing}
+                      disabled={isPending || isCompressing}
                       value="spec"
                       className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 disabled:opacity-50"
                     />
@@ -388,7 +461,7 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
                     <input
                       type="checkbox"
                       checked={isSpecVisible}
-                      disabled={mutation.isPending || isCompressing}
+                      disabled={isPending || isCompressing}
                       onChange={(e) => handleVisibleFieldChange("spec", e.target.checked)}
                       className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-500 disabled:opacity-50"
                     />
@@ -398,7 +471,7 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
                     <input
                       type="checkbox"
                       checked={isUnitVisible}
-                      disabled={mutation.isPending || isCompressing}
+                      disabled={isPending || isCompressing}
                       onChange={(e) => handleVisibleFieldChange("unit", e.target.checked)}
                       className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-500 disabled:opacity-50"
                     />
@@ -420,28 +493,59 @@ export function CategoryFormModal({ isOpen, onClose }: CategoryFormModalProps) {
           )}
 
           <div className="mt-4 flex gap-3">
-            <button
-              type="button"
-              onClick={onClose}
-              disabled={mutation.isPending || isCompressing}
-              className="flex-1 px-4 py-2.5 border text-slate-700 font-medium hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Hủy
-            </button>
-            <button
-              type="submit"
-              disabled={mutation.isPending || isCompressing}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
-            >
-              {mutation.isPending || isCompressing ? (
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white animate-spin" />
-              ) : (
-                <>
-                  <Plus size={18} />
-                  Thêm mới
-                </>
-              )}
-            </button>
+            {isEdit ? (
+              <>
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  disabled={isPending || isCompressing || (productCount ? productCount > 0 : false)}
+                  title={productCount && productCount > 0 ? `Không thể xóa vì danh mục đang có ${productCount} sản phẩm` : "Xóa danh mục"}
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 border border-red-200 text-red-600 font-medium hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Trash2 size={18} />
+                  Xóa
+                </button>
+                <button
+                  type="submit"
+                  disabled={isPending || isCompressing || !isValid}
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  {isPending || isCompressing ? (
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white animate-spin" />
+                  ) : (
+                    <>
+                      <Save size={18} />
+                      Cập nhật
+                    </>
+                  )}
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  disabled={isPending || isCompressing}
+                  className="flex-1 px-4 py-2.5 border text-slate-700 font-medium hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  disabled={isPending || isCompressing || !isValid}
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  {isPending || isCompressing ? (
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white animate-spin" />
+                  ) : (
+                    <>
+                      <Plus size={18} />
+                      Thêm mới
+                    </>
+                  )}
+                </button>
+              </>
+            )}
           </div>
         </form>
       </div>
