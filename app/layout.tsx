@@ -1,9 +1,12 @@
+import { SessionProvider } from "next-auth/react"
+import OneTapProvider from "@/components/providers/OneTapProvider";
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import QueryProvider from '@/components/providers/query-provider';
 import { SkeletonProvider } from '@/components/providers/skeleton-provider';
 import BusinessSchema from '@/components/providers/BusinessSchema';
+
 
 const inter = Inter({
   subsets: ['vietnamese'],
@@ -65,9 +68,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </a>
         <BusinessSchema />
         <QueryProvider>
-          <SkeletonProvider>
-            {children}
-          </SkeletonProvider>
+          <SessionProvider>
+            <SkeletonProvider>
+                <OneTapProvider />
+                {children}
+            </SkeletonProvider>
+          </SessionProvider>
         </QueryProvider>
       </body>
     </html>

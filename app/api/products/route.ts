@@ -1,3 +1,4 @@
+import { auth } from "@/auth"
 import { NextResponse } from 'next/server';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { connectDB } from '@/lib/mongodb';
@@ -59,6 +60,12 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
     try {
+        const session = await auth()
+
+        if (!session?.user?.isAdmin) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
+        }
+
         await connectDB();
 
         const formData = await req.formData();

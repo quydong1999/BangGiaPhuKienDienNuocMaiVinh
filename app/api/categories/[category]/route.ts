@@ -1,3 +1,4 @@
+import { auth } from "@/auth"
 import { NextResponse } from 'next/server';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { connectDB } from '@/lib/mongodb';
@@ -62,6 +63,12 @@ export async function PATCH(
   { params }: { params: Promise<{ category: string }> }
 ) {
   try {
+    const session = await auth()
+
+    if (!session?.user?.isAdmin) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
+    }
+
     const { category } = await params;
     await connectDB();
 
@@ -71,11 +78,11 @@ export async function PATCH(
     const shortTitle = formData.get('shortTitle') as string;
     const layout = formData.get('layout') as string;
     const filterField = formData.get('filterField') as string;
-    
+
     // Xử lý visibleFields
     const visibleFieldsRaw = formData.getAll('visibleFields');
     const visibleFields = visibleFieldsRaw.length > 0 ? visibleFieldsRaw : [];
-    
+
     const imageFile = formData.get('image') as File | null;
 
     if (!slug || !title) {
@@ -188,11 +195,17 @@ export async function DELETE(
   { params }: { params: Promise<{ category: string }> }
 ) {
   try {
+    const session = await auth()
+
+    if (!session?.user?.isAdmin) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
+    }
+
     const { category } = await params;
     await connectDB();
 
     const categoryToDelete = await Category.findOne({ slug: category });
-    
+
     if (!categoryToDelete) {
       return NextResponse.json(
         { success: false, message: "Không tìm thấy danh mục" },

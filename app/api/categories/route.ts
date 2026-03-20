@@ -1,3 +1,4 @@
+import { auth } from "@/auth"
 import { NextResponse } from 'next/server';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { connectDB } from '@/lib/mongodb';
@@ -10,7 +11,7 @@ export async function GET() {
     // 1. Thử lấy từ Redis
     console.log("--- Đang kiểm tra cache Redis cho Categories... ---");
     const cachedCategories = await redis.get(CACHE_KEYS.CATEGORIES_ALL);
-    
+
     if (cachedCategories) {
       console.log("--- Cache Hit! Trả về dữ liệu từ Redis. ---");
       return NextResponse.json({
@@ -49,6 +50,12 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
+    const session = await auth()
+
+    if (!session?.user?.isAdmin) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
+    }
+
     await connectDB();
 
     // 1. Lấy dữ liệu từ FormData thay vì JSON

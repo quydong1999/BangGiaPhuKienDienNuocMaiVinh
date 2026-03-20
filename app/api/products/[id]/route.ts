@@ -1,3 +1,4 @@
+import { auth } from "@/auth"
 import { NextResponse } from 'next/server';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { connectDB } from '@/lib/mongodb';
@@ -11,6 +12,12 @@ export async function PATCH(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const session = await auth()
+
+        if (!session?.user?.isAdmin) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
+        }
+
         await connectDB();
         const { id } = await params;
 
@@ -72,7 +79,7 @@ export async function PATCH(
         console.log(`--- Đang xóa cache Redis cho Products của category: ${categoryId}... ---`);
         await redis.del(CACHE_KEYS.PRODUCTS_BY_CATEGORY(categoryId));
         await redis.del(CACHE_KEYS.PRODUCTS_ALL);
-        
+
         if (existingProduct.categoryId.toString() !== categoryId) {
             console.log(`--- Đang xóa cache Redis cho Products của category cũ: ${existingProduct.categoryId}... ---`);
             await redis.del(CACHE_KEYS.PRODUCTS_BY_CATEGORY(existingProduct.categoryId.toString()));
@@ -120,6 +127,12 @@ export async function DELETE(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const session = await auth()
+
+        if (!session?.user?.isAdmin) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
+        }
+
         await connectDB();
         const { id } = await params;
 

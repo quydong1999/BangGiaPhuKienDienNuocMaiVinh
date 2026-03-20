@@ -4,6 +4,8 @@ import { useState, useMemo, useRef, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import type { Product, FilterField, VisibleField } from '@/types/types';
 import { PendingProductSkeleton } from '@/components/PendingSkeletons';
+import { useAdmin } from "@/hooks/useAdmin"
+import LoginModal from "@/components/LoginModal"
 import { ProductFormModal } from '@/components/ProductFormModal';
 
 interface ProductListProps {
@@ -17,6 +19,8 @@ export default function ProductList({ data, filterField, visibleFields, category
   const [selectedField, setSelectedField] = useState<string>('Tất cả');
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const searchParams = useSearchParams();
+  const { isAdmin } = useAdmin()
+  const [showLogin, setShowLogin] = useState(false)
 
   useEffect(() => {
     const productId = searchParams.get('productId');
@@ -110,7 +114,7 @@ export default function ProductList({ data, filterField, visibleFields, category
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
-                {filteredData.map((item, index) => (
+              {filteredData.map((item, index) => (
                 <tr
                   key={`${item._id}-${index}`}
                   id={`product-${item._id}`}
@@ -121,11 +125,17 @@ export default function ProductList({ data, filterField, visibleFields, category
 
                     if (field === 'spec') {
                       return (
-                        <td 
-                          key={field} 
+                        <td
+                          key={field}
                           className="px-4 py-3"
                           {...(fIndex === 0 ? {
-                            onDoubleClick: () => setEditingProduct(item),
+                            onDoubleClick: () => {
+                              if (isAdmin) {
+                                setEditingProduct(item);
+                              } else {
+                                setShowLogin(true);
+                              }
+                            },
                           } : {})}
                         >
                           <span
@@ -146,7 +156,13 @@ export default function ProductList({ data, filterField, visibleFields, category
                             'px-4 py-3 text-right font-bold text-slate-900' : 'px-4 py-3 font-medium text-slate-900'
                         }
                         {...(fIndex === 0 ? {
-                          onDoubleClick: () => setEditingProduct(item),
+                          onDoubleClick: () => {
+                            if (isAdmin) {
+                              setEditingProduct(item);
+                            } else {
+                              setShowLogin(true);
+                            }
+                          },
                         } : {})}
                       >
                         {value}
@@ -155,10 +171,10 @@ export default function ProductList({ data, filterField, visibleFields, category
                   })}
                 </tr>
               ))}
-              <PendingProductSkeleton 
-                categoryId={categoryId} 
-                layout="table" 
-                visibleFieldsCount={visibleFields.length} 
+              <PendingProductSkeleton
+                categoryId={categoryId}
+                layout="table"
+                visibleFieldsCount={visibleFields.length}
               />
             </tbody>
           </table>
@@ -178,6 +194,10 @@ export default function ProductList({ data, filterField, visibleFields, category
         categoryId={categoryId}
         initialData={editingProduct}
         showImageField={false}
+      />
+      <LoginModal
+        isOpen={showLogin}
+        onClose={() => setShowLogin(false)}
       />
     </div>
   );

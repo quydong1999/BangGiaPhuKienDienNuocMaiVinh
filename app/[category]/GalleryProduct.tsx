@@ -6,6 +6,8 @@ import { useSearchParams } from 'next/navigation';
 import { getBlurPlaceholder } from '@/lib/image-blur';
 import type { Product } from '@/types/types';
 import { PendingProductSkeleton } from '@/components/PendingSkeletons';
+import { useAdmin } from "@/hooks/useAdmin"
+import LoginModal from "@/components/LoginModal"
 import dynamic from 'next/dynamic';
 
 const ProductFormModal = dynamic(() => import('@/components/ProductFormModal').then(mod => mod.ProductFormModal), { ssr: false });
@@ -22,6 +24,8 @@ export default function GalleryProduct({ data, categoryId }: GalleryProductProps
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const clickTimer = useRef<NodeJS.Timeout | null>(null);
   const searchParams = useSearchParams();
+  const { isAdmin } = useAdmin()
+  const [showLogin, setShowLogin] = useState(false)
 
   useEffect(() => {
     const productId = searchParams.get('productId');
@@ -38,7 +42,11 @@ export default function GalleryProduct({ data, categoryId }: GalleryProductProps
       // If a second click happens within 300ms, it's a double click
       clearTimeout(clickTimer.current);
       clickTimer.current = null;
-      setEditingProduct(product);
+      if (isAdmin) {
+        setEditingProduct(product);
+      } else {
+        setShowLogin(true);
+      }
     } else {
       // First click: start timer
       clickTimer.current = setTimeout(() => {
@@ -153,6 +161,10 @@ export default function GalleryProduct({ data, categoryId }: GalleryProductProps
         onClose={() => setEditingProduct(null)}
         categoryId={categoryId}
         initialData={editingProduct}
+      />
+      <LoginModal
+        isOpen={showLogin}
+        onClose={() => setShowLogin(false)}
       />
     </div>
   );

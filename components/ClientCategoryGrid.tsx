@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useRef } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { getBlurPlaceholder } from "@/lib/image-blur";
 import { PendingCategorySkeleton } from "@/components/PendingSkeletons";
+import { useAdmin } from "@/hooks/useAdmin"
+import LoginModal from "@/components/LoginModal"
 import dynamic from "next/dynamic";
 
 const CategoryFormModal = dynamic(
@@ -40,6 +41,18 @@ export function ClientCategoryGrid({ categories }: ClientCategoryGridProps) {
   const router = useRouter();
   const [editingCategory, setEditingCategory] = useState<CategoryWithCount | null>(null);
   const clickTimer = useRef<NodeJS.Timeout | null>(null);
+  const { isAdmin } = useAdmin()
+  const [showLogin, setShowLogin] = useState(false)
+
+  const handleEditClick = (e: React.MouseEvent, category: CategoryWithCount) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isAdmin) {
+      setEditingCategory(category);
+    } else {
+      setShowLogin(true);
+    }
+  };
 
   if (!categories || categories.length === 0) {
     return (
@@ -56,7 +69,7 @@ export function ClientCategoryGrid({ categories }: ClientCategoryGridProps) {
       // Double click
       clearTimeout(clickTimer.current);
       clickTimer.current = null;
-      setEditingCategory(category);
+      handleEditClick(e, category);
     } else {
       // Single click
       clickTimer.current = setTimeout(() => {
@@ -110,6 +123,10 @@ export function ClientCategoryGrid({ categories }: ClientCategoryGridProps) {
         onClose={() => setEditingCategory(null)}
         initialData={editingCategory}
         productCount={editingCategory?.productCount || 0}
+      />
+      <LoginModal
+        isOpen={showLogin}
+        onClose={() => setShowLogin(false)}
       />
     </>
   );
