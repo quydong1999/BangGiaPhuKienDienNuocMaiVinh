@@ -40,10 +40,10 @@ interface ProductFormModalProps {
   showImageField?: boolean;
 }
 
-export function ProductFormModal({ 
-  isOpen, 
-  onClose, 
-  categoryId, 
+export function ProductFormModal({
+  isOpen,
+  onClose,
+  categoryId,
   initialData,
   showImageField = true
 }: ProductFormModalProps) {
@@ -282,7 +282,7 @@ export function ProductFormModal({
                   onChange={async (e) => {
                     if (e.target.files && e.target.files.length > 0) {
                       const imageFile = e.target.files[0];
-                      
+
                       // Nén ảnh nếu file lớn hơn 1MB
                       if (imageFile.size > 1024 * 1024) {
                         setIsCompressing(true);
@@ -358,30 +358,20 @@ export function ProductFormModal({
                 </button>
               </>
             ) : (
-              <>
-                <button
-                  type="button"
-                  onClick={onClose}
-                  disabled={isPending || isCompressing}
-                  className="flex-1 px-4 py-2.5 border text-slate-700 font-medium hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Hủy
-                </button>
-                <button
-                  type="submit"
-                  disabled={isPending || isCompressing || !isValid}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
-                >
-                  {isPending || isCompressing ? (
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white animate-spin" />
-                  ) : (
-                    <>
-                      <Plus size={18} />
-                      Thêm mới
-                    </>
-                  )}
-                </button>
-              </>
+              <button
+                type="submit"
+                disabled={isPending || isCompressing || !isValid}
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {isPending || isCompressing ? (
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white animate-spin" />
+                ) : (
+                  <>
+                    <Plus size={18} />
+                    Thêm mới
+                  </>
+                )}
+              </button>
             )}
           </div>
         </form>
