@@ -47,7 +47,7 @@ export function HomeHeader({ compact = false }: HomeHeaderProps = {}) {
             <button
               onClick={() => dispatch(openModal({ type: 'search' }))}
               className={`w-full flex items-center gap-2 h-10 px-3 sm:px-4 rounded-lg transition-all border text-sm focus:outline-none ${compact
-                ? 'bg-white/10 hover:bg-white/20 border-white/20 text-white/90 shadow-inner'
+                ? 'bg-white/30 hover:bg-white/40 border-white/20 text-white/90 shadow-inner'
                 : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-500 shadow-sm'
                 }`}
               aria-label="Tìm kiếm sản phẩm"

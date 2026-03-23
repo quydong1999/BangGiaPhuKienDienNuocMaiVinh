@@ -3,7 +3,6 @@ import { connectDB } from '@/lib/mongodb';
 import Category from '@/models/Category';
 import { AddCategoryButton } from '@/components/AddCategoryButton';
 import { HomeHeader } from '@/components/HomeHeader';
-import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { unstable_cache } from 'next/cache';
 import { ClientCategoryGrid } from '@/components/ClientCategoryGrid';
 
@@ -64,7 +63,6 @@ export default function HomePage() {
     <main id="main-content" className="min-h-screen bg-light-grey flex flex-col relative pb-24">
       <HomeHeader compact />
       <div className="w-full max-w-6xl mx-auto px-4 mt-1">
-        <Breadcrumbs items={[{ label: 'Trang chủ' }]} />
         <div className="flex items-center">
           <AddCategoryButton />
         </div>
