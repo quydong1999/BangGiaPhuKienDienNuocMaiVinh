@@ -30,10 +30,12 @@ export function AddProductButton({ categoryId, showImageField = true }: AddProdu
     <>
       <button
         onClick={handleClick}
-        className="fixed bottom-6 right-6 p-4 bg-emerald-600 text-white rounded-full shadow-lg hover:bg-emerald-700 hover:shadow-xl hover:-translate-y-1 transition-all z-40 active:scale-95 flex items-center justify-center"
-        aria-label="Thêm sản phẩm mới"
+        className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 hover:text-emerald-800 rounded-md text-sm font-medium transition-colors shadow-sm whitespace-nowrap z-10 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1"
+        aria-label="Thêm sản phẩm"
       >
-        <Plus size={28} />
+        <Plus size={16} className="-ml-0.5" />
+        <span className="hidden sm:inline">Thêm sản phẩm</span>
+        <span className="sm:hidden">Thêm</span>
       </button>
 
       <ProductFormModal

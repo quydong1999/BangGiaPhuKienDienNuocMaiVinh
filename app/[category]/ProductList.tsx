@@ -7,6 +7,7 @@ import { PendingProductSkeleton } from '@/components/PendingSkeletons';
 import { useAdmin } from "@/hooks/useAdmin"
 import LoginModal from "@/components/LoginModal"
 import { ProductFormModal } from '@/components/ProductFormModal';
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 
 interface ProductListProps {
   data: Product[];
@@ -18,23 +19,17 @@ interface ProductListProps {
 export default function ProductList({ data, filterField, visibleFields, categoryId }: ProductListProps) {
   const [selectedField, setSelectedField] = useState<string>('Tất cả');
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 50;
+
   const searchParams = useSearchParams();
   const { isAdmin } = useAdmin()
   const [showLogin, setShowLogin] = useState(false)
 
+  // Reset trang về 1 khi chọn filter
   useEffect(() => {
-    const productId = searchParams.get('productId');
-    if (productId) {
-      const element = document.getElementById(`product-${productId}`);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        element.classList.add('bg-emerald-50');
-        setTimeout(() => {
-          element.classList.remove('bg-emerald-50');
-        }, 3000);
-      }
-    }
-  }, [searchParams]);
+    setCurrentPage(1);
+  }, [selectedField]);
 
   // Extract unique product names
   const uniqueData = useMemo(() => {
@@ -51,6 +46,36 @@ export default function ProductList({ data, filterField, visibleFields, category
     return data.filter(item => item[filterField] === selectedField);
   }, [data, selectedField, filterField]);
 
+  // Cuộn tới sản phẩm từ URL và chuyển trang thích hợp
+  useEffect(() => {
+    const productId = searchParams.get('productId');
+    if (productId) {
+      const index = filteredData.findIndex(p => p._id === productId);
+      if (index !== -1) {
+        const targetPage = Math.floor(index / ITEMS_PER_PAGE) + 1;
+        setCurrentPage(targetPage);
+
+        setTimeout(() => {
+          const element = document.getElementById(`product-${productId}`);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element.classList.add('bg-emerald-50');
+            setTimeout(() => {
+              element.classList.remove('bg-emerald-50');
+            }, 3000);
+          }
+        }, 100);
+      }
+    }
+  }, [searchParams, filteredData]);
+
+  const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
+
+  const paginatedData = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredData.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [filteredData, currentPage]);
+
   const fieldLabels: Record<VisibleField, string> = {
     name: 'Tên',
     spec: 'Quy cách',
@@ -61,12 +86,12 @@ export default function ProductList({ data, filterField, visibleFields, category
   return (
     <div className="space-y-6">
       {/* Filter */}
-      <nav aria-label="Bộ lọc sản phẩm" className="sticky top-14 z-10 bg-slate-50 pt-2 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
+      <nav aria-label="Bộ lọc sản phẩm" className="sticky top-[102px] sm:top-16 z-10 bg-light-grey pt-2 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
         {filterField && (
           <>
             <label
               htmlFor="product-filter"
-              className="block text-sm font-medium text-slate-700 mb-1"
+              className="block text-sm font-medium text-slate-700 mb-1 mt-2"
             >
               Lọc theo tên sản phẩm
             </label>
@@ -114,7 +139,7 @@ export default function ProductList({ data, filterField, visibleFields, category
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
-              {filteredData.map((item, index) => (
+              {paginatedData.map((item, index) => (
                 <tr
                   key={`${item._id}-${index}`}
                   id={`product-${item._id}`}
@@ -180,6 +205,83 @@ export default function ProductList({ data, filterField, visibleFields, category
           </table>
         </div>
       </div>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-3 sm:px-6">
+
+          {/* Thông tin số lượng (Desktop) */}
+          <div className="hidden sm:block text-sm text-slate-700">
+            Hiển thị <span className="font-medium">{(currentPage - 1) * ITEMS_PER_PAGE + 1}</span> đến{' '}
+            <span className="font-medium">{Math.min(currentPage * ITEMS_PER_PAGE, filteredData.length)}</span> trong{' '}
+            <span className="font-medium">{filteredData.length}</span> kết quả
+          </div>
+
+          {/* Cụm nút chuyển trang (Mobile First) */}
+          <nav className="flex items-center gap-1 sm:gap-2 w-full sm:w-auto justify-center" aria-label="Pagination">
+            {/* Về trang 1 */}
+            <button
+              onClick={() => {
+                setCurrentPage(1);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              disabled={currentPage === 1}
+              className="p-2 sm:px-3 sm:py-2 rounded-md border border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-emerald-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
+              aria-label="Trang đầu"
+              title="Trang đầu"
+            >
+              <ChevronsLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+            </button>
+
+            {/* Trang trước */}
+            <button
+              onClick={() => {
+                setCurrentPage(p => Math.max(1, p - 1));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              disabled={currentPage === 1}
+              className="p-2 sm:px-3 sm:py-2 rounded-md border border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-emerald-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
+              aria-label="Trang trước"
+              title="Trang trước"
+            >
+              <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+            </button>
+
+            {/* Số trang hiện tại */}
+            <div className="flex items-center justify-center px-4 py-2 min-w-[3rem] sm:min-w-[4rem]">
+              {currentPage} <span className="mx-1 font-normal">/</span> {totalPages}
+            </div>
+
+            {/* Trang sau */}
+            <button
+              onClick={() => {
+                setCurrentPage(p => Math.min(totalPages, p + 1));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              disabled={currentPage === totalPages}
+              className="p-2 sm:px-3 sm:py-2 rounded-md border border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-emerald-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
+              aria-label="Trang sau"
+              title="Trang sau"
+            >
+              <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
+            </button>
+
+            {/* Trang cuối */}
+            <button
+              onClick={() => {
+                setCurrentPage(totalPages);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              disabled={currentPage === totalPages}
+              className="p-2 sm:px-3 sm:py-2 rounded-md border border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-emerald-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
+              aria-label="Trang cuối"
+              title="Trang cuối"
+            >
+              <ChevronsRight className="h-4 w-4 sm:h-5 sm:w-5" />
+            </button>
+          </nav>
+        </div>
+      )}
 
       {filteredData.length === 0 && (
         <div className="text-center py-12 text-slate-500">

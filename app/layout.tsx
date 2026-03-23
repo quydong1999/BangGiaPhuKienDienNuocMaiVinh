@@ -1,17 +1,19 @@
 import { SessionProvider } from "next-auth/react"
 import OneTapProvider from "@/components/providers/OneTapProvider";
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { Roboto } from 'next/font/google';
 import './globals.css';
+import { SiteFooter } from '@/components/SiteFooter';
 import QueryProvider from '@/components/providers/query-provider';
 import { SkeletonProvider } from '@/components/providers/skeleton-provider';
 import BusinessSchema from '@/components/providers/BusinessSchema';
 
 
-const inter = Inter({
+const roboto = Roboto({
+  weight: ['300', '400', '500', '700', '900'],
   subsets: ['vietnamese'],
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-roboto',
 });
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
@@ -58,11 +60,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="vi" className={`${inter.variable}`}>
+    <html lang="vi" className={`${roboto.variable}`}>
       <head>
         <link rel="preconnect" href="https://res.cloudinary.com" />
       </head>
-      <body className={`bg-slate-50 text-slate-900 antialiased font-sans`} suppressHydrationWarning>
+      <body className={`bg-light-grey text-slate-900 antialiased font-sans`} suppressHydrationWarning>
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-white focus:text-emerald-600">
           Chuyển đến nội dung chính
         </a>
@@ -71,7 +73,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <SessionProvider>
             <SkeletonProvider>
                 <OneTapProvider />
-                {children}
+                <div className="flex flex-col min-h-screen">
+                  {children}
+                  <SiteFooter />
+                </div>
             </SkeletonProvider>
           </SessionProvider>
         </QueryProvider>

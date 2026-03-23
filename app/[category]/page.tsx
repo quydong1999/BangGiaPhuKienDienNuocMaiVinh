@@ -1,7 +1,8 @@
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ChevronLeft } from 'lucide-react';
+import { HomeHeader } from '@/components/HomeHeader';
+import { Breadcrumbs } from '@/components/Breadcrumbs';
 import ProductContainer from './ProductContainer';
 import { AddProductButton } from '@/components/AddProductButton';
 import CategorySchema from '@/components/CategorySchema';
@@ -93,25 +94,24 @@ export default async function TypePage({ params }: { params: Promise<{ category:
   const products = await getCachedProducts(categoryId);
 
   return (
-    <main id="main-content" className="min-h-screen bg-slate-50 flex flex-col">
+    <main id="main-content" className="min-h-screen bg-light-grey flex flex-col">
       <CategorySchema category={categoryData} products={products} />
-      {/* Header - Shown immediately (SSG) */}
-      <header className="sticky top-0 z-10 bg-white border-b border-slate-200 shadow-sm">
-        <div className="flex items-center h-14 px-4 max-w-6xl mx-auto w-full">
-          <nav aria-label="Điều hướng">
-            <Link
-              href="/"
-              className="p-2 -ml-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-colors inline-flex"
-              aria-label="Quay về trang chủ"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </Link>
-          </nav>
-          <h1 className="text-lg font-semibold text-slate-900 ml-2">
-            {title}
-          </h1>
+      {/* Header & Breadcrumb */}
+      <HomeHeader compact />
+      <div className="w-full max-w-6xl mx-auto px-4 mt-1">
+        <Breadcrumbs
+          items={[
+            { label: 'Trang chủ', href: '/' },
+            { label: title }
+          ]}
+        />
+        <div className="flex items-center">
+          <AddProductButton
+            categoryId={categoryId}
+            showImageField={layout !== 'table'}
+          />
         </div>
-      </header>
+      </div>
 
       {/* Content */}
       <section aria-label="Danh sách sản phẩm" className="flex-1 w-full max-w-6xl mx-auto p-4">
@@ -127,10 +127,7 @@ export default async function TypePage({ params }: { params: Promise<{ category:
         </Suspense>
       </section>
 
-      <AddProductButton
-        categoryId={categoryId}
-        showImageField={layout !== 'table'}
-      />
+
     </main>
   );
 }

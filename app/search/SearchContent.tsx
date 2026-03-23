@@ -2,8 +2,10 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { ChevronLeft, Loader2, Search } from 'lucide-react';
+import { Loader2, Search } from 'lucide-react';
 import Link from 'next/link';
+import { HomeHeader } from '@/components/HomeHeader';
+import { Breadcrumbs } from '@/components/Breadcrumbs';
 import type { Product } from '@/types/types';
 
 interface SearchProduct extends Product {
@@ -125,20 +127,17 @@ export default function SearchContent() {
   const router = useRouter();
 
   return (
-    <main id="main-content" className="min-h-screen bg-slate-50 flex flex-col">
-      <header className="sticky top-0 z-10 bg-white border-b border-slate-200 shadow-sm">
-        <div className="flex items-center h-14 px-4 max-w-6xl mx-auto w-full">
-          <button
-            onClick={() => router.back()}
-            className="p-2 -ml-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-colors"
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </button>
-          <h1 className="text-lg font-semibold text-slate-900 ml-2">
-            Kết Quả Tìm Kiếm
-          </h1>
-        </div>
-      </header>
+    <main id="main-content" className="min-h-screen bg-light-grey flex flex-col">
+      {/* Header & Breadcrumb */}
+      <HomeHeader compact />
+      <div className="w-full max-w-6xl mx-auto px-4 mt-1">
+        <Breadcrumbs 
+          items={[
+            { label: 'Trang chủ', href: '/' },
+            { label: 'Kết quả tìm kiếm' }
+          ]} 
+        />
+      </div>
 
       <div className="flex-1 w-full max-w-6xl mx-auto p-4 md:p-6">
         <Suspense fallback={
@@ -150,10 +149,6 @@ export default function SearchContent() {
           <SearchResults />
         </Suspense>
       </div>
-
-      <footer className="py-8 text-center text-xs text-slate-400">
-        &copy; {new Date().getFullYear()} MAI VINH - Bảng giá phụ kiện điện nước
-      </footer>
     </main>
   );
 }

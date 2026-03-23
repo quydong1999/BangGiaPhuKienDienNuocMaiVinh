@@ -3,6 +3,7 @@ import { connectDB } from '@/lib/mongodb';
 import Category from '@/models/Category';
 import { AddCategoryButton } from '@/components/AddCategoryButton';
 import { HomeHeader } from '@/components/HomeHeader';
+import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { unstable_cache } from 'next/cache';
 import { ClientCategoryGrid } from '@/components/ClientCategoryGrid';
 
@@ -60,9 +61,16 @@ function GridSkeleton() {
 
 export default function HomePage() {
   return (
-    <main id="main-content" className="min-h-screen bg-slate-50 flex flex-col items-center p-4 relative pb-24">
-      <div className="w-full max-w-5xl space-y-6">
-        <HomeHeader />
+    <main id="main-content" className="min-h-screen bg-light-grey flex flex-col relative pb-24">
+      <HomeHeader compact />
+      <div className="w-full max-w-6xl mx-auto px-4 mt-1">
+        <Breadcrumbs items={[{ label: 'Trang chủ' }]} />
+        <div className="flex items-center">
+          <AddCategoryButton />
+        </div>
+      </div>
+
+      <div className="w-full max-w-5xl mx-auto space-y-6 p-4 mt-2">
 
         <section aria-label="Danh mục sản phẩm">
           <h2 className="sr-only">Danh mục sản phẩm</h2>
@@ -72,7 +80,7 @@ export default function HomePage() {
         </section>
       </div>
 
-      <AddCategoryButton />
+
     </main>
   );
 }
