@@ -1,5 +1,4 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 
 # Điện Nước Mai Vinh - Modern E-Commerce Catalog
 
@@ -90,7 +89,7 @@ Launch the fast development server:
 npm run dev
 ```
 
-Browse the application on [http://localhost:3000](http://localhost:3000).
+Browse the application on [https://diennuocmaivinh.vercel.app/](https://diennuocmaivinh.vercel.app/).
 
 ---
 *Designed and engineered with passion. Built to demonstrate full-stack problem-solving competence, modern web standards, and high-performance design.*
