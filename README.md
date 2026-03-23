@@ -11,7 +11,7 @@ A highly-optimized full-stack web application built with **Next.js 15**, focusin
 [![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
 [![Redis](https://img.shields.io/badge/Upstash_Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)](https://upstash.com/)
 
-[**View Live Demo**](http://mai-vinh-dien-nuoc.vercel.app/) <!-- Edit link to production -->
+[**View Live Demo**](https://diennuocmaivinh.vercel.app/)
 
 </div>
 

@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
 import { HomeHeader } from '@/components/HomeHeader';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import ProductContainer from './ProductContainer';
@@ -105,7 +104,7 @@ export default async function TypePage({ params }: { params: Promise<{ category:
             { label: title }
           ]}
         />
-        <div className="flex items-center">
+        <div className="flex items-center mb-4">
           <AddProductButton
             categoryId={categoryId}
             showImageField={layout !== 'table'}

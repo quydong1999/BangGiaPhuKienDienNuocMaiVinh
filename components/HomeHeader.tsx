@@ -5,21 +5,18 @@ import { Search, LogOut, LogIn, UserRound, Menu } from 'lucide-react';
 import { signOut } from "next-auth/react"
 import { useAdmin } from "@/hooks/useAdmin"
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
-
-const SearchModal = dynamic(() => import('./SearchModal').then(mod => mod.SearchModal), { ssr: false });
-const LoginModal = dynamic(() => import('./LoginModal').then(mod => mod.default), { ssr: false });
+import { useAppDispatch } from '@/store/hooks';
+import { openModal } from '@/store/modalSlice';
 
 interface HomeHeaderProps {
   compact?: boolean;
 }
 
 export function HomeHeader({ compact = false }: HomeHeaderProps = {}) {
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
   const { isAdmin, isLoading, user } = useAdmin()
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -48,7 +45,7 @@ export function HomeHeader({ compact = false }: HomeHeaderProps = {}) {
           {/* Giữa (Mobile: Row 2, Desktop: Row 1): Search Textbox */}
           <div className="w-full sm:flex-1 order-3 sm:order-2 sm:max-w-2xl sm:mx-4 z-10">
             <button
-              onClick={() => setIsSearchOpen(true)}
+              onClick={() => dispatch(openModal({ type: 'search' }))}
               className={`w-full flex items-center gap-2 h-10 px-3 sm:px-4 rounded-lg transition-all border text-sm focus:outline-none ${compact
                 ? 'bg-white/10 hover:bg-white/20 border-white/20 text-white/90 shadow-inner'
                 : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-500 shadow-sm'
@@ -101,7 +98,7 @@ export function HomeHeader({ compact = false }: HomeHeaderProps = {}) {
                       </>
                     ) : (
                       <button
-                        onClick={() => { setIsLoginOpen(true); setIsDropdownOpen(false); }}
+                        onClick={() => { dispatch(openModal({ type: 'login' })); setIsDropdownOpen(false); }}
                         className="flex items-center gap-2 text-sm text-slate-600 hover:bg-slate-50 rounded-lg px-2 py-1.5 transition-colors"
                       >
                         <LogIn size={14} />
@@ -116,9 +113,6 @@ export function HomeHeader({ compact = false }: HomeHeaderProps = {}) {
 
         </div>
       </header>
-
-      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-      <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
     </>
   );
 }

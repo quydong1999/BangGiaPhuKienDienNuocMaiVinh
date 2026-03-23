@@ -7,6 +7,8 @@ import { SiteFooter } from '@/components/SiteFooter';
 import QueryProvider from '@/components/providers/query-provider';
 import { SkeletonProvider } from '@/components/providers/skeleton-provider';
 import BusinessSchema from '@/components/providers/BusinessSchema';
+import { ReduxProvider } from '@/components/ReduxProvider';
+import { ModalProvider } from '@/components/ModalProvider';
 
 
 const roboto = Roboto({
@@ -69,17 +71,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Chuyển đến nội dung chính
         </a>
         <BusinessSchema />
-        <QueryProvider>
-          <SessionProvider>
-            <SkeletonProvider>
-                <OneTapProvider />
-                <div className="flex flex-col min-h-screen">
-                  {children}
-                  <SiteFooter />
-                </div>
-            </SkeletonProvider>
-          </SessionProvider>
-        </QueryProvider>
+        <ReduxProvider>
+          <QueryProvider>
+            <SessionProvider>
+              <SkeletonProvider>
+                  <OneTapProvider />
+                  <div className="flex flex-col min-h-screen">
+                    {children}
+                    <SiteFooter />
+                  </div>
+                  <ModalProvider />
+              </SkeletonProvider>
+            </SessionProvider>
+          </QueryProvider>
+        </ReduxProvider>
       </body>
     </html>
   );

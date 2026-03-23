@@ -5,9 +5,9 @@ import { useSearchParams } from 'next/navigation';
 import type { Product, FilterField, VisibleField } from '@/types/types';
 import { PendingProductSkeleton } from '@/components/PendingSkeletons';
 import { useAdmin } from "@/hooks/useAdmin"
-import LoginModal from "@/components/LoginModal"
-import { ProductFormModal } from '@/components/ProductFormModal';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { useAppDispatch } from '@/store/hooks';
+import { openModal } from '@/store/modalSlice';
 
 interface ProductListProps {
   data: Product[];
@@ -18,13 +18,12 @@ interface ProductListProps {
 
 export default function ProductList({ data, filterField, visibleFields, categoryId }: ProductListProps) {
   const [selectedField, setSelectedField] = useState<string>('Tất cả');
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 50;
 
   const searchParams = useSearchParams();
   const { isAdmin } = useAdmin()
-  const [showLogin, setShowLogin] = useState(false)
+  const dispatch = useAppDispatch();
 
   // Reset trang về 1 khi chọn filter
   useEffect(() => {
@@ -156,9 +155,9 @@ export default function ProductList({ data, filterField, visibleFields, category
                           {...(fIndex === 0 ? {
                             onDoubleClick: () => {
                               if (isAdmin) {
-                                setEditingProduct(item);
+                                dispatch(openModal({ type: 'productForm', props: { categoryId, initialData: item, showImageField: false } }));
                               } else {
-                                setShowLogin(true);
+                                dispatch(openModal({ type: 'login' }));
                               }
                             },
                           } : {})}
@@ -183,9 +182,9 @@ export default function ProductList({ data, filterField, visibleFields, category
                         {...(fIndex === 0 ? {
                           onDoubleClick: () => {
                             if (isAdmin) {
-                              setEditingProduct(item);
+                              dispatch(openModal({ type: 'productForm', props: { categoryId, initialData: item, showImageField: false } }));
                             } else {
-                              setShowLogin(true);
+                              dispatch(openModal({ type: 'login' }));
                             }
                           },
                         } : {})}
@@ -288,19 +287,6 @@ export default function ProductList({ data, filterField, visibleFields, category
           Không tìm thấy sản phẩm nào.
         </div>
       )}
-
-      {/* Edit Modal */}
-      <ProductFormModal
-        isOpen={!!editingProduct}
-        onClose={() => setEditingProduct(null)}
-        categoryId={categoryId}
-        initialData={editingProduct}
-        showImageField={false}
-      />
-      <LoginModal
-        isOpen={showLogin}
-        onClose={() => setShowLogin(false)}
-      />
     </div>
   );
 }
