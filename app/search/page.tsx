@@ -41,7 +41,6 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
       type: 'website',
       countryName: 'Việt Nam',
     },
-    manifest: '/manifest.json',
     alternates: {
       canonical: `${baseUrl}/search?q=${encodeURIComponent(query)}`,
     },

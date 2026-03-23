@@ -42,7 +42,6 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
       type: 'website',
       countryName: 'Việt Nam',
     },
-    manifest: '/manifest.json',
     alternates: {
       canonical: `${baseUrl}/${categoryData.slug}`,
     },

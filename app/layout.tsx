@@ -45,7 +45,6 @@ export const metadata: Metadata = {
     type: 'website',
     countryName: 'Việt Nam',
   },
-  manifest: '/manifest.json',
   alternates: {
     canonical: `${baseUrl}`,
   },

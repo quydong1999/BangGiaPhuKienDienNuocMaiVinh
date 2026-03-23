@@ -30,7 +30,7 @@ export function HomeHeader({ compact = false }: HomeHeaderProps = {}) {
 
   return (
     <>
-      <header className={`sticky top-0 z-30 w-full ${compact ? 'bg-gradient-to-r from-emerald-600 to-teal-500 shadow-md text-white' : ''}`}>
+      <header className={`sticky top-0 z-30 w-full ${compact ? 'bg-emerald-600 shadow-md text-white' : ''}`}>
         <div className={`mx-auto w-full max-w-6xl flex flex-wrap sm:flex-nowrap items-center justify-between ${compact ? 'px-3 sm:px-4 py-2 sm:h-16 gap-y-2 sm:gap-4' : 'px-4 pt-6 pb-10'}`}>
 
           {/* Trái: Menu & Logo */}
