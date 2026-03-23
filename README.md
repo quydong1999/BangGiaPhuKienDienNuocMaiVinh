@@ -1,6 +1,6 @@
 <div align="center">
 
-# Điện Nước Mai Vinh - Modern E-Commerce Catalog
+# 🛠️ Điện Nước Mai Vinh - Modern E-Commerce Catalog
 
 A highly-optimized full-stack web application built with **Next.js 15**, focusing on extreme performance, mobile-first design, and seamless user experience. Designed to showcase modern frontend and backend architectures at enterprise scale.
 
@@ -11,47 +11,110 @@ A highly-optimized full-stack web application built with **Next.js 15**, focusin
 [![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
 [![Redis](https://img.shields.io/badge/Upstash_Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)](https://upstash.com/)
 
-[**View Live Demo**](https://diennuocmaivinh.vercel.app/)
+[**✨ View Live Demo**](https://diennuocmaivinh.vercel.app/)
 
 </div>
 
-## 🚀 Key Features & Architectural Highlights
+## 📖 Table of Contents
+- [🚀 Key Features](#-key-features)
+- [🧠 System Architecture](#-system-architecture)
+- [🧠 Core Engineering Problems Solved](#-core-engineering-problems-solved)
+- [🎨 Design System & UX Decisions](#-design-system--ux-decisions)
+- [💻 Technical Stack Depth](#-technical-stack-depth)
+- [⚙️ Getting Started](#-getting-started)
+
+---
+
+## 🚀 Key Features
 
 ### 1. Hybrid Rendering & Server Components
-Leveraged the **Next.js App Router** with seamless transitions between **Server Components (RSC)** and **Client Components**.
-- **Static Site Generation (SSG):** Used caching and static building for shells and layouts (Header, Breadcrumb).
-- **Client-Side Rendering (CSR):** Used React Suspense and TanStack Query to stream dynamic data and manage internal component states interactively, ensuring minimum Time To Interactive (TTI).
+- **Static Site Generation (SSG):** Used caching and static building for shells and layout elements.
+- **Client-Side Rendering (CSR):** Used React Suspense and TanStack Query to stream dynamic datasets and manage interactive states, lowering Time To Interactive (TTI).
 
-### 2. High-Performance Caching Strategy
-- **Upstash Redis Layer:** Implemented Redis as a fast in-memory caching layer strictly reducing latency. Complex MongoDB aggregation queries are bypassed, guaranteeing response times typically `<50ms`.
-- **Intelligent Cache Invalidation:** Designed granular eviction policies clearing cache solely when related database boundaries mutate (Create/Update/Delete).
+### 2. Micro-Caching with Redis
+- Bypassed complex MongoDB aggregations on frequent reads guaranteeing response times typically **`<50ms`**.
 
-### 3. Progressive Web App (PWA) & Mobile-First UX
-- Highly responsive **Mobile-First interface** maximizing real-estate utilization and finger-friendly tap targets.
-- Out-of-the-box **PWA setup** allowing installation directly as a native application for both iOS and Android.
-- Refined UI built iteratively using **Tailwind CSS v4** featuring modern glassmorphism, gradient styling, auto-scroll paginations, and skeleton loaders.
+### 3. Progressive Web App (PWA)
+- Out-of-the-box **PWA setup** supporting installation as a standalone application layout in Android & iOS.
 
-### 4. Authentication, Security & RBAC
-- Complete Role-Based Access Control logic via an invisible abstraction layer using **NextAuth.js (Auth.js v5)**.
-- Passwordless experience through **Google One-Tap Login** securing administrative dashboard features.
-- Zero-trust principle adopted: Client-side buttons gracefully hide/lock their actions without valid Admin sessions while Backend APIs independently re-validate authenticated context globally.
+### 4. Admin Dashboard Security (RBAC)
+- Role-Based Access Control via **NextAuth.js (Auth.js v5)** and passwordless **Google One-Tap Login**.
 
-### 5. Advanced SEO & Semantic Parsing
-- **Dynamic Metadata & Open Graph Data:** Rich object routing dynamically pulling product specifics generating canonicals and previews seamlessly.
-- **Microdata & JSON-LD:** Structured schema configurations ensuring pristine indexing by Google Search crawlers as a Store/Product catalog context.
-- High focus on **Semantic HTML** layout (`<main>`, `<nav>`, `<aside>`, `<section>`).
+---
+
+## 🧠 System Architecture
+
+### 🔄 Data & Caching Flow
+This diagram showcases how data fetches leverage multi-level caching abstractions before falling back to the Database.
+
+```mermaid
+graph TD
+    User([User Requests Page]) --> Router[Next.js App Router]
+    Router --> Layouts[RSC: Static Headers/Footers]
+    Router --> ClientFetch[TanStack Query: Client Hydration]
+    
+    ClientFetch --> API[Next.js API Routes]
+    API --> Redis{Check Upstash Redis Cache}
+    
+    Redis -- Cache Hit --> Return[Return Response < 50ms]
+    Redis -- Cache Miss --> Mongo[(MongoDB Server)]
+    
+    Mongo --> Update["Update Redis Cache (TTL)"]
+    Update --> Return
+```
+
+### 🔲 Centralized Modal Management (Redux)
+To keep the DOM tree clean, models are managed through a unified portal rather than nested imports.
+
+```mermaid
+graph LR
+    Subcomp[Nested Component] -->|dispatch openModal| Store[Redux Store]
+    Store -->|Update State| Provider[Modal Provider @ Root Layout]
+    Provider -->|Inject Portal| View[Modal Popup Opens]
+```
+
+---
+
+## 🧠 Core Engineering Problems Solved
+
+### ⚡ 1. Bundle Size Optimization (Hydration issues)
+*   **Problem:** Form templates like `ProductFormModal` / `CategoryFormModal` use heavyweight libraries (`React-Hook-Form`, `Zod`, `Cloudinary widget`). Adding them statically inflated Initial bundle sizes by bundle overheads.
+*   **Solution:** Centralized `ModalProvider` utilizing Next.js `dynamic()` imports with `ssr: false`. Heavy modalities are lazily packaged in decoupled JS chunks, lowering the Initial First Load JS size to **`~100KB`**.
+
+### 🔄 2. Cache Consistency & Invalidation
+*   **Problem:** Stale cache loading when Admin modifies prices, deleting, or adding distinct product nodes.
+*   **Solution:** Granular eviction policies clearing targeted cache regions instantly upon Database mutation batches. Users will view exact rates statically consistent without sluggish re-loads.
+
+### 📜 3. Scroll Sync with URL Params
+*   **Problem:** Landing from Search direct hits. Traditional client routing lands on full list sets without centering accuracy.
+*   **Solution:** Implemented robust `useEffect` algorithms with dynamic scrolling timeouts that paginate index limits smoothly on component mounts, pushing correct viewport bounds automatically.
+
+---
+
+## 🎨 Design System & UX Decisions
+
+### 📱 Mobile-First Controls
+- Built auto-collapsible Breadcrumbs relying on `.flex-wrap` algorithms bypassing annoying table layout shifts or overflows.
+- Designed finger-friendly tap regions for complex data Pagination streams (`<<`, `<`, page nodes, `>`, `>>`).
+
+### 📦 Clean Interface Transition
+- Refactored away traditional **Floating Action Buttons (FAB)** which commonly overlaps vital mobile navigation fields. 
+- Installed smooth contextual inline buttons merging seamlessly with top Breadcrumb visual alignment hierarchies.
+
+---
 
 ## 💻 Technical Stack Depth
 
-- **Core Framework:** Next.js 15.4 (React 19)
-- **Language:** TypeScript 5
-- **Styling Engine:** Tailwind CSS 4.1.11, Lucide React Icons
-- **Primary Database:** MongoDB (Mongoose 9.3)
-- **Fast KV Cache:** Upstash Redis
-- **Auth Provider:** Next-Auth (beta v5)
-- **State & Data Fetching:** TanStack React Query v5
-- **Forms & Type Validation:** React Hook Form + Zod
-- **Media Optimization:** Browser Image Compression algorithm, Cloudinary Serverless Storage
+| Layer | Technology |
+| :--- | :--- |
+| **Framework** | Next.js 15 (React 19), Typescript 5 |
+| **Styling** | Tailwind CSS v4, Framer Motion, Lucide |
+| **Databases** | MongoDB (Mongoose), Upstash Redis |
+| **Auth** | Next-Auth.js (v5), Google One-Tap SDK |
+| **State** | Redux Toolkit (Modals), TanStack Query v5 |
+| **Heavy Tools** | React Hook Form, Zod, Cloudinary Storage |
+
+---
 
 ## ⚙️ Getting Started
 
@@ -62,8 +125,6 @@ npm install
 ```
 
 ### Environment Variables (`.env.local`)
-To run this project, make sure to add the following sensitive variables:
-
 ```env
 # Database
 MONGODB_URI=your_mongodb_connection_string
@@ -84,12 +145,11 @@ NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=your_preset
 ```
 
 ### Run Locally
-Launch the fast development server:
 ```bash
 npm run dev
 ```
-
-Browse the application on [https://diennuocmaivinh.vercel.app/](https://diennuocmaivinh.vercel.app/).
+Browse on [http://localhost:3000](http://localhost:3000).
 
 ---
+
 *Designed and engineered with passion. Built to demonstrate full-stack problem-solving competence, modern web standards, and high-performance design.*
