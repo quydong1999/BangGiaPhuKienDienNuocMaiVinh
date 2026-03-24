@@ -9,6 +9,7 @@ import { SkeletonProvider } from '@/components/providers/skeleton-provider';
 import BusinessSchema from '@/components/providers/BusinessSchema';
 import { ReduxProvider } from '@/components/ReduxProvider';
 import { ModalProvider } from '@/components/ModalProvider';
+import { CartHydration } from '@/components/CartHydration';
 
 
 const roboto = Roboto({
@@ -80,6 +81,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     <SiteFooter />
                   </div>
                   <ModalProvider />
+                  <CartHydration />
               </SkeletonProvider>
             </SessionProvider>
           </QueryProvider>

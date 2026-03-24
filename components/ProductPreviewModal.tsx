@@ -1,19 +1,66 @@
 "use client";
 
+import { useState } from 'react';
 import Image from 'next/image';
 import { getBlurPlaceholder } from '@/lib/image-blur';
+import { ShoppingCart, Minus, Plus } from 'lucide-react';
 import type { Product } from '@/types/types';
+import { useAppDispatch } from '@/store/hooks';
+import { addToCart } from '@/store/cartSlice';
+import { closeModal } from '@/store/modalSlice';
 
 interface ProductPreviewModalProps {
   isOpen: boolean;
   onClose: () => void;
   product?: Product;
+  categoryImageUrl?: string;
 }
 
 const imgNotFoundUrl = "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?_=20210521171500";
 
-export function ProductPreviewModal({ isOpen, onClose, product }: ProductPreviewModalProps) {
+/**
+ * Parse price string like "12.500đ" or "1,200,000" to number.
+ * Returns 0 if unable to parse.
+ */
+function parsePrice(priceStr: string): number {
+  const cleaned = priceStr.replace(/[^\d.,]/g, '').replace(/\./g, '').replace(/,/g, '');
+  const num = parseInt(cleaned, 10);
+  return isNaN(num) ? 0 : num;
+}
+
+function formatPrice(value: number): string {
+  return value.toLocaleString('vi-VN') + 'đ';
+}
+
+export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl }: ProductPreviewModalProps) {
+  const [quantityInput, setQuantityInput] = useState("1");
+  const dispatch = useAppDispatch();
+
   if (!isOpen || !product) return null;
+
+  const imageUrl = product.image?.secure_url || categoryImageUrl || imgNotFoundUrl;
+  const unitPrice = parsePrice(product.priceSell);
+
+  const parsedQuantity = parseFloat(quantityInput.replace(',', '.'));
+  const isValid = !isNaN(parsedQuantity) && parsedQuantity >= 0.01;
+  const quantity = isValid ? parsedQuantity : 1;
+  const total = unitPrice * quantity;
+
+  const handleAddToCart = () => {
+    dispatch(addToCart({ product, quantity }));
+    dispatch(closeModal());
+    setQuantityInput("1");
+  };
+
+  const handleBlur = () => {
+    // If empty or invalid, reset to the parsed value or 1
+    if (isNaN(parsedQuantity) || parsedQuantity < 0.01) {
+      setQuantityInput("1");
+    } else {
+      // Format back to string or leave as is
+      setQuantityInput(String(Math.round(parsedQuantity * 100) / 100));
+    }
+  };
 
   return (
     <div
@@ -24,17 +71,17 @@ export function ProductPreviewModal({ isOpen, onClose, product }: ProductPreview
         className="relative bg-white max-w-lg w-full overflow-hidden shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative w-full h-1/2 min-h-[220px] bg-black">
+        <div className="relative w-full h-1/2 min-h-[220px] bg-gray-50">
           <Image
-            src={product.image?.secure_url ?? imgNotFoundUrl}
+            src={imageUrl}
             alt={product.name}
             fill
             sizes="(min-width: 768px) 480px, 100vw"
-            className="object-cover"
-            {...getBlurPlaceholder(product.image?.secure_url, 800, 600)}
+            className="object-contain"
+            {...getBlurPlaceholder(imageUrl, 800, 600)}
           />
         </div>
-        <div className="p-4 space-y-2">
+        <div className="p-4 space-y-3">
           <div className="flex items-center justify-between gap-3">
             <h2 className="text-base font-semibold text-slate-900">
               {product.name}
@@ -53,6 +100,66 @@ export function ProductPreviewModal({ isOpen, onClose, product }: ProductPreview
             )}
             <span>Đơn vị: {product.unit}</span>
           </div>
+
+          {/* Quantity + Total */}
+          <div className="flex items-center justify-between gap-3 pt-1 border-t border-slate-100">
+            <div className="flex items-center gap-1">
+              <span className="text-sm text-slate-600 mr-1">SL:</span>
+              <button
+                type="button"
+                onClick={() => {
+                  const currentVal = isNaN(parsedQuantity) ? 1 : parsedQuantity;
+                  setQuantityInput(String(Math.max(0.01, currentVal - 1)));
+                }}
+                disabled={quantity <= 0.01}
+                className="w-7 h-7 flex items-center justify-center rounded-md border border-slate-300 text-slate-600 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                aria-label="Giảm số lượng"
+              >
+                <Minus size={14} />
+              </button>
+              <input
+                type="text"
+                value={quantityInput}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (/^[0-9]*[.,]?[0-9]*$/.test(val)) {
+                    setQuantityInput(val);
+                  }
+                }}
+                onBlur={handleBlur}
+                className={`w-12 text-center text-sm font-semibold tabular-nums border rounded-md py-1 focus:outline-none focus:ring-1 ${
+                  !isValid ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-slate-200 focus:border-emerald-500 focus:ring-emerald-500'
+                }`}
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  const currentVal = isNaN(parsedQuantity) ? 1 : parsedQuantity;
+                  setQuantityInput(String(currentVal + 1));
+                }}
+                className="w-7 h-7 flex items-center justify-center rounded-md border border-slate-300 text-slate-600 hover:bg-slate-100 transition-colors"
+                aria-label="Tăng số lượng"
+              >
+                <Plus size={14} />
+              </button>
+            </div>
+            {unitPrice > 0 && (
+              <span className="text-sm font-bold text-emerald-700">
+                Tổng: {formatPrice(total)}
+              </span>
+            )}
+          </div>
+
+          {/* Add to Cart Button */}
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            disabled={!isValid}
+            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] transition-all"
+          >
+            <ShoppingCart size={16} />
+            Thêm vào giỏ
+          </button>
         </div>
         <button
           type="button"

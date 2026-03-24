@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useRef, useEffect } from 'react';
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import type { Product, FilterField, VisibleField } from '@/types/types';
 import { PendingProductSkeleton } from '@/components/PendingSkeletons';
@@ -14,9 +14,10 @@ interface ProductListProps {
   filterField: FilterField | null;
   visibleFields: readonly VisibleField[];
   categoryId: string;
+  categoryImageUrl?: string;
 }
 
-export default function ProductList({ data, filterField, visibleFields, categoryId }: ProductListProps) {
+export default function ProductList({ data, filterField, visibleFields, categoryId, categoryImageUrl }: ProductListProps) {
   const [selectedField, setSelectedField] = useState<string>('Tất cả');
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 50;
@@ -24,6 +25,37 @@ export default function ProductList({ data, filterField, visibleFields, category
   const searchParams = useSearchParams();
   const { isAdmin } = useAdmin()
   const dispatch = useAppDispatch();
+  const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleNameClick = useCallback((item: Product) => {
+    // Single click → open ProductPreview
+    dispatch(openModal({
+      type: 'productPreview',
+      props: { product: item, categoryImageUrl }
+    }));
+  }, [dispatch, categoryImageUrl]);
+
+  const handleNameDoubleClick = useCallback((item: Product) => {
+    // Double click → open EditModal (admin) or LoginModal
+    if (isAdmin) {
+      dispatch(openModal({ type: 'productForm', props: { categoryId, initialData: item, showImageField: false } }));
+    } else {
+      dispatch(openModal({ type: 'login' }));
+    }
+  }, [dispatch, isAdmin, categoryId]);
+
+  const handleCellClick = useCallback((item: Product) => {
+    if (clickTimerRef.current) {
+      clearTimeout(clickTimerRef.current);
+      clickTimerRef.current = null;
+      handleNameDoubleClick(item);
+    } else {
+      clickTimerRef.current = setTimeout(() => {
+        clickTimerRef.current = null;
+        handleNameClick(item);
+      }, 250);
+    }
+  }, [handleNameClick, handleNameDoubleClick]);
 
   // Reset trang về 1 khi chọn filter
   useEffect(() => {
@@ -153,13 +185,7 @@ export default function ProductList({ data, filterField, visibleFields, category
                           key={field}
                           className="px-4 py-3"
                           {...(fIndex === 0 ? {
-                            onDoubleClick: () => {
-                              if (isAdmin) {
-                                dispatch(openModal({ type: 'productForm', props: { categoryId, initialData: item, showImageField: false } }));
-                              } else {
-                                dispatch(openModal({ type: 'login' }));
-                              }
-                            },
+                            onClick: () => handleCellClick(item),
                           } : {})}
                         >
                           <span
@@ -180,13 +206,7 @@ export default function ProductList({ data, filterField, visibleFields, category
                             'px-4 py-3 text-right font-bold text-slate-900' : 'px-4 py-3 font-medium text-slate-900 hover:cursor-pointer'
                         }
                         {...(fIndex === 0 ? {
-                          onDoubleClick: () => {
-                            if (isAdmin) {
-                              dispatch(openModal({ type: 'productForm', props: { categoryId, initialData: item, showImageField: false } }));
-                            } else {
-                              dispatch(openModal({ type: 'login' }));
-                            }
-                          },
+                          onClick: () => handleCellClick(item),
                         } : {})}
                       >
                         {value}

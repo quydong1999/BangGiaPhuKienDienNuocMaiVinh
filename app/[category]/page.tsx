@@ -114,6 +114,7 @@ export default async function TypePage({ params }: { params: Promise<{ category:
             filterField={filterField}
             visibleFields={visibleFields}
             initialProducts={products}
+            categoryImageUrl={categoryData.image?.secure_url}
           />
         </Suspense>
       </section>

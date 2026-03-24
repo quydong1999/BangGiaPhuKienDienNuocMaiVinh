@@ -12,6 +12,7 @@ interface ProductContainerProps {
   filterField: any;
   visibleFields: any;
   initialProducts: Product[];
+  categoryImageUrl?: string;
 }
 
 function ProductSkeleton({ layout }: { layout: string }) {
@@ -46,7 +47,8 @@ export default function ProductContainer({
   layout, 
   filterField, 
   visibleFields,
-  initialProducts 
+  initialProducts,
+  categoryImageUrl 
 }: ProductContainerProps) {
   const { data: products, isLoading, error } = useProducts(categoryId, initialProducts);
 
@@ -71,6 +73,7 @@ export default function ProductContainer({
         filterField={filterField as FilterField}
         visibleFields={visibleFields as VisibleField[]}
         categoryId={categoryId}
+        categoryImageUrl={categoryImageUrl}
       />
     );
   }

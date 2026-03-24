@@ -2,6 +2,7 @@
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { closeModal } from '@/store/modalSlice';
+import { useHotkey } from '@tanstack/react-hotkeys';
 import dynamic from 'next/dynamic';
 
 const LoginModal = dynamic(() => import('./LoginModal').then(m => m.default), { ssr: false });
@@ -13,6 +14,8 @@ const ProductPreviewModal = dynamic(() => import('./ProductPreviewModal').then(m
 export function ModalProvider() {
   const { type, isOpen, props } = useAppSelector((state) => state.modal);
   const dispatch = useAppDispatch();
+
+  useHotkey('Escape', () => dispatch(closeModal()), { enabled: isOpen });
 
   if (!type && !isOpen) return null;
 
