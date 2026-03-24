@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 import { connectDB } from '@/lib/mongodb';
 import Category from '@/models/Category';
-import { AddCategoryButton } from '@/components/AddCategoryButton';
 import { HomeHeader } from '@/components/HomeHeader';
 import { unstable_cache } from 'next/cache';
 import { ClientCategoryGrid } from '@/components/ClientCategoryGrid';
@@ -61,12 +60,7 @@ function GridSkeleton() {
 export default function HomePage() {
   return (
     <main id="main-content" className="min-h-screen bg-light-grey flex flex-col relative pb-24">
-      <HomeHeader compact />
-      <div className="w-full max-w-6xl mx-auto px-4 mt-1">
-        <div className="flex items-center">
-          <AddCategoryButton />
-        </div>
-      </div>
+      <HomeHeader compact showAddCategory />
 
       <div className="w-full max-w-5xl mx-auto space-y-6 p-4 mt-2">
 

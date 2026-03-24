@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import { HomeHeader } from '@/components/HomeHeader';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import ProductContainer from './ProductContainer';
-import { AddProductButton } from '@/components/AddProductButton';
 import CategorySchema from '@/components/CategorySchema';
 import { connectDB } from '@/lib/mongodb';
 import Category from '@/models/Category';
@@ -95,20 +94,14 @@ export default async function TypePage({ params }: { params: Promise<{ category:
     <main id="main-content" className="min-h-screen bg-light-grey flex flex-col">
       <CategorySchema category={categoryData} products={products} />
       {/* Header & Breadcrumb */}
-      <HomeHeader compact />
-      <div className="w-full max-w-6xl mx-auto px-4 mt-1">
+      <HomeHeader compact categoryId={categoryId} categoryLayout={layout} />
+      <div className="w-full max-w-6xl mx-auto px-4 mt-1 mb-2">
         <Breadcrumbs
           items={[
             { label: 'Trang chủ', href: '/' },
             { label: title }
           ]}
         />
-        <div className="flex items-center mb-4">
-          <AddProductButton
-            categoryId={categoryId}
-            showImageField={layout !== 'table'}
-          />
-        </div>
       </div>
 
       {/* Content */}

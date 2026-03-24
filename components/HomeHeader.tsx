@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { Search, LogOut, LogIn, UserRound, Menu } from 'lucide-react';
+import { Search, LogOut, LogIn, UserRound, FolderPlus, PackagePlus } from 'lucide-react';
 import { signOut } from "next-auth/react"
 import { useAdmin } from "@/hooks/useAdmin"
 import Link from 'next/link';
@@ -10,9 +10,17 @@ import { openModal } from '@/store/modalSlice';
 
 interface HomeHeaderProps {
   compact?: boolean;
+  showAddCategory?: boolean;
+  categoryId?: string;
+  categoryLayout?: string;
 }
 
-export function HomeHeader({ compact = false }: HomeHeaderProps = {}) {
+export function HomeHeader({ 
+  compact = false,
+  showAddCategory = false,
+  categoryId,
+  categoryLayout
+}: HomeHeaderProps = {}) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { isAdmin, isLoading, user } = useAdmin()
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -88,6 +96,30 @@ export function HomeHeader({ compact = false }: HomeHeaderProps = {}) {
                         <p className="text-xs text-slate-400 px-2 pt-1 pb-0.5 font-medium truncate max-w-[160px]">
                           {user?.name}
                         </p>
+                        {showAddCategory && (
+                          <button
+                            onClick={() => { dispatch(openModal({ type: 'categoryForm' })); setIsDropdownOpen(false); }}
+                            className="flex items-center gap-2 text-sm text-slate-600 hover:bg-slate-50 rounded-lg px-2 py-1.5 transition-colors"
+                          >
+                            <FolderPlus size={14} />
+                            Thêm danh mục
+                          </button>
+                        )}
+                        {categoryId && (
+                          <button
+                            onClick={() => { 
+                              dispatch(openModal({ 
+                                type: 'productForm', 
+                                props: { categoryId, showImageField: categoryLayout !== 'table' } 
+                              })); 
+                              setIsDropdownOpen(false); 
+                            }}
+                            className="flex items-center gap-2 text-sm text-slate-600 hover:bg-slate-50 rounded-lg px-2 py-1.5 transition-colors"
+                          >
+                            <PackagePlus size={14} />
+                            Thêm sản phẩm
+                          </button>
+                        )}
                         <button
                           onClick={() => { signOut(); setIsDropdownOpen(false); }}
                           className="flex items-center gap-2 text-sm text-red-500 hover:bg-red-50 rounded-lg px-2 py-1.5 transition-colors"

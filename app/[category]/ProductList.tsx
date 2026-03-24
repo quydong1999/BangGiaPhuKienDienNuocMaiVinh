@@ -177,7 +177,7 @@ export default function ProductList({ data, filterField, visibleFields, category
                         key={field}
                         className={
                           field === 'priceSell' ?
-                            'px-4 py-3 text-right font-bold text-slate-900' : 'px-4 py-3 font-medium text-slate-900'
+                            'px-4 py-3 text-right font-bold text-slate-900' : 'px-4 py-3 font-medium text-slate-900 hover:cursor-pointer'
                         }
                         {...(fIndex === 0 ? {
                           onDoubleClick: () => {

@@ -7,10 +7,8 @@ import { getBlurPlaceholder } from '@/lib/image-blur';
 import type { Product } from '@/types/types';
 import { PendingProductSkeleton } from '@/components/PendingSkeletons';
 import { useAdmin } from "@/hooks/useAdmin"
-import LoginModal from "@/components/LoginModal"
-import dynamic from 'next/dynamic';
-
-const ProductFormModal = dynamic(() => import('@/components/ProductFormModal').then(mod => mod.ProductFormModal), { ssr: false });
+import { useAppDispatch } from '@/store/hooks';
+import { openModal } from '@/store/modalSlice';
 
 interface GalleryProductProps {
   data: Product[];
@@ -20,37 +18,33 @@ interface GalleryProductProps {
 const imgNotFoundUrl = "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?_=20210521171500";
 
 export default function GalleryProduct({ data, categoryId }: GalleryProductProps) {
-  const [selected, setSelected] = useState<Product | null>(null);
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const dispatch = useAppDispatch();
   const clickTimer = useRef<NodeJS.Timeout | null>(null);
   const searchParams = useSearchParams();
-  const { isAdmin } = useAdmin()
-  const [showLogin, setShowLogin] = useState(false)
+  const { isAdmin } = useAdmin();
 
   useEffect(() => {
     const productId = searchParams.get('productId');
     if (productId && data.length > 0) {
       const product = data.find(p => p._id === productId);
       if (product) {
-        setSelected(product);
+        dispatch(openModal({ type: 'productPreview', props: { product } }));
       }
     }
-  }, [searchParams, data]);
+  }, [searchParams, data, dispatch]);
 
   const handleProductClick = (product: Product) => {
     if (clickTimer.current) {
-      // If a second click happens within 300ms, it's a double click
       clearTimeout(clickTimer.current);
       clickTimer.current = null;
       if (isAdmin) {
-        setEditingProduct(product);
+        dispatch(openModal({ type: 'productForm', props: { categoryId, initialData: product } }));
       } else {
-        setShowLogin(true);
+        dispatch(openModal({ type: 'login' }));
       }
     } else {
-      // First click: start timer
       clickTimer.current = setTimeout(() => {
-        setSelected(product);
+        dispatch(openModal({ type: 'productPreview', props: { product } }));
         clickTimer.current = null;
       }, 300);
     }
@@ -102,70 +96,6 @@ export default function GalleryProduct({ data, categoryId }: GalleryProductProps
         ))}
         <PendingProductSkeleton categoryId={categoryId} layout="gallery" />
       </div>
-
-      {/* Modal preview */}
-      {selected && (
-        <div
-          className="fixed inset-0 z-30 bg-black/60 flex items-center justify-center px-4"
-          onClick={() => setSelected(null)}
-        >
-          <div
-            className="relative bg-white max-w-lg w-full overflow-hidden shadow-lg"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="relative w-full h-1/2 min-h-[220px] bg-black">
-              <Image
-                src={selected.image?.secure_url ?? imgNotFoundUrl}
-                alt={selected.name}
-                fill
-                sizes="(min-width: 768px) 480px, 100vw"
-                className="object-cover"
-                {...getBlurPlaceholder(selected.image?.secure_url, 800, 600)}
-              />
-            </div>
-            <div className="p-4 space-y-2">
-              <div className="flex items-center justify-between gap-3">
-                <h2 className="text-base font-semibold text-slate-900">
-                  {selected.name}
-                </h2>
-                <span className="text-sm font-bold text-slate-900">
-                  {selected.priceSell}
-                </span>
-              </div>
-              <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600">
-                {selected.spec && selected.spec !== '-' && (
-                  <span
-                    className={`inline-flex items-center px-2 py-0.5 rounded-md font-medium bg-emerald-100 text-emerald-800`}
-                  >
-                    {selected.spec}
-                  </span>
-                )}
-                <span>Đơn vị: {selected.unit}</span>
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={() => setSelected(null)}
-              className="absolute top-3 right-3 inline-flex items-center justify-center w-8 h-8 rounded-full bg-black/60 text-white text-sm hover:bg-black/80 transition-colors"
-              aria-label="Đóng xem ảnh"
-            >
-              ✕
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Edit Modal */}
-      <ProductFormModal
-        isOpen={!!editingProduct}
-        onClose={() => setEditingProduct(null)}
-        categoryId={categoryId}
-        initialData={editingProduct}
-      />
-      <LoginModal
-        isOpen={showLogin}
-        onClose={() => setShowLogin(false)}
-      />
     </div>
   );
 }
