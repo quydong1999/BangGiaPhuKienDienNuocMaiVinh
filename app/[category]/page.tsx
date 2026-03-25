@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, cache } from 'react';
 import { notFound } from 'next/navigation';
 import { HomeHeader } from '@/components/HomeHeader';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
@@ -11,42 +11,9 @@ import { unstable_cache } from 'next/cache';
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-export async function generateMetadata({ params }: { params: Promise<{ category: string }> }) {
-  const { category: categorySlug } = await params;
-  const categoryData = await getCachedCategory(categorySlug);
-  if (!categoryData) {
-    return {
-      title: 'Not Found',
-    };
-  }
-  return {
-    title: `${categoryData.title} chính hãng | Điện nước Mai Vinh - Bình Định`,
-    description: `Cập nhật báo giá mới nhất cho sản phẩm ${categoryData.title} chính hãng tại cửa hàng Điện nước Mai Vinh - Bình Định. Chuyên cung cấp sỉ, lẻ tất cả các loại thiết bị, phụ kiện, sản phẩm điện nước gia dụng tại nhà chuyên nghiệp, uy tín, chất lượng.`,
-    keywords: [`phụ kiện`, `ống nước`, `uPVC`, `Mai Vinh`, `điện nước`, `dây điện`, `báo giá`, `Đồng Lâm`, `Thắng Kiên`, `Cát Khánh`, `Điện nước Mai Vinh`, `${categoryData.title}`],
-    openGraph: {
-      title: `${categoryData.title} chính hãng | Điện nước Mai Vinh - Bình Định`,
-      description: `Cập nhật báo giá mới nhất cho sản phẩm ${categoryData.title} chính hãng tại cửa hàng Điện nước Mai Vinh - Bình Định. Chuyên cung cấp sỉ, lẻ tất cả các loại thiết bị, phụ kiện, sản phẩm điện nước gia dụng tại nhà chuyên nghiệp, uy tín, chất lượng.`,
-      url: `${baseUrl}/${categoryData.slug}`,
-      siteName: 'Báo giá điện nước Mai Vinh - Bình Định',
-      images: [
-        {
-          url: `${baseUrl}/diennuocmaivinh.webp`,
-          width: 1200,
-          height: 630,
-          alt: 'Báo giá điện nước Mai Vinh',
-        },
-      ],
-      locale: 'vi_VN',
-      phoneNumbers: ['0982390943', '0976576443'],
-      type: 'website',
-      countryName: 'Việt Nam',
-    },
-    alternates: {
-      canonical: `${baseUrl}/${categoryData.slug}`,
-    },
-    metadataBase: new URL(`${baseUrl}`),
-  };
-}
+const getCategoryData = cache(async (slug: string) => {
+  return await getCachedCategory(slug);
+});
 
 const getCachedCategory = (slug: string) => unstable_cache(
   async () => {
@@ -68,6 +35,25 @@ const getCachedProducts = (categoryId: string) => unstable_cache(
   { tags: [`products-${categoryId}`, 'products'] }
 )();
 
+export async function generateMetadata({ params }: { params: Promise<{ category: string }> }) {
+  const { category: categorySlug } = await params;
+  const categoryData = await getCategoryData(categorySlug);
+
+  if (!categoryData) return { title: 'Không tìm thấy danh mục' };
+
+  return {
+    title: `${categoryData.title} chính hãng | Điện nước Mai Vinh`,
+    description: `Báo giá sản phẩm ${categoryData.title} tại Điện nước Mai Vinh - Bình Định.`,
+    openGraph: {
+      title: categoryData.title,
+      url: `${baseUrl}/${categoryData.slug}`,
+      images: [{ url: `${baseUrl}/diennuocmaivinh.webp` }],
+    },
+    alternates: { canonical: `${baseUrl}/${categoryData.slug}` },
+    metadataBase: new URL(`${baseUrl || ''}`),
+  };
+}
+
 export async function generateStaticParams() {
   await connectDB();
   const categories = await Category.find({}, { slug: 1 }).lean();
@@ -79,7 +65,8 @@ export async function generateStaticParams() {
 export default async function TypePage({ params }: { params: Promise<{ category: string }> }) {
   const { category: categorySlug } = await params;
 
-  const categoryData = await getCachedCategory(categorySlug);
+  // Gọi đồng thời cả Category và Products để tiết kiệm thời gian (Parallel Fetching)
+  const categoryData = await getCategoryData(categorySlug);
 
   if (!categoryData) {
     notFound();
@@ -88,13 +75,15 @@ export default async function TypePage({ params }: { params: Promise<{ category:
   const { _id, title, filterField = null, visibleFields = [], layout } = categoryData;
   const categoryId = _id.toString();
 
+  // Fetch products ngay tại đây để truyền vào ProductContainer
   const products = await getCachedProducts(categoryId);
 
   return (
     <main id="main-content" className="min-h-screen bg-light-grey flex flex-col">
       <CategorySchema category={categoryData} products={products} />
-      {/* Header & Breadcrumb */}
+
       <HomeHeader compact categoryId={categoryId} categoryLayout={layout} />
+
       <div className="w-full max-w-6xl mx-auto px-4 mt-1 mb-2">
         <Breadcrumbs
           items={[
@@ -104,9 +93,9 @@ export default async function TypePage({ params }: { params: Promise<{ category:
         />
       </div>
 
-      {/* Content */}
       <section aria-label="Danh sách sản phẩm" className="flex-1 w-full max-w-6xl mx-auto p-4">
-        <Suspense fallback={null}>
+        {/* Suspense ở đây chỉ có tác dụng nếu ProductContainer là một component async hoặc render nặng */}
+        <Suspense fallback={<div className="h-96 flex items-center justify-center">Đang tải sản phẩm...</div>}>
           <ProductContainer
             categoryId={categoryId}
             categorySlug={categorySlug}
@@ -118,9 +107,6 @@ export default async function TypePage({ params }: { params: Promise<{ category:
           />
         </Suspense>
       </section>
-
-
     </main>
   );
 }
-
