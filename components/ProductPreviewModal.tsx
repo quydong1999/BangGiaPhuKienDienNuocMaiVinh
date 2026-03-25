@@ -1,13 +1,16 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { getBlurPlaceholder } from '@/lib/image-blur';
-import { ShoppingCart, Minus, Plus } from 'lucide-react';
+import { ShoppingCart, Minus, Plus, Check } from 'lucide-react';
 import type { Product } from '@/types/types';
 import { useAppDispatch } from '@/store/hooks';
 import { addToCart } from '@/store/cartSlice';
 import { closeModal } from '@/store/modalSlice';
+import { motion } from 'framer-motion';
+
+
 
 interface ProductPreviewModalProps {
   isOpen: boolean;
@@ -34,7 +37,9 @@ function formatPrice(value: number): string {
 
 export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl }: ProductPreviewModalProps) {
   const [quantityInput, setQuantityInput] = useState("1");
+  const [isAdded, setIsAdded] = useState(false);
   const dispatch = useAppDispatch();
+  const addToCartBtnRef = useRef<HTMLButtonElement>(null);
 
   if (!isOpen || !product) return null;
 
@@ -47,10 +52,27 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
   const total = unitPrice * quantity;
 
   const handleAddToCart = () => {
+    // Fire flying animation
+    if (addToCartBtnRef.current) {
+      const rect = addToCartBtnRef.current.getBoundingClientRect();
+      window.dispatchEvent(new CustomEvent('fly-to-cart', {
+        detail: {
+          startX: rect.left + rect.width / 2,
+          startY: rect.top,
+        }
+      }));
+    }
+
     dispatch(addToCart({ product, quantity }));
-    dispatch(closeModal());
-    setQuantityInput("1");
+    setIsAdded(true);
+    setTimeout(() => {
+      dispatch(closeModal());
+      setQuantityInput("1");
+      setIsAdded(false);
+    }, 700);
   };
+
+
 
   const handleBlur = () => {
     // If empty or invalid, reset to the parsed value or 1
@@ -151,16 +173,34 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
           </div>
 
           {/* Add to Cart Button */}
-          <button
+          <motion.button
+            ref={addToCartBtnRef}
             type="button"
             onClick={handleAddToCart}
-            disabled={!isValid}
-            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] transition-all"
+            disabled={!isValid || isAdded}
+            whileTap={{ scale: 0.96 }}
+            className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-white text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all ${
+              isAdded ? 'bg-emerald-500' : 'bg-emerald-600 hover:bg-emerald-700'
+            }`}
           >
-            <ShoppingCart size={16} />
-            Thêm vào giỏ
-          </button>
+            {isAdded ? (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-center gap-2"
+              >
+                <Check size={16} />
+                <span>Đã thêm vào giỏ</span>
+              </motion.div>
+            ) : (
+              <>
+                <ShoppingCart size={16} />
+                Thêm vào giỏ
+              </>
+            )}
+          </motion.button>
         </div>
+
         <button
           type="button"
           onClick={onClose}

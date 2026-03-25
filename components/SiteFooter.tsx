@@ -1,4 +1,4 @@
-import { MapPin, Phone, MapPinned } from 'lucide-react';
+import { MapPin, Phone } from 'lucide-react';
 
 export function SiteFooter() {
   const currentYear = new Date().getFullYear();
@@ -20,49 +20,35 @@ export function SiteFooter() {
           {/* Contact Info */}
           <div className="space-y-4 md:justify-self-end w-full sm:w-auto mt-2 md:mt-0">
             <h3 className="text-base font-semibold text-white">Liên hệ</h3>
-            <div className="flex flex-row items-center sm:items-start gap-4 sm:gap-8 border-t border-emerald-500/30 pt-4 md:border-0 md:pt-0">
-              <ul className="space-y-4 flex-1">
-                <li className="flex items-start gap-3 text-sm">
-                  <Phone size={18} className="text-white mt-0.5 shrink-0" />
-                  <div className="flex flex-col sm:flex-row sm:gap-4 gap-1">
-                    <a href="tel:0982390943" className="hover:text-white text-emerald-50 transition-colors font-medium">0982 390 943</a>
-                    <span className="hidden sm:inline text-emerald-300/60">|</span>
-                    <a href="tel:0976576443" className="hover:text-white text-emerald-50 transition-colors font-medium">0976 576 443</a>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3 text-sm text-emerald-50">
-                  <MapPin size={18} className="text-white mt-0.5 shrink-0" />
-                  <a href="https://maps.app.goo.gl/pHLNv3rDBr16PTrt5" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-                    <span className="leading-snug block max-w-[180px] sm:max-w-none">Bình Định, Việt Nam</span>
-                  </a>
-                </li>
-              </ul>
-
-              {/* Minimap Widget */}
-              <a 
-                href="https://maps.app.goo.gl/pHLNv3rDBr16PTrt5" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="relative flex items-center justify-center w-24 h-24 sm:w-28 sm:h-28 bg-emerald-900/40 rounded-xl border border-emerald-400/30 hover:border-white/80 transition-all group overflow-hidden shrink-0 shadow-lg hover:shadow-xl hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-emerald-600"
-                aria-label="Xem vị trí trên Google Maps"
-                title="Cửa hàng điện nước MAI VINH"
-              >
-                {/* CSS Grid Pattern for Map Vibe */}
-                <div className="absolute inset-0 opacity-20 pointer-events-none bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:10px_10px]"></div>
-                
-                {/* Map Route/Pin background styling */}
-                <svg className="absolute inset-0 w-full h-full opacity-30 text-emerald-200 pointer-events-none" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M20 80 Q 40 40 80 20" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" />
-                  <circle cx="20" cy="80" r="4" fill="currentColor" />
-                  <circle cx="80" cy="20" r="4" fill="currentColor" />
-                </svg>
-
-                <MapPinned size={32} className="text-white group-hover:scale-110 group-hover:text-amber-200 transition-all duration-300 drop-shadow-md z-10 -mt-3" />
-                <div className="absolute bottom-0 w-full text-center pb-2 pt-6 bg-gradient-to-t from-emerald-950 to-transparent">
-                  <span className="text-[10px] sm:text-xs font-bold text-emerald-50 tracking-wider uppercase">Bản đồ</span>
+            <ul className="space-y-4">
+              <li className="flex items-start gap-3 text-sm">
+                <Phone size={18} className="text-white mt-0.5 shrink-0" />
+                <div className="flex flex-col sm:flex-row sm:gap-4 gap-1">
+                  <a href="tel:0982390943" className="hover:text-white text-emerald-50 transition-colors font-medium">0982 390 943</a>
+                  <span className="hidden sm:inline text-emerald-300/60">|</span>
+                  <a href="tel:0976576443" className="hover:text-white text-emerald-50 transition-colors font-medium">0976 576 443</a>
                 </div>
-              </a>
-            </div>
+              </li>
+              <li className="flex items-start gap-3 text-sm text-emerald-50">
+                <MapPin size={18} className="text-white mt-0.5 shrink-0" />
+                <a
+                  href="https://maps.app.goo.gl/pHLNv3rDBr16PTrt5"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white transition-colors leading-snug"
+                >
+                  Thắng Kiên, Đề Gi, Bình Định, Việt Nam
+                </a>
+              </li>
+              <li>
+                <div className="rounded-xl overflow-hidden w-full h-44 border border-emerald-400/30 shadow-lg">
+                  <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3869.537649379725!2d109.18716049999999!3d14.104448999999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x316f37d14647decb%3A0xc99b261b8447a7f8!2zQ-G7rWEgaMOgbmcgxJFp4buHbiBuxrDhu5tjIE1haSBWaW5o!5e0!3m2!1svi!2s!4v1774407991432!5m2!1svi!2s" width="100%" height="100%" style={{ border: 0 }} allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Vị trí cửa hàng điện nước Mai Vinh trên Google Maps"></iframe>
+                </div>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

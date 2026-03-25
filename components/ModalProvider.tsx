@@ -4,6 +4,7 @@ import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { closeModal } from '@/store/modalSlice';
 import { useHotkey } from '@tanstack/react-hotkeys';
 import dynamic from 'next/dynamic';
+import { FlyToCartAnimation } from './FlyToCartAnimation';
 
 const LoginModal = dynamic(() => import('./LoginModal').then(m => m.default), { ssr: false });
 const SearchModal = dynamic(() => import('./SearchModal').then(m => m.SearchModal), { ssr: false });
@@ -17,10 +18,9 @@ export function ModalProvider() {
 
   useHotkey('Escape', () => dispatch(closeModal()), { enabled: isOpen });
 
-  if (!type && !isOpen) return null;
-
   return (
     <>
+      <FlyToCartAnimation />
       {type === 'login' && <LoginModal isOpen={isOpen} onClose={() => dispatch(closeModal())} />}
       {type === 'search' && <SearchModal isOpen={isOpen} onClose={() => dispatch(closeModal())} />}
       {type === 'categoryForm' && <CategoryFormModal isOpen={isOpen} onClose={() => dispatch(closeModal())} {...props} />}
@@ -29,3 +29,4 @@ export function ModalProvider() {
     </>
   );
 }
+

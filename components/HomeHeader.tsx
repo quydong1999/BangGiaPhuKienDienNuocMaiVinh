@@ -8,6 +8,8 @@ import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { openModal } from '@/store/modalSlice';
 import { selectCartCount } from '@/store/cartSlice';
+import { motion } from 'framer-motion';
+
 
 interface HomeHeaderProps {
   compact?: boolean;
@@ -71,17 +73,25 @@ export function HomeHeader({
           <div className="flex items-center justify-end gap-2 order-2 sm:order-3 flex-shrink-0 z-20">
             {/* Cart Button */}
             <Link
+              id="header-cart-icon"
               href="/cart"
               className={`relative w-8 h-8 flex items-center justify-center rounded-full transition-colors ${compact ? 'text-white/80 hover:text-white hover:bg-white/20' : 'text-slate-500 hover:text-emerald-600 hover:bg-slate-100'}`}
               aria-label="Giỏ hàng"
             >
               <ShoppingCart size={18} />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center rounded-full bg-red-500 text-white text-[10px] font-bold leading-none px-1">
+                <motion.span
+                  key={cartCount}
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: [1.2, 1], opacity: 1 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 12 }}
+                  className="absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center rounded-full bg-red-500 text-white text-[10px] font-bold leading-none px-1"
+                >
                   {cartCount > 99 ? '99+' : cartCount}
-                </span>
+                </motion.span>
               )}
             </Link>
+
             {!isLoading && (
               <div className="relative" ref={dropdownRef}>
 
