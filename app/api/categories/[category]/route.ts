@@ -6,7 +6,7 @@
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 import { revalidatePath, revalidateTag } from 'next/cache';
-import { CategoryService } from '@/services/CategoryService';
+import { categoryService } from '@/services';
 import { uploadImage, deleteImage } from '@/lib/cloudinary';
 import type { ICategoryUpdateInput } from '@/types/service.types';
 
@@ -18,7 +18,7 @@ export async function GET(
 ) {
   try {
     const { category } = await params;
-    const result = await CategoryService.findBySlug(category);
+    const result = await categoryService.findBySlug(category);
 
     if (!result.success) {
       return NextResponse.json(result, { status: 404 });
@@ -59,7 +59,7 @@ export async function PATCH(
     const imageFile = formData.get('image') as File | null;
 
     // Handle image (Cloudinary concern stays in Route)
-    const existingImage = await CategoryService.getExistingImage(category);
+    const existingImage = await categoryService.getExistingImage(category);
     let imageData = existingImage;
 
     if (imageFile && imageFile.size > 0 && typeof imageFile !== 'string') {
@@ -91,7 +91,7 @@ export async function PATCH(
       image: imageData,
     };
 
-    const result = await CategoryService.update(category, input);
+    const result = await categoryService.update(category, input);
 
     if (!result.success) {
       const status = result.message?.includes('tồn tại')
@@ -141,9 +141,9 @@ export async function DELETE(
     const { category } = await params;
 
     // Get image data for Cloudinary cleanup (Route concern)
-    const existingImage = await CategoryService.getExistingImage(category);
+    const existingImage = await categoryService.getExistingImage(category);
 
-    const result = await CategoryService.delete(category);
+    const result = await categoryService.delete(category);
 
     if (!result.success) {
       const status = result.message?.includes('Không tìm thấy')

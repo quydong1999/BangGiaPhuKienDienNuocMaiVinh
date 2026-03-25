@@ -6,45 +6,68 @@ if (!MONGODB_URI) {
   throw new Error('Vui lòng định nghĩa biến MONGODB_URI trong file .env.local');
 }
 
-/** * Sử dụng biến Global để duy trì kết nối khi Next.js Hot Reload (trong môi trường Dev)
- * Tránh việc tạo quá nhiều kết nối gây quá tải MongoDB Atlas.
+/**
+ * MongoDB Singleton để duy trì kết nối duy nhất (đặc biệt quan trọng trong Next.js Dev mode).
  */
-let cached = (global as any).mongoose;
+class MongoDB {
+  private static instance: MongoDB;
+  private conn: any = null;
+  private promise: any = null;
 
-if (!cached) {
-  cached = (global as any).mongoose = { conn: null, promise: null };
+  private constructor() {
+    // Khởi tạo cached từ global để giữ kết nối qua các lần Hot Reload
+    const cached = (global as any).mongoose;
+    if (cached) {
+      this.conn = cached.conn;
+      this.promise = cached.promise;
+    } else {
+      (global as any).mongoose = { conn: null, promise: null };
+    }
+  }
+
+  public static getInstance(): MongoDB {
+    if (!MongoDB.instance) {
+      MongoDB.instance = new MongoDB();
+    }
+    return MongoDB.instance;
+  }
+
+  public async connect() {
+    if (this.conn) {
+      return this.conn;
+    }
+
+    if (!this.promise) {
+      const opts = {
+        bufferCommands: false,
+      };
+
+      this.promise = mongoose.connect(MONGODB_URI!, opts)
+        .then((mongoose) => {
+          console.log('✅ MongoDB đã kết nối thành công');
+          return mongoose;
+        })
+        .catch((e) => {
+          console.error('❌ Lỗi kết nối MongoDB:', e.message);
+          this.promise = null;
+          (global as any).mongoose.promise = null;
+          throw e;
+        });
+      
+      (global as any).mongoose.promise = this.promise;
+    }
+
+    try {
+      this.conn = await this.promise;
+      (global as any).mongoose.conn = this.conn;
+    } catch (e) {
+      this.conn = null;
+      (global as any).mongoose.conn = null;
+      throw e;
+    }
+
+    return this.conn;
+  }
 }
 
-export const connectDB = async () => {
-  // 1. Nếu đã có kết nối trước đó, dùng lại luôn
-  if (cached.conn) {
-    return cached.conn;
-  }
-
-  // 2. Nếu chưa có kết nối, tiến hành tạo mới và CATCH LỖI
-  if (!cached.promise) {
-    const opts = {
-      bufferCommands: false, // Không đợi lệnh nếu chưa kết nối xong (tránh treo request)
-    };
-
-    cached.promise = mongoose.connect(MONGODB_URI, opts)
-      .then((mongoose) => {
-        console.log('✅ MongoDB đã kết nối thành công');
-        return mongoose;
-      })
-      .catch((e) => {
-        console.error('❌ Lỗi kết nối MongoDB:', e.message);
-        cached.promise = null; // Reset promise để lần sau có thể thử lại
-        throw e; // Ném lỗi ra ngoài để API Route xử lý
-      });
-  }
-
-  try {
-    cached.conn = await cached.promise;
-  } catch (e) {
-    cached.conn = null;
-    throw e;
-  }
-
-  return cached.conn;
-};
+export const connectDB = () => MongoDB.getInstance().connect();

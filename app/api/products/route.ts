@@ -6,7 +6,7 @@
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 import { revalidatePath, revalidateTag } from 'next/cache';
-import { ProductService } from '@/services/ProductService';
+import { productService } from '@/services';
 import { uploadImage } from '@/lib/cloudinary';
 import type { IProductCreateInput } from '@/types/service.types';
 
@@ -17,7 +17,7 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const categoryId = searchParams.get('categoryId') || undefined;
 
-    const result = await ProductService.findAll(categoryId);
+    const result = await productService.findAll(categoryId);
 
     return NextResponse.json(result, { status: 200 });
   } catch (error: any) {
@@ -73,7 +73,7 @@ export async function POST(req: Request) {
       image: imageData,
     };
 
-    const result = await ProductService.create(input);
+    const result = await productService.create(input);
 
     if (!result.success) {
       return NextResponse.json(result, { status: 400 });
@@ -81,7 +81,7 @@ export async function POST(req: Request) {
 
     // Revalidation (Route concern)
     try {
-      const slug = await ProductService.getCategorySlugById(categoryId);
+      const slug = await productService.getCategorySlugById(categoryId);
       if (slug) {
         revalidatePath(`/${slug}`);
         revalidateTag(`products-${slug}`);

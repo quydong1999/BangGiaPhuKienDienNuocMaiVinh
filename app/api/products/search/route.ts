@@ -4,14 +4,14 @@
  */
 
 import { NextResponse } from 'next/server';
-import { ProductService } from '@/services/ProductService';
+import { productService } from '@/services';
 
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const query = searchParams.get('q') || '';
 
-    const result = await ProductService.search(query);
+    const result = await productService.search(query);
 
     return NextResponse.json(result, { status: 200 });
   } catch (error: any) {

@@ -23,13 +23,24 @@ import type {
 } from '@/types/service.types';
 
 export class ProductService {
+  private static instance: ProductService;
+
+  private constructor() {}
+
+  public static getInstance(): ProductService {
+    if (!ProductService.instance) {
+      ProductService.instance = new ProductService();
+    }
+    return ProductService.instance;
+  }
+
   // ─── GET ALL / BY CATEGORY ───────────────────────────────────────────────
 
   /**
    * Lấy danh sách Products, hỗ trợ lọc theo categoryId.
    * Ưu tiên lấy từ Redis Cache, nếu miss thì query MongoDB.
    */
-  static async findAll(categoryId?: string): Promise<IListResponse<IProduct>> {
+  async findAll(categoryId?: string): Promise<IListResponse<IProduct>> {
     const cacheKey = categoryId
       ? CACHE_KEYS.PRODUCTS_BY_CATEGORY(categoryId)
       : CACHE_KEYS.PRODUCTS_ALL;
@@ -65,7 +76,7 @@ export class ProductService {
    * Tìm kiếm sản phẩm bằng MongoDB Atlas Search.
    * Kết quả được cache trong Redis với TTL 30 phút.
    */
-  static async search(query: string): Promise<IListResponse<ISearchResult>> {
+  async search(query: string): Promise<IListResponse<ISearchResult>> {
     if (!query || query.length < 2) {
       return { success: true, count: 0, data: [], source: 'cache' };
     }
@@ -154,7 +165,7 @@ export class ProductService {
   /**
    * Tạo mới Product và invalidate cache.
    */
-  static async create(input: IProductCreateInput): Promise<IServiceResponse<IProduct>> {
+  async create(input: IProductCreateInput): Promise<IServiceResponse<IProduct>> {
     await connectDB();
 
     if (!input.name || !input.priceSell || !input.categoryId) {
@@ -167,7 +178,7 @@ export class ProductService {
     const newProduct = await Product.create(input);
 
     // Invalidate cache
-    await ProductService.invalidateCache(input.categoryId);
+    await this.invalidateCache(input.categoryId);
 
     return {
       success: true,
@@ -182,7 +193,7 @@ export class ProductService {
    * Cập nhật Product bằng findOneAndUpdate với option returnDocument: 'after'.
    * Trả về document đã được cập nhật.
    */
-  static async update(
+  async update(
     id: string,
     input: IProductUpdateInput
   ): Promise<IServiceResponse<IProduct>> {
@@ -205,13 +216,13 @@ export class ProductService {
 
     // Invalidate cache cho cả category cũ và mới (nếu thay đổi)
     const newCategoryId = input.categoryId || existingProduct.categoryId.toString();
-    await ProductService.invalidateCache(newCategoryId);
+    await this.invalidateCache(newCategoryId);
 
     if (
       input.categoryId &&
       existingProduct.categoryId.toString() !== input.categoryId
     ) {
-      await ProductService.invalidateCache(existingProduct.categoryId.toString());
+      await this.invalidateCache(existingProduct.categoryId.toString());
     }
 
     return {
@@ -226,7 +237,7 @@ export class ProductService {
   /**
    * Xóa Product theo ID và invalidate cache.
    */
-  static async delete(id: string): Promise<IServiceResponse<null>> {
+  async delete(id: string): Promise<IServiceResponse<null>> {
     await connectDB();
 
     const product = await Product.findById(id);
@@ -237,7 +248,7 @@ export class ProductService {
     await Product.findByIdAndDelete(id);
 
     // Invalidate cache
-    await ProductService.invalidateCache(product.categoryId.toString());
+    await this.invalidateCache(product.categoryId.toString());
 
     return { success: true, message: 'Xóa sản phẩm thành công', data: null };
   }
@@ -248,7 +259,7 @@ export class ProductService {
    * Xóa tất cả Redis cache liên quan đến Products.
    * Bao gồm: products by category, all products.
    */
-  static async invalidateCache(categoryId?: string): Promise<void> {
+  async invalidateCache(categoryId?: string): Promise<void> {
     const keysToDelete = [CACHE_KEYS.PRODUCTS_ALL];
     if (categoryId) {
       keysToDelete.push(CACHE_KEYS.PRODUCTS_BY_CATEGORY(categoryId));
@@ -262,7 +273,7 @@ export class ProductService {
    * Lấy slug của Category theo ID — dùng để revalidatePath trong API Route.
    * (Revalidation là concern của Route Handler, không phải Service.)
    */
-  static async getCategorySlugById(categoryId: string): Promise<string | null> {
+  async getCategorySlugById(categoryId: string): Promise<string | null> {
     await connectDB();
     const category = await Category.findById(categoryId).select('slug').lean();
     return category ? (category as { slug: string }).slug : null;

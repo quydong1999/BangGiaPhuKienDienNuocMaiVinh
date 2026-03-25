@@ -1,7 +1,7 @@
-/**
- * Services Barrel Export
- * Import trung tâm cho tất cả Services.
- */
+import { ProductService } from './ProductService';
+import { CategoryService } from './CategoryService';
 
-export { ProductService } from './ProductService';
-export { CategoryService } from './CategoryService';
+export const productService = ProductService.getInstance();
+export const categoryService = CategoryService.getInstance();
+
+export { ProductService, CategoryService };

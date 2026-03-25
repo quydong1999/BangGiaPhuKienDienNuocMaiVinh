@@ -6,7 +6,7 @@
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 import { revalidatePath, revalidateTag } from 'next/cache';
-import { ProductService } from '@/services/ProductService';
+import { productService } from '@/services';
 import { uploadImage, deleteImage } from '@/lib/cloudinary';
 import { connectDB } from '@/lib/mongodb';
 import Product from '@/models/Product';
@@ -75,7 +75,7 @@ export async function PATCH(
       image: imageData,
     };
 
-    const result = await ProductService.update(id, input);
+    const result = await productService.update(id, input);
 
     if (!result.success) {
       return NextResponse.json(result, { status: 404 });
@@ -83,13 +83,13 @@ export async function PATCH(
 
     // Revalidation (Route concern)
     try {
-      const slug = await ProductService.getCategorySlugById(categoryId);
+      const slug = await productService.getCategorySlugById(categoryId);
       if (slug) {
         revalidatePath(`/${slug}`);
         revalidateTag(`products-${slug}`);
       }
       if (existingProduct.categoryId.toString() !== categoryId) {
-        const oldSlug = await ProductService.getCategorySlugById(
+        const oldSlug = await productService.getCategorySlugById(
           existingProduct.categoryId.toString()
         );
         if (oldSlug) {
@@ -140,7 +140,7 @@ export async function DELETE(
       await deleteImage(product.image.public_id);
     }
 
-    const result = await ProductService.delete(id);
+    const result = await productService.delete(id);
 
     if (!result.success) {
       return NextResponse.json(result, { status: 404 });
@@ -148,7 +148,7 @@ export async function DELETE(
 
     // Revalidation
     try {
-      const slug = await ProductService.getCategorySlugById(
+      const slug = await productService.getCategorySlugById(
         product.categoryId.toString()
       );
       if (slug) {

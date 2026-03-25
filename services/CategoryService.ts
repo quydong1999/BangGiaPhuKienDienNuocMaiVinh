@@ -18,9 +18,20 @@ import type {
 } from '@/types/service.types';
 
 export class CategoryService {
+  private static instance: CategoryService;
+
+  private constructor() {}
+
+  public static getInstance(): CategoryService {
+    if (!CategoryService.instance) {
+      CategoryService.instance = new CategoryService();
+    }
+    return CategoryService.instance;
+  }
+
   // ─── GET ALL ──────────────────────────────────────────────────────────────
 
-  static async findAll(): Promise<IListResponse<ICategory>> {
+  async findAll(): Promise<IListResponse<ICategory>> {
     // 1. Cache check
     const cached = await redis.get(CACHE_KEYS.CATEGORIES_ALL);
     if (cached) {
@@ -45,7 +56,7 @@ export class CategoryService {
 
   // ─── GET BY SLUG ──────────────────────────────────────────────────────────
 
-  static async findBySlug(slug: string): Promise<IServiceResponse<ICategory>> {
+  async findBySlug(slug: string): Promise<IServiceResponse<ICategory>> {
     // 1. Cache check
     const cacheKey = CACHE_KEYS.CATEGORY_BY_SLUG(slug);
     const cached = await redis.get(cacheKey);
@@ -68,7 +79,7 @@ export class CategoryService {
 
   // ─── CREATE ──────────────────────────────────────────────────────────────
 
-  static async create(input: ICategoryCreateInput): Promise<IServiceResponse<ICategory>> {
+  async create(input: ICategoryCreateInput): Promise<IServiceResponse<ICategory>> {
     await connectDB();
 
     if (!input.slug || !input.title) {
@@ -84,7 +95,7 @@ export class CategoryService {
     const newCategory = await Category.create(input);
 
     // Invalidate cache
-    await CategoryService.invalidateCache();
+    await this.invalidateCache();
 
     return {
       success: true,
@@ -95,7 +106,7 @@ export class CategoryService {
 
   // ─── UPDATE (findOneAndUpdate, returnDocument: 'after') ──────────────────
 
-  static async update(
+  async update(
     currentSlug: string,
     input: ICategoryUpdateInput
   ): Promise<IServiceResponse<ICategory>> {
@@ -129,7 +140,7 @@ export class CategoryService {
     }
 
     // Invalidate cache
-    await CategoryService.invalidateCache(currentSlug);
+    await this.invalidateCache(currentSlug);
     if (input.slug && input.slug !== currentSlug) {
       await redis.del(CACHE_KEYS.CATEGORY_BY_SLUG(input.slug));
     }
@@ -143,7 +154,7 @@ export class CategoryService {
 
   // ─── DELETE ──────────────────────────────────────────────────────────────
 
-  static async delete(slug: string): Promise<IServiceResponse<null>> {
+  async delete(slug: string): Promise<IServiceResponse<null>> {
     await connectDB();
 
     const category = await Category.findOne({ slug });
@@ -163,7 +174,7 @@ export class CategoryService {
     await Category.findByIdAndDelete(category._id);
 
     // Invalidate cache
-    await CategoryService.invalidateCache(slug);
+    await this.invalidateCache(slug);
 
     return { success: true, message: 'Xóa danh mục thành công', data: null };
   }
@@ -173,7 +184,7 @@ export class CategoryService {
   /**
    * Trả về image data của category hiện tại (để xử lý Cloudinary trong Route).
    */
-  static async getExistingImage(slug: string) {
+  async getExistingImage(slug: string) {
     await connectDB();
     const category = await Category.findOne({ slug }).select('image').lean();
     return category ? (category as any).image : null;
@@ -182,7 +193,7 @@ export class CategoryService {
   /**
    * Invalidate tất cả cache liên quan đến Categories.
    */
-  static async invalidateCache(slug?: string): Promise<void> {
+  async invalidateCache(slug?: string): Promise<void> {
     await redis.del(CACHE_KEYS.CATEGORIES_ALL);
     if (slug) {
       await redis.del(CACHE_KEYS.CATEGORY_BY_SLUG(slug));

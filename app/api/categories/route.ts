@@ -6,7 +6,7 @@
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 import { revalidatePath, revalidateTag } from 'next/cache';
-import { CategoryService } from '@/services/CategoryService';
+import { categoryService } from '@/services';
 import { uploadImage } from '@/lib/cloudinary';
 import type { ICategoryCreateInput } from '@/types/service.types';
 
@@ -14,7 +14,7 @@ import type { ICategoryCreateInput } from '@/types/service.types';
 
 export async function GET() {
   try {
-    const result = await CategoryService.findAll();
+    const result = await categoryService.findAll();
     return NextResponse.json(result, { status: 200 });
   } catch (error: any) {
     console.error('Lỗi API Categories GET:', error);
@@ -72,7 +72,7 @@ export async function POST(req: Request) {
       image: imageData,
     };
 
-    const result = await CategoryService.create(input);
+    const result = await categoryService.create(input);
 
     if (!result.success) {
       const status = result.message?.includes('tồn tại') ? 409 : 400;
