@@ -1,0 +1,104 @@
+/**
+ * Service Layer - Shared Interfaces
+ * Chuẩn hóa kiểu dữ liệu trả về cho toàn bộ Service, giúp dễ dàng mở rộng
+ * và sẵn sàng chuyển đổi sang NestJS bằng cách thêm Decorators.
+ */
+
+// ─── Generic Service Response ────────────────────────────────────────────────
+
+export interface IServiceResponse<T = unknown> {
+  success: boolean;
+  data?: T;
+  message?: string;
+  error?: string;
+}
+
+export interface IListResponse<T = unknown> extends IServiceResponse<T[]> {
+  count: number;
+  source: 'cache' | 'database';
+}
+
+// ─── Product Interfaces ─────────────────────────────────────────────────────
+
+export interface ICloudinaryImage {
+  public_id?: string;
+  url?: string;
+  secure_url?: string;
+}
+
+export interface IProduct {
+  _id: string;
+  name: string;
+  spec?: string;
+  unit?: string;
+  priceSell: string;
+  image?: ICloudinaryImage;
+  categoryId: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface IProductCreateInput {
+  name: string;
+  spec?: string;
+  unit?: string;
+  priceSell: string;
+  categoryId: string;
+  image?: ICloudinaryImage | null;
+}
+
+export interface IProductUpdateInput {
+  name?: string;
+  spec?: string;
+  unit?: string;
+  priceSell?: string;
+  categoryId?: string;
+  image?: ICloudinaryImage | null;
+}
+
+export interface ISearchResult extends IProduct {
+  categoryName?: string;
+  categoryShortTitle?: string;
+  categorySlug?: string;
+  layout?: string;
+  score?: number;
+}
+
+// ─── Category Interfaces ────────────────────────────────────────────────────
+
+export type VisibleField = 'name' | 'spec' | 'unit' | 'priceSell';
+export type FilterField = 'name' | 'spec';
+export type LayoutType = 'table' | 'gallery';
+
+export interface ICategory {
+  _id: string;
+  slug: string;
+  title: string;
+  shortTitle?: string;
+  image?: ICloudinaryImage;
+  layout: LayoutType;
+  visibleFields?: VisibleField[];
+  filterField?: FilterField | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface ICategoryCreateInput {
+  slug: string;
+  title: string;
+  shortTitle?: string;
+  layout?: string;
+  filterField?: string;
+  visibleFields?: string[];
+  image?: ICloudinaryImage | null;
+}
+
+export interface ICategoryUpdateInput {
+  slug?: string;
+  title?: string;
+  shortTitle?: string;
+  layout?: string;
+  filterField?: string;
+  visibleFields?: string[];
+  image?: ICloudinaryImage | null;
+}
