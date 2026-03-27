@@ -1,6 +1,6 @@
 "use client"
+import { motion } from "framer-motion"
 import { signIn } from "next-auth/react"
-import Swal from "sweetalert2"
 
 interface LoginModalProps {
     isOpen: boolean
@@ -8,23 +8,35 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
-    if (!isOpen) return null
-
     const handleGoogleSignIn = () => {
         signIn("google");
         onClose();
     }
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center"
+        >
             {/* Backdrop */}
-            <div
-                className="absolute inset-0 bg-black/50"
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 bg-black/50 backdrop-blur-sm"
                 onClick={onClose}
             />
 
             {/* Modal */}
-            <div className="relative bg-white rounded-2xl shadow-xl p-8 w-full max-w-sm mx-4 flex flex-col items-center gap-6">
+            <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                transition={{ type: "spring", duration: 0.4, bounce: 0.3 }}
+                className="relative bg-white rounded-2xl shadow-xl p-8 w-full max-w-sm mx-4 flex flex-col items-center gap-6"
+            >
                 <h2 className="text-xl font-semibold text-gray-800">Đăng nhập</h2>
                 <p className="text-sm text-gray-500 text-center">
                     Chỉ tài khoản được cấp quyền mới có thể thực hiện thao tác này.
@@ -45,7 +57,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                         Đăng nhập với Google
                     </span>
                 </button>
-            </div>
-        </div>
+            </motion.div>
+        </motion.div>
     )
 }

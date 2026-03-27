@@ -41,10 +41,8 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
   const dispatch = useAppDispatch();
   const addToCartBtnRef = useRef<HTMLButtonElement>(null);
 
-  if (!isOpen || !product) return null;
-
-  const imageUrl = product.image?.secure_url || categoryImageUrl || imgNotFoundUrl;
-  const unitPrice = parsePrice(product.priceSell);
+  const imageUrl = product?.image?.secure_url || categoryImageUrl || imgNotFoundUrl;
+  const unitPrice = parsePrice(product?.priceSell || "0");
 
   const parsedQuantity = parseFloat(quantityInput.replace(',', '.'));
   const isValid = !isNaN(parsedQuantity) && parsedQuantity >= 0.01;
@@ -52,6 +50,7 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
   const total = unitPrice * quantity;
 
   const handleAddToCart = () => {
+    if (!product) return;
     // Fire flying animation
     if (addToCartBtnRef.current) {
       const rect = addToCartBtnRef.current.getBoundingClientRect();
@@ -84,12 +83,21 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
     }
   };
 
+  if (!product) return null;
+
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       className="fixed inset-0 z-30 bg-black/60 flex items-center justify-center px-4"
       onClick={onClose}
     >
-      <div
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+        transition={{ type: "spring", duration: 0.5, bounce: 0.3 }}
         className="relative bg-white max-w-lg w-full overflow-hidden shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
@@ -211,7 +219,7 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
         >
           ✕
         </button>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 import { Search, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
+import { motion } from 'framer-motion';
+
 interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -34,15 +36,20 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-slate-900/60 backdrop-blur-sm transition-all"
       onClick={onClose}
     >
-      <div
-        className="w-full max-w-2xl bg-white shadow-2xl rounded-xl overflow-hidden animate-in fade-in zoom-in duration-200"
+      <motion.div
+        initial={{ opacity: 0, y: -50, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: -50, scale: 0.95 }}
+        transition={{ type: "spring", duration: 0.4, bounce: 0.2 }}
+        className="w-full max-w-2xl bg-white shadow-2xl rounded-xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         <form onSubmit={handleSearch} className="relative flex items-center p-4">
@@ -67,7 +74,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
         <div className="px-6 pb-6 pt-2 border-t border-slate-100 flex justify-between items-center text-xs text-slate-400">
           <span>Nhập ít nhất 2 ký tự để tìm kiếm</span>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
