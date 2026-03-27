@@ -96,6 +96,7 @@ export async function PATCH(
           revalidatePath(`/${oldSlug}`);
           revalidateTag(`products-${oldSlug}`);
         }
+        revalidateTag('categories-list');
       }
     } catch (e) {
       console.error('Lỗi revalidate:', e);
@@ -154,6 +155,7 @@ export async function DELETE(
       if (slug) {
         revalidatePath(`/${slug}`);
         revalidateTag(`products-${slug}`);
+        revalidateTag('categories-list');
       }
     } catch (e) {
       console.error('Lỗi revalidate:', e);

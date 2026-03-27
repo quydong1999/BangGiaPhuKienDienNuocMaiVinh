@@ -85,6 +85,7 @@ export async function POST(req: Request) {
       if (slug) {
         revalidatePath(`/${slug}`);
         revalidateTag(`products-${slug}`);
+        revalidateTag('categories-list');
       }
     } catch (e) {
       console.error('Lỗi revalidate:', e);
