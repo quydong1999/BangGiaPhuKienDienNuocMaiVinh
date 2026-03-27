@@ -5,6 +5,7 @@
  * Sử dụng Static Methods — sẵn sàng chuyển sang NestJS bằng cách thêm @Injectable().
  */
 
+import mongoose from 'mongoose';
 import { connectDB } from '@/lib/mongodb';
 import { redis, CACHE_KEYS, DEFAULT_TTL } from '@/lib/redis';
 import Category from '@/models/Category';
@@ -156,27 +157,44 @@ export class CategoryService {
 
   async delete(slug: string): Promise<IServiceResponse<null>> {
     await connectDB();
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-    const category = await Category.findOne({ slug });
-    if (!category) {
-      return { success: false, message: 'Không tìm thấy danh mục' };
+    try {
+      const category = await Category.findOne({ slug }).session(session);
+      if (!category) {
+        await session.abortTransaction();
+        return { success: false, message: 'Không tìm thấy danh mục' };
+      }
+
+      // Check if category has products
+      const productCount = await Product.countDocuments(
+        { categoryId: category._id },
+        { session }
+      );
+      if (productCount > 0) {
+        await session.abortTransaction();
+        return {
+          success: false,
+          message: 'Không thể xóa. Danh mục này đang chứa sản phẩm!',
+        };
+      }
+
+      await Category.findByIdAndDelete(category._id).session(session);
+
+      await session.commitTransaction();
+
+      // Invalidate cache (outside transaction is fine)
+      await this.invalidateCache(slug);
+
+      return { success: true, message: 'Xóa danh mục thành công', data: null };
+    } catch (error: any) {
+      await session.abortTransaction();
+      console.error('Lỗi khi xóa Category (Transaction):', error);
+      return { success: false, message: 'Lỗi server khi xóa danh mục', error: error.message };
+    } finally {
+      session.endSession();
     }
-
-    // Check if category has products
-    const productCount = await Product.countDocuments({ categoryId: category._id });
-    if (productCount > 0) {
-      return {
-        success: false,
-        message: 'Không thể xóa. Danh mục này đang chứa sản phẩm!',
-      };
-    }
-
-    await Category.findByIdAndDelete(category._id);
-
-    // Invalidate cache
-    await this.invalidateCache(slug);
-
-    return { success: true, message: 'Xóa danh mục thành công', data: null };
   }
 
   // ─── HELPERS ──────────────────────────────────────────────────────────────
