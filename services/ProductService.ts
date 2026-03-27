@@ -166,25 +166,45 @@ export class ProductService {
    * Tạo mới Product và invalidate cache.
    */
   async create(input: IProductCreateInput): Promise<IServiceResponse<IProduct>> {
-    await connectDB();
+    const mongoose = await connectDB();
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-    if (!input.name || !input.priceSell || !input.categoryId) {
+    try {
+      if (!input.name || !input.priceSell || !input.categoryId) {
+        await session.abortTransaction();
+        return {
+          success: false,
+          message: 'Thiếu thông tin bắt buộc (tên, giá bán hoặc danh mục)',
+        };
+      }
+
+      // Check if category exists
+      const categoryExists = await Category.findById(input.categoryId).session(session);
+      if (!categoryExists) {
+        await session.abortTransaction();
+        return { success: false, message: 'Danh mục không tồn tại' };
+      }
+
+      const newProduct = await Product.create([input], { session });
+      const createdProduct = newProduct[0];
+
+      await session.commitTransaction();
+
+      // Invalidate cache
+      await this.invalidateCache(input.categoryId);
+
       return {
-        success: false,
-        message: 'Thiếu thông tin bắt buộc (tên, giá bán hoặc danh mục)',
+        success: true,
+        message: 'Tạo sản phẩm thành công',
+        data: createdProduct.toObject() as unknown as IProduct,
       };
+    } catch (error: any) {
+      await session.abortTransaction();
+      return { success: false, message: 'Lỗi server khi tạo sản phẩm', error: error.message };
+    } finally {
+      await session.endSession();
     }
-
-    const newProduct = await Product.create(input);
-
-    // Invalidate cache
-    await this.invalidateCache(input.categoryId);
-
-    return {
-      success: true,
-      message: 'Tạo sản phẩm thành công',
-      data: newProduct.toObject() as IProduct,
-    };
   }
 
   // ─── UPDATE (findOneAndUpdate, returnDocument: 'after') ──────────────────
@@ -197,39 +217,61 @@ export class ProductService {
     id: string,
     input: IProductUpdateInput
   ): Promise<IServiceResponse<IProduct>> {
-    await connectDB();
+    const mongoose = await connectDB();
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-    const existingProduct = await Product.findById(id);
-    if (!existingProduct) {
-      return { success: false, message: 'Không tìm thấy sản phẩm' };
+    try {
+      const existingProduct = await Product.findById(id).session(session);
+      if (!existingProduct) {
+        await session.abortTransaction();
+        return { success: false, message: 'Không tìm thấy sản phẩm' };
+      }
+
+      // Check if target category exists (if changing)
+      if (input.categoryId && input.categoryId !== existingProduct.categoryId.toString()) {
+        const categoryExists = await Category.findById(input.categoryId).session(session);
+        if (!categoryExists) {
+          await session.abortTransaction();
+          return { success: false, message: 'Danh mục đích không tồn tại' };
+        }
+      }
+
+      const updatedProduct = await Product.findOneAndUpdate(
+        { _id: id },
+        { $set: input },
+        { returnDocument: 'after', session }
+      ).lean();
+
+      if (!updatedProduct) {
+        await session.abortTransaction();
+        return { success: false, message: 'Cập nhật sản phẩm thất bại' };
+      }
+
+      await session.commitTransaction();
+
+      // Invalidate cache cho cả category cũ và mới (nếu thay đổi)
+      const newCategoryId = input.categoryId || existingProduct.categoryId.toString();
+      await this.invalidateCache(newCategoryId);
+
+      if (
+        input.categoryId &&
+        existingProduct.categoryId.toString() !== input.categoryId
+      ) {
+        await this.invalidateCache(existingProduct.categoryId.toString());
+      }
+
+      return {
+        success: true,
+        message: 'Cập nhật sản phẩm thành công',
+        data: updatedProduct as unknown as IProduct,
+      };
+    } catch (error: any) {
+      await session.abortTransaction();
+      return { success: false, message: 'Lỗi server khi cập nhật sản phẩm', error: error.message };
+    } finally {
+      await session.endSession();
     }
-
-    const updatedProduct = await Product.findOneAndUpdate(
-      { _id: id },
-      { $set: input },
-      { returnDocument: 'after' }
-    ).lean();
-
-    if (!updatedProduct) {
-      return { success: false, message: 'Cập nhật sản phẩm thất bại' };
-    }
-
-    // Invalidate cache cho cả category cũ và mới (nếu thay đổi)
-    const newCategoryId = input.categoryId || existingProduct.categoryId.toString();
-    await this.invalidateCache(newCategoryId);
-
-    if (
-      input.categoryId &&
-      existingProduct.categoryId.toString() !== input.categoryId
-    ) {
-      await this.invalidateCache(existingProduct.categoryId.toString());
-    }
-
-    return {
-      success: true,
-      message: 'Cập nhật sản phẩm thành công',
-      data: updatedProduct as IProduct,
-    };
   }
 
   // ─── DELETE ──────────────────────────────────────────────────────────────

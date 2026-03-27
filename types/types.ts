@@ -36,4 +36,5 @@ export type Product = {
   unit?: string;
   priceSell: string;
   image?: CloudinaryImage;
+  categoryId?: string;
 };

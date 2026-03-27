@@ -12,6 +12,7 @@ import * as z from "zod";
 import imageCompression from "browser-image-compression";
 import type { Product } from "@/types/types";
 import { FormModal } from "@/components/FormModal";
+import { CategorySelect } from "@/components/CategorySelect";
 
 const productSchema = z.object({
   name: z.string().min(1, { message: "Tên sản phẩm không được bỏ trống" }),
@@ -48,6 +49,7 @@ export function ProductFormModal({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isCompressing, setIsCompressing] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>(categoryId);
 
   const isEdit = !!initialData;
 
@@ -72,14 +74,16 @@ export function ProductFormModal({
           priceSell: parseVND(initialData.priceSell),
         });
         setPreviewUrl(initialData.image?.secure_url || null);
+        setSelectedCategoryId(initialData.categoryId || categoryId);
       } else {
         reset({ name: "", spec: "", unit: "", priceSell: "" as any });
         setPreviewUrl(null);
+        setSelectedCategoryId(categoryId);
       }
       setSubmitError(null);
       setSelectedFile(null);
     }
-  }, [isOpen, reset, initialData]);
+  }, [isOpen, reset, initialData, categoryId]);
 
   useEffect(() => {
     if (selectedFile) {
@@ -104,15 +108,19 @@ export function ProductFormModal({
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("priceSell", formatVND(data.priceSell));
-    formData.append("categoryId", categoryId);
+    formData.append("categoryId", selectedCategoryId);
     if (data.spec) formData.append("spec", data.spec);
     if (data.unit) formData.append("unit", data.unit);
     if (selectedFile) formData.append("image", selectedFile);
 
     const mutationOptions = {
       onSuccess: () => {
+        // Invalidate both current and new category queries
         queryClient.invalidateQueries({ queryKey: ["products", categoryId] });
-        setPendingProductCategoryId(categoryId);
+        if (selectedCategoryId !== categoryId) {
+          queryClient.invalidateQueries({ queryKey: ["products", selectedCategoryId] });
+        }
+        setPendingProductCategoryId(selectedCategoryId);
         startRefresh(() => { router.refresh(); onClose(); });
       },
       onError: (err: any) => setSubmitError(err.message),
@@ -166,6 +174,18 @@ export function ProductFormModal({
       />
 
       <FormModal.Body onSubmit={handleSubmit(onSubmit)} submitError={submitError}>
+        {/* Danh mục */}
+        <div className="space-y-1">
+          <label className="text-sm font-medium text-slate-700">
+            Danh mục <span className="text-red-500">*</span>
+          </label>
+          <CategorySelect
+            value={selectedCategoryId}
+            onChange={setSelectedCategoryId}
+            disabled={isPending || isCompressing}
+          />
+        </div>
+
         {/* Tên sản phẩm */}
         <div className="space-y-1">
           <label className="text-sm font-medium text-slate-700">
