@@ -107,6 +107,11 @@ export default function ProductList({ data, filterField, visibleFields, category
     return filteredData.slice(startIndex, startIndex + ITEMS_PER_PAGE);
   }, [filteredData, currentPage]);
 
+  const sortedVisibleFields = useMemo(() => {
+    const order: VisibleField[] = ['name', 'spec', 'unit', 'priceSell'];
+    return order.filter(field => (visibleFields as VisibleField[]).includes(field));
+  }, [visibleFields]);
+
   const fieldLabels: Record<VisibleField, string> = {
     name: 'Tên',
     spec: 'Quy cách',
@@ -155,7 +160,7 @@ export default function ProductList({ data, filterField, visibleFields, category
             <caption className="sr-only">Bảng danh sách sản phẩm</caption>
             <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-medium">
               <tr>
-                {visibleFields.map((field) => (
+                {sortedVisibleFields.map((field) => (
                   <th
                     key={field}
                     className={
@@ -176,7 +181,7 @@ export default function ProductList({ data, filterField, visibleFields, category
                   id={`product-${item._id}`}
                   className="hover:bg-slate-50 transition-colors"
                 >
-                  {visibleFields.map((field, fIndex) => {
+                  {sortedVisibleFields.map((field, fIndex) => {
                     const value = item[field as VisibleField];
 
                     if (field === 'spec') {
@@ -218,7 +223,7 @@ export default function ProductList({ data, filterField, visibleFields, category
               <PendingProductSkeleton
                 categoryId={categoryId}
                 layout="table"
-                visibleFieldsCount={visibleFields.length}
+                visibleFieldsCount={sortedVisibleFields.length}
               />
             </tbody>
           </table>
