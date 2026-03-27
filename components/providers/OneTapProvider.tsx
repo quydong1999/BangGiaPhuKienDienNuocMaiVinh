@@ -36,7 +36,6 @@ export default function OneTapProvider() {
         };
 
         const initializeOneTap = () => {
-            console.log("✅ Google script loaded");
             const google = (window as any).google;
             google?.accounts.id.initialize({
                 client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
@@ -63,15 +62,15 @@ export default function OneTapProvider() {
                 context: "signin",
             });
 
-            google?.accounts.id.prompt((notification: any) => {
-                if (notification.isNotDisplayed()) {
-                    console.log("❌ One Tap not displayed:", notification.getNotDisplayedReason());
-                } else if (notification.isSkippedMoment()) {
-                    console.log("⚠️ One Tap skipped:", notification.getSkippedReason());
-                } else if (notification.isDismissedMoment()) {
-                    console.log("ℹ️ One Tap dismissed:", notification.getDismissedReason());
-                }
-            });
+            // google?.accounts.id.prompt((notification: any) => {
+            //     if (notification.isNotDisplayed()) {
+            //         console.log("❌ One Tap not displayed:", notification.getNotDisplayedReason());
+            //     } else if (notification.isSkippedMoment()) {
+            //         console.log("⚠️ One Tap skipped:", notification.getSkippedReason());
+            //     } else if (notification.isDismissedMoment()) {
+            //         console.log("ℹ️ One Tap dismissed:", notification.getDismissedReason());
+            //     }
+            // });
         };
 
         loadScript();

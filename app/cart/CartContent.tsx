@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
-import { getBlurPlaceholder } from '@/lib/image-blur';
+import { getBlurPlaceholder, getOptimizedImageUrl } from '@/lib/image-blur';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { selectCartItems, removeFromCart, updateQuantity, clearCart } from '@/store/cartSlice';
 import Swal from 'sweetalert2';
@@ -101,11 +101,12 @@ export default function CartContent() {
               {/* Image */}
               <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-slate-50 rounded overflow-hidden">
                 <Image
-                  src={imageUrl}
+                  src={getOptimizedImageUrl(imageUrl, 160)}
                   alt={item.product.name}
                   fill
                   sizes="80px"
                   className="object-cover"
+                  quality={50}
                   {...getBlurPlaceholder(imageUrl)}
                 />
               </div>

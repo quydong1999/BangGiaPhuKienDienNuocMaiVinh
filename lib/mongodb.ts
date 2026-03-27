@@ -53,7 +53,7 @@ class MongoDB {
           (global as any).mongoose.promise = null;
           throw e;
         });
-      
+
       (global as any).mongoose.promise = this.promise;
     }
 

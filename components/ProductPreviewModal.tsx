@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import Image from 'next/image';
-import { getBlurPlaceholder } from '@/lib/image-blur';
+import { getBlurPlaceholder, getOptimizedImageUrl } from '@/lib/image-blur';
 import { ShoppingCart, Minus, Plus, Check } from 'lucide-react';
 import type { Product } from '@/types/types';
 import { useAppDispatch } from '@/store/hooks';
@@ -95,12 +95,13 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
       >
         <div className="relative w-full h-1/2 min-h-[220px] bg-gray-50">
           <Image
-            src={imageUrl}
+            src={getOptimizedImageUrl(imageUrl, 800)}
             alt={product.name}
             fill
             sizes="(min-width: 768px) 480px, 100vw"
             className="object-contain"
             priority
+            quality={70}
             {...getBlurPlaceholder(imageUrl, 800, 600)}
           />
         </div>

@@ -54,3 +54,21 @@ export function getBlurPlaceholder(imageUrl: string | undefined, w = 400, h = 30
 
   return { placeholder: 'blur' as const, blurDataURL: getShimmerDataUrl(w, h) };
 }
+
+/**
+ * Transforms a regular Cloudinary URL into an optimized version.
+ * - Injects f_auto,q_auto for automatic format and quality.
+ * - Optionally injects w_WIDTH,c_limit for resizing.
+ */
+export function getOptimizedImageUrl(url: string | undefined, width?: number): string {
+  if (!url) return '';
+  if (!url.includes('res.cloudinary.com')) return url;
+
+  const transform = width ? `f_auto,q_auto,w_${width},c_limit` : 'f_auto,q_auto';
+
+  // Match Cloudinary URL pattern: .../upload/... or .../upload/v1234/...
+  return url.replace(
+    /\/upload\/(v\d+\/)?/,
+    `/upload/${transform}/$1`
+  );
+}

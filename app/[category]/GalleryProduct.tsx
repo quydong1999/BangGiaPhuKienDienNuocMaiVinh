@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
-import { getBlurPlaceholder } from '@/lib/image-blur';
+import { getBlurPlaceholder, getOptimizedImageUrl } from '@/lib/image-blur';
 import type { Product } from '@/types/types';
 import { PendingProductSkeleton } from '@/components/PendingSkeletons';
 import { useAdmin } from "@/hooks/useAdmin"
@@ -63,12 +63,13 @@ export default function GalleryProduct({ data, categoryId }: GalleryProductProps
           >
             <div className="relative w-full aspect-[4/3] bg-slate-100">
               <Image
-                src={item.image?.secure_url ?? imgNotFoundUrl}
+                src={getOptimizedImageUrl(item.image?.secure_url ?? imgNotFoundUrl, 400)}
                 alt={item.name}
                 fill
                 sizes="(min-width: 768px) 200px, 50vw"
                 className="object-cover group-hover:scale-105 transition-transform"
                 priority={index < 5}
+                quality={60}
                 {...getBlurPlaceholder(item.image?.secure_url)}
               />
             </div>

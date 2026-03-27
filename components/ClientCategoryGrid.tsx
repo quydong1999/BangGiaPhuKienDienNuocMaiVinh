@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { getBlurPlaceholder } from "@/lib/image-blur";
+import { getBlurPlaceholder, getOptimizedImageUrl } from "@/lib/image-blur";
 import { PendingCategorySkeleton } from "@/components/PendingSkeletons";
 import { useAdmin } from "@/hooks/useAdmin"
 import { useCategories } from "@/hooks/useCategories";
@@ -98,12 +98,13 @@ export function ClientCategoryGrid({ categories: initialCategories }: ClientCate
               {/* Square image container */}
               <div className="relative aspect-square w-full">
                 <Image
-                  src={category.image?.secure_url || category.image?.url || imgNotFoundUrl}
+                  src={getOptimizedImageUrl(category.image?.secure_url || category.image?.url || imgNotFoundUrl, 400)}
                   alt={`Danh mục ${category.shortTitle || category.title}`}
                   fill
                   sizes="(max-width: 640px) 50vw, 256px"
                   className="object-cover"
                   priority={index < 5}
+                  quality={60}
                   {...getBlurPlaceholder(category.image?.secure_url || category.image?.url)}
                 />
               </div>
