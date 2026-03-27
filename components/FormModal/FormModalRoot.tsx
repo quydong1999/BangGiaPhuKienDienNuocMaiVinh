@@ -12,6 +12,8 @@ function FormModalRoot({
     isCompressing = false,
     children,
 }: FormModalRootProps) {
+    if (!isOpen) return null;
+
     return (
         <motion.div
             initial={{ opacity: 0 }}

@@ -8,6 +8,8 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
+    if (!isOpen) return null;
+
     const handleGoogleSignIn = () => {
         signIn("google");
         onClose();

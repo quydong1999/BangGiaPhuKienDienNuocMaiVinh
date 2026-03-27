@@ -36,6 +36,8 @@ function formatPrice(value: number): string {
 }
 
 export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl }: ProductPreviewModalProps) {
+  if (!isOpen || !product) return null;
+
   const [quantityInput, setQuantityInput] = useState("1");
   const [isAdded, setIsAdded] = useState(false);
   const dispatch = useAppDispatch();
@@ -82,8 +84,6 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
       setQuantityInput(String(Math.round(parsedQuantity * 100) / 100));
     }
   };
-
-  if (!product) return null;
 
   return (
     <motion.div

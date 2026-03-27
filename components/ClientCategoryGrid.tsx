@@ -7,6 +7,7 @@ import { getBlurPlaceholder, getOptimizedImageUrl } from "@/lib/image-blur";
 import { PendingCategorySkeleton } from "@/components/PendingSkeletons";
 import { useAdmin } from "@/hooks/useAdmin"
 import { useCategories } from "@/hooks/useCategories";
+import { AnimatePresence } from "framer-motion";
 import LoginModal from "@/components/LoginModal"
 import dynamic from "next/dynamic";
 
@@ -121,16 +122,22 @@ export function ClientCategoryGrid({ categories: initialCategories }: ClientCate
       </nav>
 
       {/* Edit Modal */}
-      <CategoryFormModal
-        isOpen={!!editingCategory}
-        onClose={() => setEditingCategory(null)}
-        initialData={editingCategory}
-        productCount={editingCategory?.productCount || 0}
-      />
-      <LoginModal
-        isOpen={showLogin}
-        onClose={() => setShowLogin(false)}
-      />
+      <AnimatePresence>
+        {editingCategory && (
+          <CategoryFormModal
+            isOpen={!!editingCategory}
+            onClose={() => setEditingCategory(null)}
+            initialData={editingCategory}
+            productCount={editingCategory?.productCount || 0}
+          />
+        )}
+        {showLogin && (
+          <LoginModal
+            isOpen={showLogin}
+            onClose={() => setShowLogin(false)}
+          />
+        )}
+      </AnimatePresence>
     </>
   );
 }

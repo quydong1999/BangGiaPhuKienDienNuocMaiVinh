@@ -12,6 +12,8 @@ interface SearchModalProps {
 }
 
 export function SearchModal({ isOpen, onClose }: SearchModalProps) {
+  if (!isOpen) return null;
+
   const [query, setQuery] = useState('');
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
