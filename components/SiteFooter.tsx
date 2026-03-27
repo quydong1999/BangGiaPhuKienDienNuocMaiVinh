@@ -1,10 +1,5 @@
 import { MapPin, Phone } from 'lucide-react';
-import dynamic from 'next/dynamic';
-
-const GoogleMap = dynamic(() => import('./GoogleMap'), {
-  ssr: false,
-  loading: () => <div className="w-full h-44 bg-emerald-800/20 animate-pulse" />
-});
+import { DynamicMap } from './DynamicMap';
 
 export function SiteFooter() {
   const currentYear = new Date().getFullYear();
@@ -47,7 +42,7 @@ export function SiteFooter() {
                 </a>
               </li>
               <li>
-                <GoogleMap />
+                <DynamicMap />
               </li>
             </ul>
           </div>
