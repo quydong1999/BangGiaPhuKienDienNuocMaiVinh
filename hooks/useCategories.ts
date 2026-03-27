@@ -82,34 +82,7 @@ export function useCreateCategory() {
       }
       return result;
     },
-    onMutate: async (formData) => {
-      await queryClient.cancelQueries({ queryKey: ["categories"] });
-      const previousCategories = queryClient.getQueryData(["categories"]);
-
-      const title = formData.get('title') as string;
-      const slug = formData.get('slug') as string;
-      const shortTitle = formData.get('shortTitle') as string;
-
-      const newCategory = {
-        _id: 'temp-' + Date.now(),
-        title,
-        slug,
-        shortTitle,
-      };
-
-      queryClient.setQueryData(["categories"], (old: any) => {
-        if (Array.isArray(old)) return [...old, newCategory];
-        return [newCategory];
-      });
-
-      return { previousCategories };
-    },
-    onError: (_err, _formData, context) => {
-      if (context?.previousCategories) {
-        queryClient.setQueryData(["categories"], context.previousCategories);
-      }
-    },
-    onSettled: () => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
     },
   });

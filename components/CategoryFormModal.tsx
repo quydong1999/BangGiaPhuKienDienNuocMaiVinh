@@ -167,8 +167,16 @@ export function CategoryFormModal({ isOpen, onClose, initialData, productCount }
 
     const mutationOptions = {
       onSuccess: () => {
-        setIsAddingCategory(true);
-        startRefresh(() => { router.refresh(); onClose(); });
+        if (!isEdit) {
+          setIsAddingCategory(true);
+          startRefresh(() => {
+            router.refresh();
+            onClose();
+          });
+        } else {
+          router.refresh();
+          onClose();
+        }
       },
       onError: (err: any) => setSubmitError(err.message),
     };
@@ -185,8 +193,9 @@ export function CategoryFormModal({ isOpen, onClose, initialData, productCount }
     if (window.confirm("Bạn có chắc chắn muốn xóa danh mục này?")) {
       deleteMutation.mutate(initialData.slug, {
         onSuccess: () => {
-          setIsAddingCategory(true);
-          startRefresh(() => { router.refresh(); onClose(); });
+          // Không hiện skeleton khi xóa
+          router.refresh();
+          onClose();
         },
         onError: (err: any) => setSubmitError(err.message),
       });

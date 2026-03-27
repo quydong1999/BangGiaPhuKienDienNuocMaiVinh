@@ -120,8 +120,19 @@ export function ProductFormModal({
         if (selectedCategoryId !== categoryId) {
           queryClient.invalidateQueries({ queryKey: ["products", selectedCategoryId] });
         }
-        setPendingProductCategoryId(selectedCategoryId);
-        startRefresh(() => { router.refresh(); onClose(); });
+
+        if (!isEdit) {
+          // Chỉ hiện skeleton khi thêm mới
+          setPendingProductCategoryId(selectedCategoryId);
+          startRefresh(() => {
+            router.refresh();
+            onClose();
+          });
+        } else {
+          // Nếu là sửa, reload thầm lặng (đã có optimistic update lo phần UI)
+          router.refresh();
+          onClose();
+        }
       },
       onError: (err: any) => setSubmitError(err.message),
     };
@@ -139,8 +150,9 @@ export function ProductFormModal({
       deleteMutation.mutate(initialData._id, {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ["products", categoryId] });
-          setPendingProductCategoryId(categoryId);
-          startRefresh(() => { router.refresh(); onClose(); });
+          // Không hiện skeleton khi xóa (optimistic update đã xóa product khỏi list)
+          router.refresh();
+          onClose();
         },
         onError: (err: any) => setSubmitError(err.message),
       });

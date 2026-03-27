@@ -68,48 +68,9 @@ export function useCreateProduct() {
             }
             return result.data;
         },
-        onMutate: async (formData) => {
-            const categoryId = formData.get('categoryId') as string;
-            
-            // Cancel outgoing refetches
-            await queryClient.cancelQueries({ queryKey: ["products"] });
-
-            // Snapshot previous values
-            const previousQueries = queryClient.getQueriesData({ queryKey: ["products"] });
-
-            // Optimistically update to the new value
-            const newProduct = {
-                _id: 'temp-' + Date.now(),
-                name: formData.get('name') as string,
-                spec: formData.get('spec') as string,
-                unit: formData.get('unit') as string,
-                priceSell: formData.get('priceSell') as string,
-                categoryId,
-            };
-
-            previousQueries.forEach(([queryKey]) => {
-                const queryCategoryId = queryKey[1] as string | undefined;
-                if (queryCategoryId === undefined || queryCategoryId === categoryId) {
-                    queryClient.setQueryData(queryKey, (old: any) => {
-                        if (Array.isArray(old)) return [...old, newProduct];
-                        return [newProduct];
-                    });
-                }
-            });
-
-            return { previousQueries };
-        },
-        onError: (_err, _formData, context) => {
-            if (context?.previousQueries) {
-                context.previousQueries.forEach(([queryKey, queryData]) => {
-                    queryClient.setQueryData(queryKey, queryData);
-                });
-            }
-        },
-        onSettled: (_data, _error, formData) => {
-            const categoryId = formData.get('categoryId') as string;
-            queryClient.invalidateQueries({ queryKey: ["products", categoryId] });
-            queryClient.invalidateQueries({ queryKey: ["products", undefined] });
+        onSuccess: () => {
+            // Invalidate all product related queries
+            queryClient.invalidateQueries({ queryKey: ["products"] });
         },
     });
 }
