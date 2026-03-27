@@ -74,8 +74,8 @@ export function useCreateProduct() {
             // Cancel outgoing refetches
             await queryClient.cancelQueries({ queryKey: ["products"] });
 
-            // Snapshot previous value
-            const previousProducts = queryClient.getQueryData(["products", categoryId]);
+            // Snapshot previous values
+            const previousQueries = queryClient.getQueriesData({ queryKey: ["products"] });
 
             // Optimistically update to the new value
             const newProduct = {
@@ -87,17 +87,23 @@ export function useCreateProduct() {
                 categoryId,
             };
 
-            queryClient.setQueryData(["products", categoryId], (old: any) => {
-                if (Array.isArray(old)) return [...old, newProduct];
-                return [newProduct];
+            previousQueries.forEach(([queryKey]) => {
+                const queryCategoryId = queryKey[1] as string | undefined;
+                if (queryCategoryId === undefined || queryCategoryId === categoryId) {
+                    queryClient.setQueryData(queryKey, (old: any) => {
+                        if (Array.isArray(old)) return [...old, newProduct];
+                        return [newProduct];
+                    });
+                }
             });
 
-            return { previousProducts };
+            return { previousQueries };
         },
-        onError: (_err, formData, context) => {
-            const categoryId = formData.get('categoryId') as string;
-            if (context?.previousProducts) {
-                queryClient.setQueryData(["products", categoryId], context.previousProducts);
+        onError: (_err, _formData, context) => {
+            if (context?.previousQueries) {
+                context.previousQueries.forEach(([queryKey, queryData]) => {
+                    queryClient.setQueryData(queryKey, queryData);
+                });
             }
         },
         onSettled: (_data, _error, formData) => {
@@ -128,19 +134,49 @@ export function useUpdateProduct() {
             await queryClient.cancelQueries({ queryKey: ["products"] });
             const previousQueries = queryClient.getQueriesData({ queryKey: ["products"] });
 
-            const name = formData.get('name') as string;
-            const spec = formData.get('spec') as string;
-            const unit = formData.get('unit') as string;
-            const priceSell = formData.get('priceSell') as string;
-            const categoryId = formData.get('categoryId') as string;
+            const updatedFields = {
+                name: formData.get('name') as string,
+                spec: formData.get('spec') as string,
+                unit: formData.get('unit') as string,
+                priceSell: formData.get('priceSell') as string,
+                categoryId: formData.get('categoryId') as string,
+            };
 
-            queryClient.setQueriesData({ queryKey: ["products"] }, (old: any) => {
-                if (Array.isArray(old)) {
-                    return old.map((p: any) => 
-                        p._id === id ? { ...p, name, spec, unit, priceSell, categoryId } : p
-                    );
+            // Tìm sản phẩm gốc để có đầy đủ thông tin khi thêm vào cache của danh mục mới
+            let originalProduct: any = null;
+            for (const [, data] of previousQueries) {
+                if (Array.isArray(data)) {
+                    originalProduct = data.find(p => p._id === id);
+                    if (originalProduct) break;
                 }
-                return old;
+            }
+
+            previousQueries.forEach(([queryKey]) => {
+                const queryCategoryId = queryKey[1] as string | undefined;
+
+                queryClient.setQueryData(queryKey, (old: any) => {
+                    if (!Array.isArray(old)) return old;
+
+                    const isCurrentlyInThisList = old.some(p => p._id === id);
+                    const shouldBeInThisList = (queryCategoryId === undefined) || (queryCategoryId === updatedFields.categoryId);
+
+                    // 1. Nếu đang có trong list này nhưng không thuộc category này nữa -> Xóa
+                    if (isCurrentlyInThisList && !shouldBeInThisList) {
+                        return old.filter(p => p._id !== id);
+                    }
+                    
+                    // 2. Nếu đang có và vẫn thuộc category này -> Cập nhật
+                    if (isCurrentlyInThisList && shouldBeInThisList) {
+                        return old.map(p => p._id === id ? { ...p, ...updatedFields } : p);
+                    }
+
+                    // 3. Nếu chưa có nhưng vừa được chuyển vào category này -> Thêm
+                    if (!isCurrentlyInThisList && shouldBeInThisList && originalProduct) {
+                        return [...old, { ...originalProduct, ...updatedFields }];
+                    }
+
+                    return old;
+                });
             });
 
             return { previousQueries };
