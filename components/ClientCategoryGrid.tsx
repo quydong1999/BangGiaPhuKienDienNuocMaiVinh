@@ -103,7 +103,7 @@ export function ClientCategoryGrid({ categories: initialCategories }: ClientCate
                   fill
                   sizes="(max-width: 640px) 50vw, 256px"
                   className="object-cover"
-                  priority={index === 0}
+                  priority={index < 5}
                   {...getBlurPlaceholder(category.image?.secure_url || category.image?.url)}
                 />
               </div>

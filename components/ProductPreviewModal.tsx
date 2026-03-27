@@ -100,6 +100,7 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
             fill
             sizes="(min-width: 768px) 480px, 100vw"
             className="object-contain"
+            priority
             {...getBlurPlaceholder(imageUrl, 800, 600)}
           />
         </div>
