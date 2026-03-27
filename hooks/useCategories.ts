@@ -14,6 +14,7 @@ export interface Category {
   layout?: 'table' | 'gallery';
   visibleFields?: string[];
   filterField?: string;
+  productCount?: number;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -36,10 +37,11 @@ const fetchCategories = async (): Promise<Category[]> => {
   return result.data;
 };
 
-export function useCategories() {
+export function useCategories(initialData?: Category[]) {
   return useQuery({
     queryKey: ['categories'],
     queryFn: fetchCategories,
+    initialData,
   });
 }
 

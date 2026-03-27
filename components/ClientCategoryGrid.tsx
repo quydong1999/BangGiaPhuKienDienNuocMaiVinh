@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { getBlurPlaceholder } from "@/lib/image-blur";
 import { PendingCategorySkeleton } from "@/components/PendingSkeletons";
 import { useAdmin } from "@/hooks/useAdmin"
+import { useCategories } from "@/hooks/useCategories";
 import LoginModal from "@/components/LoginModal"
 import dynamic from "next/dynamic";
 
@@ -27,7 +28,7 @@ interface CategoryWithCount {
   layout?: "table" | "gallery";
   filterField?: string;
   visibleFields?: string[];
-  productCount: number;
+  productCount?: number;
 }
 
 interface ClientCategoryGridProps {
@@ -37,8 +38,9 @@ interface ClientCategoryGridProps {
 const imgNotFoundUrl =
   "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?_=20210521171500";
 
-export function ClientCategoryGrid({ categories }: ClientCategoryGridProps) {
+export function ClientCategoryGrid({ categories: initialCategories }: ClientCategoryGridProps) {
   const router = useRouter();
+  const { data: categories = initialCategories } = useCategories(initialCategories as any);
   const [editingCategory, setEditingCategory] = useState<CategoryWithCount | null>(null);
   const clickTimer = useRef<NodeJS.Timeout | null>(null);
   const { isAdmin } = useAdmin()
@@ -85,7 +87,7 @@ export function ClientCategoryGrid({ categories }: ClientCategoryGridProps) {
         aria-label="Danh mục sản phẩm"
         className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
       >
-        {categories.map((category, index) => {
+        {categories.map((category: CategoryWithCount, index: number) => {
           return (
             <a
               key={category.slug}
