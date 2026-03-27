@@ -82,7 +82,34 @@ export function useCreateCategory() {
       }
       return result;
     },
-    onSuccess: () => {
+    onMutate: async (formData) => {
+      await queryClient.cancelQueries({ queryKey: ["categories"] });
+      const previousCategories = queryClient.getQueryData(["categories"]);
+
+      const title = formData.get('title') as string;
+      const slug = formData.get('slug') as string;
+      const shortTitle = formData.get('shortTitle') as string;
+
+      const newCategory = {
+        _id: 'temp-' + Date.now(),
+        title,
+        slug,
+        shortTitle,
+      };
+
+      queryClient.setQueryData(["categories"], (old: any) => {
+        if (Array.isArray(old)) return [...old, newCategory];
+        return [newCategory];
+      });
+
+      return { previousCategories };
+    },
+    onError: (_err, _formData, context) => {
+      if (context?.previousCategories) {
+        queryClient.setQueryData(["categories"], context.previousCategories);
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
     },
   });
@@ -104,7 +131,39 @@ export function useUpdateCategory() {
       }
       return result;
     },
-    onSuccess: (data, variables) => {
+    onMutate: async ({ slug, formData }) => {
+      await queryClient.cancelQueries({ queryKey: ["categories"] });
+      await queryClient.cancelQueries({ queryKey: ["category", slug] });
+      
+      const previousCategories = queryClient.getQueryData(["categories"]);
+      const previousCategory = queryClient.getQueryData(["category", slug]);
+
+      const title = formData.get('title') as string;
+      const shortTitle = formData.get('shortTitle') as string;
+
+      queryClient.setQueryData(["categories"], (old: any) => {
+        if (Array.isArray(old)) {
+          return old.map((c: any) => c.slug === slug ? { ...c, title, shortTitle } : c);
+        }
+        return old;
+      });
+
+      queryClient.setQueryData(["category", slug], (old: any) => {
+        if (old) return { ...old, title, shortTitle };
+        return old;
+      });
+
+      return { previousCategories, previousCategory };
+    },
+    onError: (_err, variables, context) => {
+      if (context?.previousCategories) {
+        queryClient.setQueryData(["categories"], context.previousCategories);
+      }
+      if (context?.previousCategory) {
+        queryClient.setQueryData(["category", variables.slug], context.previousCategory);
+      }
+    },
+    onSettled: (_, __, variables) => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
       queryClient.invalidateQueries({ queryKey: ["category", variables.slug] });
     },
@@ -126,7 +185,23 @@ export function useDeleteCategory() {
       }
       return result;
     },
-    onSuccess: (_, slug) => {
+    onMutate: async (slug) => {
+      await queryClient.cancelQueries({ queryKey: ["categories"] });
+      const previousCategories = queryClient.getQueryData(["categories"]);
+
+      queryClient.setQueryData(["categories"], (old: any) => {
+        if (Array.isArray(old)) return old.filter((c: any) => c.slug !== slug);
+        return old;
+      });
+
+      return { previousCategories };
+    },
+    onError: (_err, _slug, context) => {
+      if (context?.previousCategories) {
+        queryClient.setQueryData(["categories"], context.previousCategories);
+      }
+    },
+    onSettled: (_, __, slug) => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
       queryClient.invalidateQueries({ queryKey: ["category", slug] });
     },

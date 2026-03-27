@@ -68,9 +68,42 @@ export function useCreateProduct() {
             }
             return result.data;
         },
-        onSuccess: () => {
-            // Invalidate all product related queries
-            queryClient.invalidateQueries({ queryKey: ["products"] });
+        onMutate: async (formData) => {
+            const categoryId = formData.get('categoryId') as string;
+            
+            // Cancel outgoing refetches
+            await queryClient.cancelQueries({ queryKey: ["products"] });
+
+            // Snapshot previous value
+            const previousProducts = queryClient.getQueryData(["products", categoryId]);
+
+            // Optimistically update to the new value
+            const newProduct = {
+                _id: 'temp-' + Date.now(),
+                name: formData.get('name') as string,
+                spec: formData.get('spec') as string,
+                unit: formData.get('unit') as string,
+                priceSell: formData.get('priceSell') as string,
+                categoryId,
+            };
+
+            queryClient.setQueryData(["products", categoryId], (old: any) => {
+                if (Array.isArray(old)) return [...old, newProduct];
+                return [newProduct];
+            });
+
+            return { previousProducts };
+        },
+        onError: (_err, formData, context) => {
+            const categoryId = formData.get('categoryId') as string;
+            if (context?.previousProducts) {
+                queryClient.setQueryData(["products", categoryId], context.previousProducts);
+            }
+        },
+        onSettled: (_data, _error, formData) => {
+            const categoryId = formData.get('categoryId') as string;
+            queryClient.invalidateQueries({ queryKey: ["products", categoryId] });
+            queryClient.invalidateQueries({ queryKey: ["products", undefined] });
         },
     });
 }
@@ -91,10 +124,39 @@ export function useUpdateProduct() {
             }
             return result.data;
         },
-        onSuccess: (data) => {
-            // Invalidate all product related queries
+        onMutate: async ({ id, formData }) => {
+            await queryClient.cancelQueries({ queryKey: ["products"] });
+            const previousQueries = queryClient.getQueriesData({ queryKey: ["products"] });
+
+            const name = formData.get('name') as string;
+            const spec = formData.get('spec') as string;
+            const unit = formData.get('unit') as string;
+            const priceSell = formData.get('priceSell') as string;
+            const categoryId = formData.get('categoryId') as string;
+
+            queryClient.setQueriesData({ queryKey: ["products"] }, (old: any) => {
+                if (Array.isArray(old)) {
+                    return old.map((p: any) => 
+                        p._id === id ? { ...p, name, spec, unit, priceSell, categoryId } : p
+                    );
+                }
+                return old;
+            });
+
+            return { previousQueries };
+        },
+        onError: (_err, _variables, context) => {
+            if (context?.previousQueries) {
+                context.previousQueries.forEach(([queryKey, queryData]) => {
+                    queryClient.setQueryData(queryKey, queryData);
+                });
+            }
+        },
+        onSettled: (data) => {
             queryClient.invalidateQueries({ queryKey: ["products"] });
-            queryClient.invalidateQueries({ queryKey: ["product", data._id] });
+            if (data?._id) {
+                queryClient.invalidateQueries({ queryKey: ["product", data._id] });
+            }
         },
     });
 }
@@ -114,8 +176,27 @@ export function useDeleteProduct() {
             }
             return result;
         },
-        onSuccess: () => {
-            // Invalidate all product related queries
+        onMutate: async (id: string) => {
+            await queryClient.cancelQueries({ queryKey: ["products"] });
+            const previousQueries = queryClient.getQueriesData({ queryKey: ["products"] });
+
+            queryClient.setQueriesData({ queryKey: ["products"] }, (old: any) => {
+                if (Array.isArray(old)) {
+                    return old.filter((p: any) => p._id !== id);
+                }
+                return old;
+            });
+
+            return { previousQueries };
+        },
+        onError: (_err, _id, context) => {
+            if (context?.previousQueries) {
+                context.previousQueries.forEach(([queryKey, queryData]) => {
+                    queryClient.setQueryData(queryKey, queryData);
+                });
+            }
+        },
+        onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ["products"] });
         },
     });
