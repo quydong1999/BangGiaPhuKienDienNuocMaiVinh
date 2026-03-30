@@ -29,12 +29,20 @@ export type Category = {
   layout: "table" | "gallery";
 }
 
+export type ProductPrice = {
+  unit: string;
+  price: number;
+};
+
+export type ProductSpec = {
+  name: string;
+  prices: ProductPrice[];
+};
+
 export type Product = {
   _id: string,
   name: string;
-  spec?: string;
-  unit?: string;
-  priceSell: string;
+  specs: ProductSpec[];
   image?: CloudinaryImage;
   categoryId?: string;
 };

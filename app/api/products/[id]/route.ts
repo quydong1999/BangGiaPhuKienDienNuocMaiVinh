@@ -29,9 +29,7 @@ export async function PATCH(
 
     const formData = await req.formData();
     const name = formData.get('name') as string;
-    const spec = formData.get('spec') as string;
-    const unit = formData.get('unit') as string;
-    const priceSell = formData.get('priceSell') as string;
+    const specsRaw = formData.get('specs') as string;
     const categoryId = formData.get('categoryId') as string;
     const imageFile = formData.get('image') as File | null;
 
@@ -67,13 +65,21 @@ export async function PATCH(
     }
 
     const input: IProductUpdateInput = {
-      name,
-      spec,
-      unit,
-      priceSell,
-      categoryId,
       image: imageData,
     };
+
+    if (name) input.name = name;
+    if (categoryId) input.categoryId = categoryId;
+    if (specsRaw) {
+      try {
+        input.specs = JSON.parse(specsRaw);
+      } catch (e) {
+        return NextResponse.json(
+          { success: false, message: 'Định dạng specs không hợp lệ (phải là JSON string)' },
+          { status: 400 }
+        );
+      }
+    }
 
     const result = await productService.update(id, input);
 

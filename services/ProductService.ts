@@ -108,7 +108,7 @@ export class ProductService {
               {
                 text: {
                   query,
-                  path: ['spec', 'name.raw'],
+                  path: ['specs.name', 'name.raw'],
                   fuzzy: { maxEdits: 1 },
                 },
               },
@@ -135,9 +135,7 @@ export class ProductService {
         $project: {
           _id: 1,
           name: 1,
-          spec: 1,
-          unit: 1,
-          priceSell: 1,
+          specs: 1,
           image: 1,
           categoryId: 1,
           categoryName: '$categoryInfo.title',
@@ -171,12 +169,23 @@ export class ProductService {
     session.startTransaction();
 
     try {
-      if (!input.name || !input.priceSell || !input.categoryId) {
+      if (!input.name || !input.specs || input.specs.length === 0 || !input.categoryId) {
         await session.abortTransaction();
         return {
           success: false,
-          message: 'Thiếu thông tin bắt buộc (tên, giá bán hoặc danh mục)',
+          message: 'Thiếu thông tin bắt buộc (tên, cấu hình hoặc danh mục)',
         };
+      }
+
+      // Validation: Mỗi spec phải có ít nhất 1 price
+      for (const spec of input.specs) {
+        if (!spec.name || !spec.prices || spec.prices.length === 0) {
+          await session.abortTransaction();
+          return {
+            success: false,
+            message: `Cấu hình "${spec.name || 'không tên'}" phải có ít nhất một mức giá`,
+          };
+        }
       }
 
       // Check if category exists
@@ -234,6 +243,23 @@ export class ProductService {
         if (!categoryExists) {
           await session.abortTransaction();
           return { success: false, message: 'Danh mục đích không tồn tại' };
+        }
+      }
+
+      // Validation specs nếu có cập nhật
+      if (input.specs) {
+        if (input.specs.length === 0) {
+          await session.abortTransaction();
+          return { success: false, message: 'Danh sách cấu hình không được để trống' };
+        }
+        for (const spec of input.specs) {
+          if (!spec.name || !spec.prices || spec.prices.length === 0) {
+            await session.abortTransaction();
+            return {
+              success: false,
+              message: `Cấu hình "${spec.name || 'không tên'}" phải có nhất một mức giá`,
+            };
+          }
         }
       }
 

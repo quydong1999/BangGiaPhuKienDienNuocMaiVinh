@@ -40,11 +40,19 @@ export async function POST(req: Request) {
 
     const formData = await req.formData();
     const name = formData.get('name') as string;
-    const spec = formData.get('spec') as string;
-    const unit = formData.get('unit') as string;
-    const priceSell = formData.get('priceSell') as string;
+    const specsRaw = formData.get('specs') as string;
     const categoryId = formData.get('categoryId') as string;
     const imageFile = formData.get('image') as File | null;
+
+    let specs = [];
+    try {
+      specs = specsRaw ? JSON.parse(specsRaw) : [];
+    } catch (e) {
+      return NextResponse.json(
+        { success: false, message: 'Định dạng specs không hợp lệ (phải là JSON string)' },
+        { status: 400 }
+      );
+    }
 
     // Handle image upload (Cloudinary concern stays in Route)
     let imageData = null;
@@ -66,9 +74,7 @@ export async function POST(req: Request) {
 
     const input: IProductCreateInput = {
       name,
-      spec,
-      unit,
-      priceSell,
+      specs,
       categoryId,
       image: imageData,
     };

@@ -26,12 +26,20 @@ export interface ICloudinaryImage {
   secure_url?: string;
 }
 
+export interface IProductPrice {
+  unit: string;
+  price: number;
+}
+
+export interface IProductSpec {
+  name: string;
+  prices: IProductPrice[];
+}
+
 export interface IProduct {
   _id: string;
   name: string;
-  spec?: string;
-  unit?: string;
-  priceSell: string;
+  specs: IProductSpec[];
   image?: ICloudinaryImage;
   categoryId: string;
   createdAt?: Date;
@@ -40,18 +48,14 @@ export interface IProduct {
 
 export interface IProductCreateInput {
   name: string;
-  spec?: string;
-  unit?: string;
-  priceSell: string;
+  specs: IProductSpec[];
   categoryId: string;
   image?: ICloudinaryImage | null;
 }
 
 export interface IProductUpdateInput {
   name?: string;
-  spec?: string;
-  unit?: string;
-  priceSell?: string;
+  specs?: IProductSpec[];
   categoryId?: string;
   image?: ICloudinaryImage | null;
 }
