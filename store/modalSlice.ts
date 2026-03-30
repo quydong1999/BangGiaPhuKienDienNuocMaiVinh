@@ -1,9 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-export type ModalType = 'login' | 'search' | 'categoryForm' | 'productForm' | 'productPreview' | null;
+import { ModalType } from '@/components/ModalProvider';
 
 interface ModalState {
-  type: ModalType;
+  type: ModalType | null;
   isOpen: boolean;
   props: any;
 }
