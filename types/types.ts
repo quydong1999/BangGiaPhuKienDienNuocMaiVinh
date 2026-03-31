@@ -43,7 +43,7 @@ export type Product = {
   _id: string,
   name: string;
   specs: ProductSpec[];
-  image?: CloudinaryImage;
+  images?: CloudinaryImage[];
   categoryId?: string;
 };
 

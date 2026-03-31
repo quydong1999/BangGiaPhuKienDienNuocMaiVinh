@@ -13,10 +13,13 @@ const SpecSchema = new Schema({
 const ProductSchema = new Schema({
   name: { type: String, required: true },
   specs: { type: [SpecSchema], required: true },
-  image: {
-    public_id: String,
-    url: String,
-    secure_url: String
+  images: {
+    type: [{
+      public_id: String,
+      url: String,
+      secure_url: String
+    }],
+    default: []
   },
   categoryId: { type: Schema.Types.ObjectId, ref: 'Category' }
 }, { timestamps: true });

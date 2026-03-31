@@ -40,7 +40,7 @@ export interface IProduct {
   _id: string;
   name: string;
   specs: IProductSpec[];
-  image?: ICloudinaryImage;
+  images?: ICloudinaryImage[];
   categoryId: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -50,14 +50,14 @@ export interface IProductCreateInput {
   name: string;
   specs: IProductSpec[];
   categoryId: string;
-  image?: ICloudinaryImage | null;
+  images?: ICloudinaryImage[] | null;
 }
 
 export interface IProductUpdateInput {
   name?: string;
   specs?: IProductSpec[];
   categoryId?: string;
-  image?: ICloudinaryImage | null;
+  images?: ICloudinaryImage[] | null;
 }
 
 export interface ISearchResult extends IProduct {

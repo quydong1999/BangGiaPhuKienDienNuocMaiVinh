@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { getBlurPlaceholder, getOptimizedImageUrl } from '@/lib/image-blur';
-import { ShoppingCart, Check, Info, Plus, Minus } from 'lucide-react';
+import { ShoppingCart, Check, Info, Plus, Minus, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { Product } from '@/types/types';
 import { useAppDispatch } from '@/store/hooks';
 import { addToCart } from '@/store/cartSlice';
@@ -20,9 +20,15 @@ interface ProductPreviewModalProps {
 
 const imgNotFoundUrl = "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?_=20210521171500";
 
+const swipeConfidenceThreshold = 10000;
+const swipePower = (offset: number, velocity: number) => {
+  return Math.abs(offset) * velocity;
+};
+
 export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl, initialSpec, initialUnit }: ProductPreviewModalProps) {
   const [selectedSpecIdx, setSelectedSpecIdx] = useState(0);
   const [selectedPriceIdx, setSelectedPriceIdx] = useState(0);
+  const [activeImgIdx, setActiveImgIdx] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [editingQty, setEditingQty] = useState<string | null>(null);
   const [addedItemKey, setAddedItemKey] = useState<string | null>(null);
@@ -50,6 +56,7 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
 
       setSelectedSpecIdx(specIdx);
       setSelectedPriceIdx(priceIdx);
+      setActiveImgIdx(0);
       setQuantity(1);
       setEditingQty(null);
     }
@@ -57,7 +64,9 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
 
   if (!isOpen || !product) return null;
 
-  const imageUrl = product?.image?.secure_url || categoryImageUrl || imgNotFoundUrl;
+  const imagesList = product?.images?.length ? product.images : (categoryImageUrl ? [{secure_url: categoryImageUrl}] : [{secure_url: imgNotFoundUrl}]);
+  const activeImageUrl = imagesList[activeImgIdx]?.secure_url || imagesList[activeImgIdx]?.url || imgNotFoundUrl;
+
   const currentSpec = product.specs[selectedSpecIdx];
   const currentPrice = currentSpec?.prices[selectedPriceIdx];
 
@@ -116,17 +125,84 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
         onClick={(e) => e.stopPropagation()}
       >
         {/* Left: Image */}
-        <div className="w-full md:w-1/2 h-72 md:h-auto relative bg-slate-50 flex items-center justify-center p-8 border-b md:border-b-0 md:border-r border-slate-100">
-          <div className="relative w-full aspect-square max-w-[400px]">
-            <Image
-              src={getOptimizedImageUrl(imageUrl, 800)}
-              alt={product.name}
-              fill
-              className="object-contain"
-              priority
-              {...getBlurPlaceholder(imageUrl, 800, 600)}
-            />
+        <div className="w-full md:w-1/2 h-72 md:h-auto relative bg-slate-50 flex items-center justify-center p-4 md:p-8 border-b md:border-b-0 md:border-r border-slate-100 group">
+          <div className="relative w-full h-full max-w-[400px] max-h-[400px]">
+             {/* Main Image Carousel */}
+             <div 
+               id="product-preview-carousel"
+               className="w-full h-full flex overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth"
+               onScroll={(e) => {
+                 const scrollLeft = e.currentTarget.scrollLeft;
+                 const width = e.currentTarget.clientWidth;
+                 if (width > 0) {
+                   const newIdx = Math.round(scrollLeft / width);
+                   if (newIdx !== activeImgIdx) setActiveImgIdx(newIdx);
+                 }
+               }}
+             >
+               {imagesList.map((img, idx) => (
+                 <div key={idx} className="relative min-w-full w-full h-full snap-center flex items-center justify-center">
+                   <Image
+                     src={getOptimizedImageUrl(img.secure_url || img.url, 800)}
+                     alt={product.name}
+                     fill
+                     sizes="(max-width: 768px) 100vw, 400px"
+                     className="object-contain"
+                     priority={idx === 0}
+                     {...getBlurPlaceholder(img.secure_url || img.url, 800, 600)}
+                     draggable={false}
+                   />
+                 </div>
+               ))}
+             </div>
+
+             {/* Web Navigation Buttons (hidden on mobile, visible on hover on desktop) */}
+             {imagesList.length > 1 && (
+               <>
+                 <button
+                   onClick={(e) => { 
+                     e.stopPropagation(); 
+                     const newIdx = Math.max(0, activeImgIdx - 1);
+                     const el = document.getElementById('product-preview-carousel');
+                     if (el) el.scrollTo({ left: newIdx * el.clientWidth, behavior: 'smooth' });
+                   }}
+                   disabled={activeImgIdx === 0}
+                   className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/50 backdrop-blur border border-slate-200 shadow-sm flex items-center justify-center text-slate-800 disabled:opacity-0 opacity-0 md:group-hover:opacity-100 transition-opacity z-10"
+                 >
+                   <ChevronLeft size={20} />
+                 </button>
+                 <button
+                   onClick={(e) => { 
+                     e.stopPropagation(); 
+                     const newIdx = Math.min(imagesList.length - 1, activeImgIdx + 1);
+                     const el = document.getElementById('product-preview-carousel');
+                     if (el) el.scrollTo({ left: newIdx * el.clientWidth, behavior: 'smooth' });
+                   }}
+                   disabled={activeImgIdx === imagesList.length - 1}
+                   className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/50 backdrop-blur border border-slate-200 shadow-sm flex items-center justify-center text-slate-800 disabled:opacity-0 opacity-0 md:group-hover:opacity-100 transition-opacity z-10"
+                 >
+                   <ChevronRight size={20} />
+                 </button>
+               </>
+             )}
           </div>
+          
+          {/* Dots Indicator */}
+          {imagesList.length > 1 && (
+            <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-1.5 z-10">
+              {imagesList.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={(e) => { 
+                    e.stopPropagation(); 
+                    const el = document.getElementById('product-preview-carousel');
+                    if (el) el.scrollTo({ left: idx * el.clientWidth, behavior: 'smooth' });
+                  }}
+                  className={`rounded-full transition-all duration-300 ${activeImgIdx === idx ? "w-4 h-2 bg-emerald-500" : "w-2 h-2 bg-slate-300 hover:bg-slate-400"}`}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Right: Content Area (4 Rows) */}

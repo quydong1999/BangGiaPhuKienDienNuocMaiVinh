@@ -31,9 +31,18 @@ export async function PATCH(
     const name = formData.get('name') as string;
     const specsRaw = formData.get('specs') as string;
     const categoryId = formData.get('categoryId') as string;
-    const imageFile = formData.get('image') as File | null;
+    const imageFiles = formData.getAll('images') as File[];
+    const retainedImageIdsRaw = formData.get('retainedImageIds') as string;
+    let retainedImageIds: string[] = [];
+    if (retainedImageIdsRaw) {
+      try {
+        retainedImageIds = JSON.parse(retainedImageIdsRaw);
+      } catch (e) {
+        // ignore
+      }
+    }
 
-    // Get existing product to handle image
+    // Get existing product to handle images
     const existingProduct = await Product.findById(id);
     if (!existingProduct) {
       return NextResponse.json(
@@ -42,30 +51,44 @@ export async function PATCH(
       );
     }
 
-    let imageData = existingProduct.image;
+    const existingImages = existingProduct.images || [];
+    let updatedImages = [];
 
-    // Handle image upload (Cloudinary concern stays in Route)
-    if (imageFile && imageFile.size > 0 && typeof imageFile !== 'string') {
-      if (existingProduct.image?.public_id) {
-        await deleteImage(existingProduct.image.public_id);
+    // Combine old .image migration compatibility
+    let oldImages = existingImages.length > 0 ? existingImages : (existingProduct.image ? [existingProduct.image] : []);
+
+    // 1. Delete images that are not retained
+    for (const oldImg of oldImages) {
+      if (oldImg.public_id && retainedImageIds.includes(oldImg.public_id)) {
+        updatedImages.push(oldImg);
+      } else if (oldImg.public_id) {
+        try {
+          await deleteImage(oldImg.public_id);
+        } catch (e) {
+          console.error("Failed to delete image from Cloudinary", e);
+        }
       }
-      const arrayBuffer = await imageFile.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
-      const base64Image = `data:${imageFile.type};base64,${buffer.toString('base64')}`;
-      const uploadResult = await uploadImage(base64Image, 'products');
-      if (uploadResult.success) {
-        imageData = {
-          public_id: uploadResult.public_id,
-          url: uploadResult.url,
-          secure_url: uploadResult.secure_url || uploadResult.url,
-        };
-      } else {
-        throw new Error('Lỗi upload hình ảnh lên Cloudinary');
+    }
+
+    // 2. Upload new images
+    for (const file of imageFiles) {
+      if (file && file.size > 0 && typeof file !== 'string') {
+        const arrayBuffer = await file.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        const base64Image = `data:${file.type};base64,${buffer.toString('base64')}`;
+        const uploadResult = await uploadImage(base64Image, 'products');
+        if (uploadResult.success) {
+          updatedImages.push({
+            public_id: uploadResult.public_id,
+            url: uploadResult.url,
+            secure_url: uploadResult.secure_url || uploadResult.url,
+          });
+        }
       }
     }
 
     const input: IProductUpdateInput = {
-      image: imageData,
+      images: updatedImages.length > 0 ? updatedImages : null,
     };
 
     if (name) input.name = name;
@@ -142,9 +165,12 @@ export async function DELETE(
       );
     }
 
-    // Cleanup Cloudinary image (Route concern)
-    if (product.image?.public_id) {
-      await deleteImage(product.image.public_id);
+    // Cleanup Cloudinary images (Route concern)
+    const imagesToDelete = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
+    for (const img of imagesToDelete) {
+      if (img.public_id) {
+        await deleteImage(img.public_id);
+      }
     }
 
     const result = await productService.delete(id);

@@ -141,7 +141,7 @@ export class ProductService {
           _id: 1,
           name: 1,
           specs: 1,
-          image: 1,
+          images: 1,
           categoryId: 1,
           categoryName: '$categoryInfo.title',
           categoryShortTitle: '$categoryInfo.shortTitle',

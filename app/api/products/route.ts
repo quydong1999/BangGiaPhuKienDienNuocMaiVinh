@@ -42,7 +42,7 @@ export async function POST(req: Request) {
     const name = formData.get('name') as string;
     const specsRaw = formData.get('specs') as string;
     const categoryId = formData.get('categoryId') as string;
-    const imageFile = formData.get('image') as File | null;
+    const imageFiles = formData.getAll('images') as File[];
 
     let specs = [];
     try {
@@ -55,20 +55,22 @@ export async function POST(req: Request) {
     }
 
     // Handle image upload (Cloudinary concern stays in Route)
-    let imageData = null;
-    if (imageFile && imageFile.size > 0) {
-      const arrayBuffer = await imageFile.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
-      const base64Image = `data:${imageFile.type};base64,${buffer.toString('base64')}`;
-      const uploadResult = await uploadImage(base64Image, 'products');
-      if (uploadResult.success) {
-        imageData = {
-          public_id: uploadResult.public_id,
-          url: uploadResult.url,
-          secure_url: uploadResult.secure_url || uploadResult.url,
-        };
-      } else {
-        throw new Error('Lỗi upload hình ảnh lên Cloudinary');
+    const imagesData = [];
+    for (const file of imageFiles) {
+      if (file && file.size > 0 && typeof file !== 'string') {
+        const arrayBuffer = await file.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        const base64Image = `data:${file.type};base64,${buffer.toString('base64')}`;
+        const uploadResult = await uploadImage(base64Image, 'products');
+        if (uploadResult.success) {
+          imagesData.push({
+            public_id: uploadResult.public_id,
+            url: uploadResult.url,
+            secure_url: uploadResult.secure_url || uploadResult.url,
+          });
+        } else {
+          throw new Error('Lỗi upload hình ảnh lên Cloudinary');
+        }
       }
     }
 
@@ -76,7 +78,7 @@ export async function POST(req: Request) {
       name,
       specs,
       categoryId,
-      image: imageData,
+      images: imagesData.length > 0 ? imagesData : null,
     };
 
     const result = await productService.create(input);

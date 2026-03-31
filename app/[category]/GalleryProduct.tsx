@@ -69,7 +69,10 @@ export default function GalleryProduct({ data, categoryId, filterField }: Galler
     if (filterField === 'spec' as any) {
       return data.filter(item => item.specs?.some(s => s.name === selectedField));
     }
-    return data.filter(item => String((item as any)[filterField]) === selectedField);
+    const res = data.filter(item => String((item as any)[filterField]) === selectedField);
+    // return data.filter(item => String((item as any)[filterField]) === selectedField);
+    console.log(res)
+    return res;
   }, [data, selectedField, filterField]);
 
   return (
@@ -112,7 +115,7 @@ export default function GalleryProduct({ data, categoryId, filterField }: Galler
           const allPrices = item.specs?.flatMap(s => s.prices.map(p => p.price)) || [];
           const minPrice = allPrices.length > 0 ? Math.min(...allPrices) : 0;
           const maxPrice = allPrices.length > 0 ? Math.max(...allPrices) : 0;
-          
+
           const isSingleVariant = item.specs?.length === 1 && item.specs[0].prices?.length === 1;
           const singleUnit = isSingleVariant ? item.specs[0].prices[0].unit : "";
 
@@ -125,14 +128,14 @@ export default function GalleryProduct({ data, categoryId, filterField }: Galler
             >
               <div className="relative w-full aspect-[4/3] bg-slate-100 flex-shrink-0">
                 <Image
-                  src={getOptimizedImageUrl(item.image?.secure_url ?? imgNotFoundUrl, 400)}
+                  src={getOptimizedImageUrl(item.images?.[0]?.secure_url ?? imgNotFoundUrl, 400)}
                   alt={item.name}
                   fill
                   sizes="(min-width: 768px) 200px, 50vw"
                   className="object-cover group-hover:scale-105 transition-transform"
                   priority={index < 5}
                   quality={60}
-                  {...getBlurPlaceholder(item.image?.secure_url)}
+                  {...getBlurPlaceholder(item.images?.[0]?.secure_url)}
                 />
               </div>
               <div className="p-3 flex-1 flex flex-col text-left w-full">

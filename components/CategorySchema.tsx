@@ -41,8 +41,8 @@ export default function CategorySchema({ category, products = [] }: CategorySche
                         '@type': 'Product',
                         name: product.name,
                         description: description,
-                        ...(product.image?.secure_url && {
-                            image: product.image.secure_url,
+                        ...(product.images?.[0]?.secure_url && {
+                            image: product.images[0].secure_url,
                         }),
                         offers: {
                             '@type': 'AggregateOffer',

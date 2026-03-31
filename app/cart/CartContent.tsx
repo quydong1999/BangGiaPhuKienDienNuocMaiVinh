@@ -81,7 +81,7 @@ export default function CartContent() {
       {/* Cart Items */}
       <div className="bg-white border border-slate-200 shadow-sm overflow-hidden divide-y divide-slate-100">
         {items.map((item) => {
-          const imageUrl = item.product.image?.secure_url || imgNotFoundUrl;
+          const imageUrl = item.product.images?.[0]?.secure_url || imgNotFoundUrl;
           const lineTotal = item.price * item.quantity;
 
           return (

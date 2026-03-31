@@ -28,7 +28,7 @@ const specSchema = z.object({
 const productSchema = z.object({
   name: z.string().min(1, { message: "Tên sản phẩm không được bỏ trống" }),
   specs: z.array(specSchema).min(1, { message: "Cần ít nhất 1 cấu hình" }),
-  image: z.any().optional(),
+  images: z.any().optional(),
 });
 
 type ProductFormValues = z.infer<typeof productSchema>;
@@ -50,9 +50,16 @@ export function ProductFormModal({
   const router = useRouter();
   const { setPendingProductCategoryId, startRefresh } = useSkeleton();
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  
+  interface ImagePreview {
+    id: string;
+    url: string;
+    file?: File;
+    public_id?: string;
+    isRetained: boolean;
+  }
+  const [images, setImages] = useState<ImagePreview[]>([]);
   const [isCompressing, setIsCompressing] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>(categoryId);
 
   const isEdit = !!initialData;
@@ -86,28 +93,48 @@ export function ProductFormModal({
             ? initialData.specs 
             : [{ name: "", prices: [{ unit: "", price: 0 }] }],
         });
-        setPreviewUrl(initialData.image?.secure_url || null);
+        
+        // Load initial images
+        const initialImages = (initialData.images || []).map(img => ({
+          id: img.secure_url || img.url || Math.random().toString(),
+          url: img.secure_url || img.url || '',
+          public_id: img.public_id,
+          isRetained: true,
+        }));
+        // Hỗ trợ backwards compatibility (trước khi migration hoàn tất)
+        if ((initialData as any).image && initialImages.length === 0) {
+          const legacyImg = (initialData as any).image;
+          initialImages.push({
+            id: legacyImg.secure_url || legacyImg.url || Math.random().toString(),
+            url: legacyImg.secure_url || legacyImg.url || '',
+            public_id: legacyImg.public_id,
+            isRetained: true,
+          })
+        }
+        setImages(initialImages.slice(0, 10));
         setSelectedCategoryId(initialData.categoryId || categoryId);
       } else {
         reset({ 
           name: "", 
           specs: [{ name: "", prices: [{ unit: "", price: 0 }] }] 
         });
-        setPreviewUrl(null);
+        setImages([]);
         setSelectedCategoryId(categoryId);
       }
       setSubmitError(null);
-      setSelectedFile(null);
     }
   }, [isOpen, reset, initialData, categoryId]);
 
+  // Cleanup object urls
   useEffect(() => {
-    if (selectedFile) {
-      const objectUrl = URL.createObjectURL(selectedFile);
-      setPreviewUrl(objectUrl);
-      return () => URL.revokeObjectURL(objectUrl);
-    }
-  }, [selectedFile]);
+    return () => {
+      images.forEach(img => {
+        if (!img.isRetained && img.url) {
+          URL.revokeObjectURL(img.url);
+        }
+      });
+    };
+  }, [images]);
 
   const createMutation = useCreateProduct();
   const updateMutation = useUpdateProduct();
@@ -122,7 +149,15 @@ export function ProductFormModal({
     formData.append("categoryId", selectedCategoryId);
     formData.append("specs", JSON.stringify(data.specs));
     
-    if (selectedFile) formData.append("image", selectedFile);
+    // new images
+    const newFiles = images.filter(img => !img.isRetained && img.file).map(img => img.file as File);
+    for (const file of newFiles) {
+      formData.append("images", file);
+    }
+
+    // retained image ids
+    const retainedIds = images.filter(img => img.isRetained && img.public_id).map(img => img.public_id);
+    formData.append("retainedImageIds", JSON.stringify(retainedIds));
 
     const mutationOptions = {
       onSuccess: () => {
@@ -149,21 +184,44 @@ export function ProductFormModal({
   };
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files?.length) return setSelectedFile(null);
-    const imageFile = e.target.files[0];
-    if (imageFile.size > 1024 * 1024) {
-      setIsCompressing(true);
-      try {
-        const compressed = await imageCompression(imageFile, { maxSizeMB: 1, maxWidthOrHeight: 1920, useWebWorker: true });
-        setSelectedFile(compressed);
-      } catch {
-        setSelectedFile(imageFile);
-      } finally {
-        setIsCompressing(false);
-      }
-    } else {
-      setSelectedFile(imageFile);
+    if (!e.target.files?.length) return;
+    
+    if (images.length + e.target.files.length > 10) {
+      alert("Chỉ được tải lên tối đa 10 ảnh.");
+      return;
     }
+
+    setIsCompressing(true);
+    try {
+      const newPreviews: ImagePreview[] = [];
+      for (let i = 0; i < e.target.files.length; i++) {
+        const imageFile = e.target.files[i];
+        let processedFile = imageFile;
+        if (imageFile.size > 1024 * 1024) {
+          try {
+            processedFile = await imageCompression(imageFile, { maxSizeMB: 1, maxWidthOrHeight: 1920, useWebWorker: true });
+          } catch {
+            processedFile = imageFile;
+          }
+        }
+        newPreviews.push({
+          id: URL.createObjectURL(processedFile),
+          url: URL.createObjectURL(processedFile),
+          file: processedFile,
+          isRetained: false,
+        });
+      }
+      setImages(prev => [...prev, ...newPreviews].slice(0, 10));
+    } finally {
+      setIsCompressing(false);
+    }
+    
+    // reset input
+    e.target.value = '';
+  };
+
+  const handleRemoveImage = (idToRemove: string) => {
+    setImages(prev => prev.filter(img => img.id !== idToRemove));
   };
 
   return (
@@ -253,25 +311,51 @@ export function ProductFormModal({
 
         {/* Hình ảnh */}
         <div className="space-y-1 pt-2">
-          <label className="text-sm font-bold text-slate-700">Hình ảnh</label>
-            <div className="relative border-2 border-dashed border-slate-200 rounded-xl h-32 flex flex-col items-center justify-center gap-2 hover:bg-slate-50 transition-colors cursor-pointer overflow-hidden bg-slate-50/50">
-              {previewUrl ? (
-                <img src={previewUrl} alt="Preview" className="absolute inset-0 w-full h-full object-contain p-2" />
-              ) : (
-                <>
-                  <Upload size={24} className="text-slate-400" />
-                  <span className="text-xs text-slate-500 font-medium">Kéo thả hoặc nhấn để tải ảnh</span>
-                </>
+          <label className="text-sm font-bold text-slate-700">Hình ảnh (tối đa 10 ảnh)</label>
+          {images.length > 0 ? (
+            <div className="grid grid-cols-5 gap-3">
+              {images.map((img) => (
+                <div key={img.id} className="relative aspect-square border border-slate-200 bg-white rounded-xl overflow-hidden group">
+                  <img src={img.url} alt="Preview" className="w-full h-full object-contain p-1" />
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveImage(img.id)}
+                    className="absolute top-1.5 right-1.5 bg-red-500 shadow-md text-white rounded-full p-1.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity z-10"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              ))}
+              {images.length < 10 && (
+                <div className="relative border-2 border-dashed border-slate-200 rounded-xl aspect-square flex flex-col items-center justify-center gap-1 hover:bg-slate-50 transition-colors cursor-pointer bg-slate-50/50">
+                  <Plus size={20} className="text-slate-400" />
+                  <span className="text-[10px] text-slate-500 font-medium">Thêm ảnh</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple // cho phép chọn nhiều file
+                    disabled={isPending || isCompressing}
+                    onChange={handleImageChange}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
+                </div>
               )}
+            </div>
+          ) : (
+            <div className="relative border-2 border-dashed border-slate-200 rounded-xl h-32 flex flex-col items-center justify-center gap-2 hover:bg-slate-50 transition-colors cursor-pointer overflow-hidden bg-slate-50/50">
+              <Upload size={24} className="text-slate-400" />
+              <span className="text-xs text-slate-500 font-medium">Kéo thả hoặc nhấn để tải nhiều ảnh</span>
               <input
                 type="file"
                 accept="image/*"
+                multiple
                 disabled={isPending || isCompressing}
                 onChange={handleImageChange}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
             </div>
-          </div>
+          )}
+        </div>
 
         <FormModal.Actions
           mode={isEdit ? "edit" : "create"}
