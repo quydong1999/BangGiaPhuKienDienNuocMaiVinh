@@ -95,12 +95,11 @@ export function useUpdateProduct() {
             await queryClient.cancelQueries({ queryKey: ["products"] });
             const previousQueries = queryClient.getQueriesData({ queryKey: ["products"] });
 
-            const updatedFields = {
+            const specsStr = formData.get('specs') as string;
+            const updatedFields: any = {
                 name: formData.get('name') as string,
-                spec: formData.get('spec') as string,
-                unit: formData.get('unit') as string,
-                priceSell: formData.get('priceSell') as string,
                 categoryId: formData.get('categoryId') as string,
+                specs: specsStr ? JSON.parse(specsStr) : [],
             };
 
             // Tìm sản phẩm gốc để có đầy đủ thông tin khi thêm vào cache của danh mục mới

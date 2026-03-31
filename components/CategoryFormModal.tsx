@@ -131,20 +131,25 @@ export function CategoryFormModal({ isOpen, onClose, initialData, productCount }
       const objectUrl = URL.createObjectURL(selectedFile);
       setPreviewUrl(objectUrl);
       return () => URL.revokeObjectURL(objectUrl);
-    } else {
+    } else if (!initialData) {
+      // Only clear preview if we are NOT editing
       setPreviewUrl(null);
     }
-  }, [selectedFile]);
+  }, [selectedFile, initialData]);
 
   useEffect(() => {
-    if (watchTitle) {
-      setValue("slug", generateSlug(watchTitle), { shouldValidate: true });
-      if (!shortTitleEdited) setValue("shortTitle", watchTitle, { shouldValidate: true });
-    } else {
-      setValue("slug", "");
-      if (!shortTitleEdited) setValue("shortTitle", "");
+    // Only auto-generate slug and shortTitle if NOT in edit mode
+    // (In edit mode, initialData provides these values and we don't want to overwrite them)
+    if (!initialData) {
+      if (watchTitle) {
+        setValue("slug", generateSlug(watchTitle), { shouldValidate: true });
+        if (!shortTitleEdited) setValue("shortTitle", watchTitle, { shouldValidate: true });
+      } else {
+        setValue("slug", "");
+        if (!shortTitleEdited) setValue("shortTitle", "");
+      }
     }
-  }, [watchTitle, setValue, shortTitleEdited]);
+  }, [watchTitle, setValue, shortTitleEdited, initialData]);
 
   const createMutation = useCreateCategory();
   const updateMutation = useUpdateCategory();
@@ -160,9 +165,12 @@ export function CategoryFormModal({ isOpen, onClose, initialData, productCount }
     formData.append("shortTitle", data.shortTitle);
     formData.append("layout", data.layout);
     if (selectedFile) formData.append("image", selectedFile);
+    formData.append("filterField", data.filterField === "null" ? "" : data.filterField || "");
     if (data.layout === "table") {
-      formData.append("filterField", data.filterField === "null" ? "" : data.filterField || "");
-      data.visibleFields.forEach((field) => formData.append("visibleFields", field));
+      
+      // Ensure fixed fields are always included, even if missing from initialData
+      const finalVisibleFields = Array.from(new Set([...data.visibleFields, "name", "priceSell"]));
+      finalVisibleFields.forEach((field) => formData.append("visibleFields", field));
     }
 
     const mutationOptions = {
@@ -345,31 +353,33 @@ export function CategoryFormModal({ isOpen, onClose, initialData, productCount }
           {errors.layout && <p className="text-red-500 text-xs mt-1">{errors.layout.message}</p>}
         </div>
 
+        {/* Trường lọc (áp dụng cả Table và Gallery) */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-slate-700">Trường lọc</label>
+          <div className="flex gap-4">
+            {([
+              { value: "null", label: "Không lọc" },
+              { value: "name", label: "Tên sản phẩm" },
+              { value: "spec", label: "Quy cách" },
+            ] as const).map(({ value, label }) => (
+              <label key={value} className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  {...register("filterField")}
+                  disabled={isPending || isCompressing}
+                  value={value}
+                  className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 disabled:opacity-50"
+                />
+                <span className="text-sm text-slate-700">{label}</span>
+              </label>
+            ))}
+          </div>
+          {errors.filterField && <p className="text-red-500 text-xs mt-1">{errors.filterField.message}</p>}
+        </div>
+
         {/* Table-only fields */}
         {watchLayout === "table" && (
           <>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-700">Trường lọc</label>
-              <div className="flex gap-4">
-                {([
-                  { value: "null", label: "Không lọc" },
-                  { value: "name", label: "Tên sản phẩm" },
-                  { value: "spec", label: "Quy cách" },
-                ] as const).map(({ value, label }) => (
-                  <label key={value} className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      {...register("filterField")}
-                      disabled={isPending || isCompressing}
-                      value={value}
-                      className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 disabled:opacity-50"
-                    />
-                    <span className="text-sm text-slate-700">{label}</span>
-                  </label>
-                ))}
-              </div>
-              {errors.filterField && <p className="text-red-500 text-xs mt-1">{errors.filterField.message}</p>}
-            </div>
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-slate-700">Các cột hiển thị</label>

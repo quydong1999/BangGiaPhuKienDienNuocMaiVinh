@@ -46,3 +46,10 @@ export type Product = {
   image?: CloudinaryImage;
   categoryId?: string;
 };
+
+export interface FlattenedProduct extends Omit<Product, 'specs'> {
+  _id_variant: string;
+  spec: string;
+  unit: string;
+  priceSell: number;
+}

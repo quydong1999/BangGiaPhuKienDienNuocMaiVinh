@@ -6,7 +6,8 @@ import { Loader2, Search } from 'lucide-react';
 import Link from 'next/link';
 import { HomeHeader } from '@/components/HomeHeader';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
-import type { Product } from '@/types/types';
+import type { Product, FlattenedProduct } from '@/types/types';
+import { flattenProducts, formatVND } from '@/lib/utils';
 
 interface SearchProduct extends Product {
   categoryName?: string;
@@ -35,7 +36,8 @@ function SearchResults() {
         const res = await fetch(`/api/products/search?q=${encodeURIComponent(query)}`);
         const data = await res.json();
         if (data.success) {
-          setResults(data.data);
+          // Phẳng hóa kết quả tìm kiếm để hiển thị từng biến thể
+          setResults(flattenProducts(data.data) as SearchProduct[]);
         }
       } catch (error) {
         console.error("Search fetch error:", error);
@@ -80,9 +82,9 @@ function SearchResults() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200">
-                {results.map((item) => (
+                {results.map((item: any) => (
                   <tr
-                    key={item._id}
+                    key={item._id_variant}
                     className="hover:bg-slate-50 transition-colors"
                   >
                     <td className="px-4 py-3 font-medium text-slate-900">
@@ -99,13 +101,13 @@ function SearchResults() {
                       </span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="px-4 py-3 text-slate-600">
+                      <span className="px-2 py-1 text-slate-600">
                         {item.categoryShortTitle}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-slate-600">{item.unit}</td>
                     <td className="px-4 py-3 text-right font-bold text-slate-900">
-                      {item.priceSell}
+                      {formatVND(item.priceSell)}
                     </td>
                   </tr>
                 ))}

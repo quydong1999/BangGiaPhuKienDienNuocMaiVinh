@@ -2,9 +2,9 @@
 
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
-import type { Product, FilterField, VisibleField } from '@/types/types';
+import type { Product, FilterField, VisibleField, FlattenedProduct } from '@/types/types';
 import { PendingProductSkeleton } from '@/components/PendingSkeletons';
-import { useAdmin } from "@/hooks/useAdmin"
+import { formatVND, flattenProducts } from '@/lib/utils';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { useAppDispatch } from '@/store/hooks';
 import { openModal } from '@/store/modalSlice';
@@ -17,32 +17,32 @@ interface ProductListProps {
   categoryImageUrl?: string;
 }
 
-export default function ProductList({ data, filterField, visibleFields, categoryId, categoryImageUrl }: ProductListProps) {
+export default function ProductList({ data = [], filterField, visibleFields, categoryId, categoryImageUrl }: ProductListProps) {
   const [selectedField, setSelectedField] = useState<string>('Tất cả');
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 50;
 
   const searchParams = useSearchParams();
-  const { isAdmin } = useAdmin()
   const dispatch = useAppDispatch();
   const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleNameClick = useCallback((item: Product) => {
+    const flattened = item as unknown as FlattenedProduct;
     // Single click → open ProductPreview
     dispatch(openModal({
       type: 'productPreview',
-      props: { product: item, categoryImageUrl }
+      props: { 
+        product: item, 
+        categoryImageUrl, 
+        initialSpec: flattened.spec, 
+        initialUnit: flattened.unit 
+      }
     }));
   }, [dispatch, categoryImageUrl]);
 
   const handleNameDoubleClick = useCallback((item: Product) => {
-    // Double click → open EditModal (admin) or LoginModal
-    if (isAdmin) {
-      dispatch(openModal({ type: 'productForm', props: { categoryId, initialData: item, showImageField: false } }));
-    } else {
-      dispatch(openModal({ type: 'login' }));
-    }
-  }, [dispatch, isAdmin, categoryId]);
+    dispatch(openModal({ type: 'productForm', props: { categoryId, initialData: item } }));
+  }, [dispatch, categoryId]);
 
   const handleCellClick = useCallback((item: Product) => {
     if (clickTimerRef.current) {
@@ -62,26 +62,47 @@ export default function ProductList({ data, filterField, visibleFields, category
     setCurrentPage(1);
   }, [selectedField]);
 
-  // Extract unique product names
+  // Flatten data: Mỗi biến thể (spec + unit) là 1 dòng
+  const flattenedData = useMemo(() => {
+    const flat = flattenProducts(data);
+    return flat.sort((a, b) => {
+      const nameCompare = a.name.localeCompare(b.name, 'vi');
+      if (nameCompare !== 0) return nameCompare;
+      if (a.spec && b.spec) return a.spec.localeCompare(b.spec, 'vi');
+      return 0;
+    });
+  }, [data]);
+
+  // Extract unique product names for filter
   const uniqueData = useMemo(() => {
-    if (!filterField) {
+    if (!filterField || !data) {
       return ['Tất cả'];
     }
-    const _data = new Set(data.map(item => item[filterField]));
-    return ['Tất cả', ...Array.from(_data)];
+    // Case 'spec': Lấy tất cả các spec name từ tất cả sản phẩm
+    if (filterField === 'spec' as any) {
+      const specs = new Set<string>();
+      data.forEach(p => p.specs?.forEach(s => specs.add(s.name)));
+      return ['Tất cả', ...Array.from(specs).sort((a, b) => a.localeCompare(b, 'vi'))];
+    }
+    const _data = new Set<string>(data.filter(Boolean).map(item => String((item as any)[filterField])));
+    return ['Tất cả', ...Array.from(_data).sort((a, b) => a.localeCompare(b, 'vi'))];
   }, [data, filterField]);
 
-  // Filter data based on selected name
+  // Filter flattened data based on selected name
   const filteredData = useMemo(() => {
-    if (!filterField || selectedField === 'Tất cả') return data;
-    return data.filter(item => item[filterField] === selectedField);
-  }, [data, selectedField, filterField]);
+    if (!filterField || selectedField === 'Tất cả') return flattenedData;
+    if (filterField === 'spec' as any) {
+      return flattenedData.filter((item: FlattenedProduct) => item.spec === selectedField);
+    }
+    return flattenedData.filter((item: FlattenedProduct) => (item as any)[filterField] === selectedField);
+  }, [flattenedData, selectedField, filterField]);
 
   // Cuộn tới sản phẩm từ URL và chuyển trang thích hợp
   useEffect(() => {
     const productId = searchParams.get('productId');
     if (productId) {
-      const index = filteredData.findIndex(p => p._id === productId);
+      const index = filteredData.findIndex((p: FlattenedProduct) => p._id === productId);
+      // ... (rest of scroll logic stays similar)
       if (index !== -1) {
         const targetPage = Math.floor(index / ITEMS_PER_PAGE) + 1;
         setCurrentPage(targetPage);
@@ -175,23 +196,22 @@ export default function ProductList({ data, filterField, visibleFields, category
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
-              {paginatedData.map((item, index) => (
+              {paginatedData.map((item: FlattenedProduct, index) => (
                 <tr
-                  key={`${item._id}-${index}`}
+                  key={`${item._id_variant}`}
                   id={`product-${item._id}`}
-                  className="hover:bg-slate-50 transition-colors"
+                  className="hover:bg-slate-50 transition-colors cursor-pointer"
+                  onClick={() => handleCellClick(item as unknown as Product)}
                 >
                   {sortedVisibleFields.map((field, fIndex) => {
-                    const value = item[field as VisibleField];
+                    let value: any = item[field as keyof FlattenedProduct];
 
                     if (field === 'spec') {
+                      value = item.spec;
                       return (
                         <td
                           key={field}
                           className="px-4 py-3"
-                          {...(fIndex === 0 ? {
-                            onClick: () => handleCellClick(item),
-                          } : {})}
                         >
                           <span
                             className={`text-xs font-medium px-2 py-1 rounded-md bg-emerald-100 text-emerald-800`}
@@ -202,17 +222,17 @@ export default function ProductList({ data, filterField, visibleFields, category
                       );
                     }
 
+                    if (field === 'priceSell') {
+                      value = formatVND(item.priceSell);
+                    }
 
                     return (
                       <td
                         key={field}
                         className={
                           field === 'priceSell' ?
-                            'px-4 py-3 text-right font-bold text-slate-900' : 'px-4 py-3 font-medium text-slate-900 hover:cursor-pointer'
+                            'px-4 py-3 text-right font-bold text-slate-900' : 'px-4 py-3 font-medium text-slate-900'
                         }
-                        {...(fIndex === 0 ? {
-                          onClick: () => handleCellClick(item),
-                        } : {})}
                       >
                         {value}
                       </td>

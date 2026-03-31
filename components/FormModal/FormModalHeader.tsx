@@ -3,7 +3,7 @@ import type { FormModalHeaderProps } from "./types";
 
 export function FormModalHeader({ title, onClose, disabled }: FormModalHeaderProps) {
     return (
-        <div className="flex justify-between items-center p-5 sticky top-0 bg-white z-10 border-b border-slate-100">
+        <div className="flex justify-between items-center p-5 sticky top-0 bg-white z-20 border-b border-slate-100 shrink-0">
             <h2 className="text-xl font-bold text-slate-800">{title}</h2>
             <button
                 onClick={onClose}

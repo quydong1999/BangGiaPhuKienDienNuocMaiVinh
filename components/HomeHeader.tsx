@@ -135,7 +135,7 @@ export function HomeHeader({
                             onClick={() => { 
                               dispatch(openModal({ 
                                 type: 'productForm', 
-                                props: { categoryId, showImageField: categoryLayout !== 'table' } 
+                                props: { categoryId } 
                               })); 
                               setIsDropdownOpen(false); 
                             }}

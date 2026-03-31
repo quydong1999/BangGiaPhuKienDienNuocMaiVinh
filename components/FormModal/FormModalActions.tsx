@@ -18,7 +18,7 @@ export function FormModalActions({
     );
 
     return (
-        <div className="mt-4 flex gap-3">
+        <div className="mt-auto pt-4 flex gap-3 sticky bottom-0 z-20 bg-white pb-5 px-5 -mx-5 -mb-5 border-t border-slate-100">
             {mode === "edit" && (
                 <button
                     type="button"

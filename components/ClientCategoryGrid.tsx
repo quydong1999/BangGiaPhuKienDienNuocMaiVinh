@@ -5,16 +5,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { getBlurPlaceholder, getOptimizedImageUrl } from "@/lib/image-blur";
 import { PendingCategorySkeleton } from "@/components/PendingSkeletons";
-import { useAdmin } from "@/hooks/useAdmin"
 import { useCategories } from "@/hooks/useCategories";
-import { AnimatePresence } from "framer-motion";
-import LoginModal from "@/components/LoginModal"
-import dynamic from "next/dynamic";
-
-const CategoryFormModal = dynamic(
-  () => import("@/components/CategoryFormModal").then((mod) => mod.CategoryFormModal),
-  { ssr: false }
-);
+import { useAppDispatch } from "@/store/hooks";
+import { openModal } from "@/store/modalSlice";
 
 interface CategoryWithCount {
   _id: string;
@@ -42,19 +35,19 @@ const imgNotFoundUrl =
 export function ClientCategoryGrid({ categories: initialCategories }: ClientCategoryGridProps) {
   const router = useRouter();
   const { data: categories = initialCategories } = useCategories(initialCategories as any);
-  const [editingCategory, setEditingCategory] = useState<CategoryWithCount | null>(null);
   const clickTimer = useRef<NodeJS.Timeout | null>(null);
-  const { isAdmin } = useAdmin()
-  const [showLogin, setShowLogin] = useState(false)
+  const dispatch = useAppDispatch();
 
   const handleEditClick = (e: React.MouseEvent, category: CategoryWithCount) => {
     e.preventDefault();
     e.stopPropagation();
-    if (isAdmin) {
-      setEditingCategory(category);
-    } else {
-      setShowLogin(true);
-    }
+    dispatch(openModal({
+      type: 'categoryForm',
+      props: {
+        initialData: category,
+        productCount: category.productCount || 0
+      }
+    }));
   };
 
   if (!categories || categories.length === 0) {
@@ -121,23 +114,6 @@ export function ClientCategoryGrid({ categories: initialCategories }: ClientCate
         <PendingCategorySkeleton />
       </nav>
 
-      {/* Edit Modal */}
-      <AnimatePresence>
-        {editingCategory && (
-          <CategoryFormModal
-            isOpen={!!editingCategory}
-            onClose={() => setEditingCategory(null)}
-            initialData={editingCategory}
-            productCount={editingCategory?.productCount || 0}
-          />
-        )}
-        {showLogin && (
-          <LoginModal
-            isOpen={showLogin}
-            onClose={() => setShowLogin(false)}
-          />
-        )}
-      </AnimatePresence>
     </>
   );
 }

@@ -27,7 +27,7 @@ function FormModalRoot({
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
                 transition={{ type: "spring", duration: 0.4, bounce: 0.3 }}
-                className="bg-white shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto flex flex-col"
+                className="bg-white shadow-2xl w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden sm:rounded-xl"
                 onClick={(e) => e.stopPropagation()}
             >
                 {children}

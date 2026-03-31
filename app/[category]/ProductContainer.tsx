@@ -78,5 +78,5 @@ export default function ProductContainer({
     );
   }
 
-  return <GalleryProduct data={data} categoryId={categoryId} />;
+  return <GalleryProduct data={data} categoryId={categoryId} filterField={filterField as FilterField} />;
 }

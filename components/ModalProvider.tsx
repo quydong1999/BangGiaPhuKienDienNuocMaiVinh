@@ -6,6 +6,7 @@ import { useHotkey } from '@tanstack/react-hotkeys';
 import dynamic from 'next/dynamic';
 import { FlyToCartAnimation } from './FlyToCartAnimation';
 import { AnimatePresence } from 'framer-motion';
+import { useAdmin } from '@/hooks/useAdmin';
 
 const MODAL_COMPONENTS = {
   login: dynamic(() => import('./LoginModal').then(m => m.default), { ssr: false }),
@@ -19,11 +20,19 @@ export type ModalType = keyof typeof MODAL_COMPONENTS;
 
 export function ModalProvider() {
   const { type, isOpen, props } = useAppSelector((state) => state.modal);
+  const { isAdmin, isLoading } = useAdmin();
   const dispatch = useAppDispatch();
 
   useHotkey('Escape', () => dispatch(closeModal()), { enabled: isOpen });
 
-  const ActiveModal = type ? MODAL_COMPONENTS[type] : null;
+  let ActiveModal = type ? MODAL_COMPONENTS[type] : null;
+
+  // Authorization check for protected modals (only for editing existing items)
+  const PROTECTED_MODALS: ModalType[] = ['categoryForm', 'productForm'];
+  if (isOpen && type && PROTECTED_MODALS.includes(type) && props?.initialData && !isAdmin) {
+    if (isLoading) return null; // Wait for session to load
+    ActiveModal = MODAL_COMPONENTS.login;
+  }
 
   return (
     <>

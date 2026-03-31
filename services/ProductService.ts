@@ -49,6 +49,8 @@ export class ProductService {
     const cached = await redis.get(cacheKey);
     if (cached) {
       const data = cached as IProduct[];
+      // Đảm bảo dữ liệu từ cache cũng được sort A-Z đề phòng cache cũ
+      data.sort((a, b) => a.name.localeCompare(b.name, 'vi'));
       return { success: true, count: data.length, data, source: 'cache' };
     }
 
@@ -57,7 +59,10 @@ export class ProductService {
     const filter: Record<string, string> = {};
     if (categoryId) filter.categoryId = categoryId;
 
-    const products = await Product.find(filter).sort({ name: 1, spec: 1 }).lean();
+    const products = await Product.find(filter)
+      .collation({ locale: 'vi', strength: 2 })
+      .sort({ name: 1, 'specs.name': 1 })
+      .lean();
 
     // 3. Cache store
     await redis.set(cacheKey, products, { ex: DEFAULT_TTL });
