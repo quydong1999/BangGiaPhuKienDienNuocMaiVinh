@@ -104,7 +104,7 @@ export function ClientCategoryGrid({ categories: initialCategories }: ClientCate
               </div>
               {/* Title */}
               <div className="px-2 py-3 bg-white">
-                <p className="text-sm font-medium text-slate-800 text-center leading-tight">
+                <p className="text-xs sm:text-sm font-medium text-slate-800 text-center leading-tight">
                   {category.shortTitle || category.title}
                 </p>
               </div>

@@ -138,12 +138,12 @@ export default function GalleryProduct({ data, categoryId, filterField }: Galler
                   {...getBlurPlaceholder(item.images?.[0]?.secure_url)}
                 />
               </div>
-              <div className="p-3 flex-1 flex flex-col text-left w-full">
-                <div className="text-sm font-semibold text-slate-900 line-clamp-2">
+              <div className="p-2 sm:p-3 flex-1 flex flex-col text-left w-full">
+                <div className="text-xs sm:text-sm font-semibold text-slate-900 line-clamp-2">
                   {item.name}
                 </div>
                 <div className="mt-auto pt-2 flex flex-col">
-                  <span className="text-sm font-bold text-emerald-600">
+                  <span className="text-xs sm:text-sm font-bold text-emerald-600">
                     {minPrice === maxPrice ? (
                       <>
                         {formatVND(minPrice)}
