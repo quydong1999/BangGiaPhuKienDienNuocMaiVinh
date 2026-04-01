@@ -138,16 +138,15 @@ export function CategoryFormModal({ isOpen, onClose, initialData, productCount }
   }, [selectedFile, initialData]);
 
   useEffect(() => {
-    // Only auto-generate slug and shortTitle if NOT in edit mode
-    // (In edit mode, initialData provides these values and we don't want to overwrite them)
-    if (!initialData) {
-      if (watchTitle) {
-        setValue("slug", generateSlug(watchTitle), { shouldValidate: true });
-        if (!shortTitleEdited) setValue("shortTitle", watchTitle, { shouldValidate: true });
-      } else {
-        setValue("slug", "");
-        if (!shortTitleEdited) setValue("shortTitle", "");
-      }
+    // Always auto-generate slug from title (both create and edit modes)
+    // Slug field is read-only, so it must always reflect the title
+    if (watchTitle) {
+      setValue("slug", generateSlug(watchTitle), { shouldValidate: true });
+      // Only auto-generate shortTitle in create mode
+      if (!initialData && !shortTitleEdited) setValue("shortTitle", watchTitle, { shouldValidate: true });
+    } else {
+      setValue("slug", "");
+      if (!initialData && !shortTitleEdited) setValue("shortTitle", "");
     }
   }, [watchTitle, setValue, shortTitleEdited, initialData]);
 
