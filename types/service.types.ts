@@ -106,3 +106,23 @@ export interface ICategoryUpdateInput {
   visibleFields?: string[];
   image?: ICloudinaryImage | null;
 }
+
+// ─── Bulk Import Interfaces ─────────────────────────────────────────────────
+
+export type BulkImportAction = 'new_product' | 'new_spec' | 'new_price' | 'update_price' | 'unchanged';
+
+export interface IBulkImportRow {
+  name: string;
+  spec: string;
+  unit: string;
+  price: number;
+  action: BulkImportAction;
+}
+
+export interface IBulkImportResult {
+  productsCreated: number;
+  specsAdded: number;
+  pricesAdded: number;
+  pricesUpdated: number;
+  totalProcessed: number;
+}

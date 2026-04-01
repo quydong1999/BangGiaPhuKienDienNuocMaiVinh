@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { Search, LogOut, LogIn, UserRound, FolderPlus, PackagePlus, ShoppingCart } from 'lucide-react';
+import { Search, LogOut, LogIn, UserRound, FolderPlus, PackagePlus, FileSpreadsheet, ShoppingCart } from 'lucide-react';
 import { signOut } from "next-auth/react"
 import { useAdmin } from "@/hooks/useAdmin"
 import Link from 'next/link';
@@ -143,6 +143,21 @@ export function HomeHeader({
                           >
                             <PackagePlus size={14} />
                             Thêm sản phẩm
+                          </button>
+                        )}
+                        {categoryId && (
+                          <button
+                            onClick={() => { 
+                              dispatch(openModal({ 
+                                type: 'bulkImport', 
+                                props: { categoryId } 
+                              })); 
+                              setIsDropdownOpen(false); 
+                            }}
+                            className="hidden sm:flex items-center gap-2 text-sm text-slate-600 hover:bg-slate-50 rounded-lg px-2 py-1.5 transition-colors"
+                          >
+                            <FileSpreadsheet size={14} />
+                            Nhập hàng loạt
                           </button>
                         )}
                         <button

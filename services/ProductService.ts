@@ -20,6 +20,8 @@ import type {
   ISearchResult,
   IServiceResponse,
   IListResponse,
+  IBulkImportRow,
+  IBulkImportResult,
 } from '@/types/service.types';
 
 export class ProductService {
@@ -324,6 +326,188 @@ export class ProductService {
     await this.invalidateCache(product.categoryId.toString());
 
     return { success: true, message: 'Xóa sản phẩm thành công', data: null };
+  }
+
+  // ─── BULK IMPORT ────────────────────────────────────────────────────────
+
+  /**
+   * Nhập hàng loạt từ CSV.
+   * Toàn bộ xử lý trong một Transaction duy nhất.
+   * Tối ưu: fetch all products 1 lần, gom nhóm operations trước khi ghi.
+   */
+  async bulkImport(
+    categoryId: string,
+    rows: IBulkImportRow[]
+  ): Promise<IServiceResponse<IBulkImportResult>> {
+    const mongoose = await connectDB();
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    const normalize = (s: string) => s.trim().toLowerCase();
+
+    try {
+      // 1. Verify category
+      const categoryExists = await Category.findById(categoryId).session(session);
+      if (!categoryExists) {
+        await session.abortTransaction();
+        return { success: false, message: 'Danh mục không tồn tại' };
+      }
+
+      // 2. Fetch ALL products of this category — 1 query (tránh N+1)
+      const existingProducts = await Product.find({ categoryId }).session(session);
+
+      // 3. Build lookup: normalizedName → Product document
+      const productLookup = new Map<string, typeof existingProducts[0]>();
+      for (const p of existingProducts) {
+        productLookup.set(normalize(p.name), p);
+      }
+
+      const result: IBulkImportResult = {
+        productsCreated: 0,
+        specsAdded: 0,
+        pricesAdded: 0,
+        pricesUpdated: 0,
+        totalProcessed: rows.length,
+      };
+
+      // 4. Gom nhóm new_product rows → Map<name, specs>
+      const newProductsMap = new Map<string, { originalName: string; specs: Map<string, { originalSpec: string; prices: { unit: string; price: number }[] }> }>();
+
+      for (const row of rows) {
+        if (row.action === 'new_product') {
+          const key = normalize(row.name);
+          if (!newProductsMap.has(key)) {
+            newProductsMap.set(key, { originalName: row.name, specs: new Map() });
+          }
+          const entry = newProductsMap.get(key)!;
+          const specKey = normalize(row.spec);
+          if (!entry.specs.has(specKey)) {
+            entry.specs.set(specKey, { originalSpec: row.spec, prices: [] });
+          }
+          entry.specs.get(specKey)!.prices.push({ unit: row.unit, price: row.price });
+        }
+      }
+
+      // 5. Batch create new products
+      if (newProductsMap.size > 0) {
+        const newProducts = Array.from(newProductsMap.values()).map(entry => ({
+          name: entry.originalName,
+          categoryId,
+          specs: Array.from(entry.specs.values()).map(spec => ({
+            name: spec.originalSpec,
+            prices: spec.prices,
+          })),
+        }));
+        await Product.create(newProducts, { session });
+        result.productsCreated = newProducts.length;
+      }
+
+      // 6. Gom nhóm rows cần update existing products
+      // Map<normalizedProductName, { new_specs, new_prices, update_prices }>
+      type UpdateEntry = {
+        product: typeof existingProducts[0];
+        newSpecs: Map<string, { originalSpec: string; prices: { unit: string; price: number }[] }>;
+        newPrices: { specName: string; unit: string; price: number }[];
+        updatePrices: { specName: string; unit: string; price: number }[];
+      };
+      const updatesMap = new Map<string, UpdateEntry>();
+
+      const getOrCreateUpdate = (productName: string): UpdateEntry | null => {
+        const key = normalize(productName);
+        if (updatesMap.has(key)) return updatesMap.get(key)!;
+        const product = productLookup.get(key);
+        if (!product) return null;
+        const entry: UpdateEntry = { product, newSpecs: new Map(), newPrices: [], updatePrices: [] };
+        updatesMap.set(key, entry);
+        return entry;
+      };
+
+      for (const row of rows) {
+        if (row.action === 'new_spec') {
+          const entry = getOrCreateUpdate(row.name);
+          if (!entry) continue;
+          const specKey = normalize(row.spec);
+          if (!entry.newSpecs.has(specKey)) {
+            entry.newSpecs.set(specKey, { originalSpec: row.spec, prices: [] });
+          }
+          entry.newSpecs.get(specKey)!.prices.push({ unit: row.unit, price: row.price });
+        } else if (row.action === 'new_price') {
+          const entry = getOrCreateUpdate(row.name);
+          if (!entry) continue;
+          entry.newPrices.push({ specName: row.spec, unit: row.unit, price: row.price });
+        } else if (row.action === 'update_price') {
+          const entry = getOrCreateUpdate(row.name);
+          if (!entry) continue;
+          entry.updatePrices.push({ specName: row.spec, unit: row.unit, price: row.price });
+        }
+      }
+
+      // 7. Execute updates per product (batch within each product)
+      for (const [, entry] of updatesMap) {
+        const product = entry.product;
+        let modified = false;
+
+        // 7a. Add new specs
+        for (const [, specData] of entry.newSpecs) {
+          product.specs.push({
+            name: specData.originalSpec,
+            prices: specData.prices,
+          });
+          result.specsAdded++;
+          modified = true;
+        }
+
+        // 7b. Add new prices to existing specs
+        for (const np of entry.newPrices) {
+          const spec = product.specs.find(
+            (s: any) => normalize(s.name) === normalize(np.specName)
+          );
+          if (spec) {
+            spec.prices.push({ unit: np.unit, price: np.price });
+            result.pricesAdded++;
+            modified = true;
+          }
+        }
+
+        // 7c. Update existing prices
+        for (const up of entry.updatePrices) {
+          const spec = product.specs.find(
+            (s: any) => normalize(s.name) === normalize(up.specName)
+          );
+          if (spec) {
+            const price = spec.prices.find(
+              (p: any) => normalize(p.unit) === normalize(up.unit)
+            );
+            if (price) {
+              price.price = up.price;
+              result.pricesUpdated++;
+              modified = true;
+            }
+          }
+        }
+
+        if (modified) {
+          await product.save({ session });
+        }
+      }
+
+      await session.commitTransaction();
+
+      // Invalidate cache
+      await this.invalidateCache(categoryId);
+
+      return {
+        success: true,
+        message: 'Nhập hàng loạt thành công',
+        data: result,
+      };
+    } catch (error: any) {
+      await session.abortTransaction();
+      console.error('Lỗi bulk import:', error);
+      return { success: false, message: 'Lỗi server khi nhập hàng loạt', error: error.message };
+    } finally {
+      await session.endSession();
+    }
   }
 
   // ─── CACHE INVALIDATION (Private Helper) ─────────────────────────────────
