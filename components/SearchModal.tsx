@@ -51,7 +51,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: -50, scale: 0.95 }}
         transition={{ type: "spring", duration: 0.4, bounce: 0.2 }}
-        className="w-full max-w-2xl bg-white shadow-2xl rounded-xl overflow-hidden"
+        className="w-full max-w-2xl bg-white shadow-2xl rounded-full overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         <form onSubmit={handleSearch} className="relative flex items-center p-4">
@@ -67,15 +67,11 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
             type="button"
             onClick={handleSearch}
             disabled={query.trim().length < 2}
-            className="p-2 text-slate-600 rounded-full transition-all bg-transparent"
+            className="p-2 pr-4 text-slate-600 rounded-full transition-all bg-transparent"
           >
             <Search size={24} />
           </button>
         </form>
-
-        <div className="px-6 pb-6 pt-2 border-t border-slate-100 flex justify-between items-center text-xs text-slate-400">
-          <span>Nhập ít nhất 2 ký tự để tìm kiếm</span>
-        </div>
       </motion.div>
     </motion.div>
   );
