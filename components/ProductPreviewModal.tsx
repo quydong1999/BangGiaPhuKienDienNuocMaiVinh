@@ -225,7 +225,7 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
           </div>
 
           <div className="flex-1 overflow-y-auto p-4 md:p-6 custom-scrollbar">
-            {product.specs.length > 0 ? (
+            {product.specs.length > 1 || (product.specs.length === 1 && product.specs[0].name && product.specs[0].name !== 'Mặc định') ? (
               <div className="space-y-2 md:space-y-3">
                 <span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Quy cách</span>
                 <div className="flex flex-wrap gap-2">

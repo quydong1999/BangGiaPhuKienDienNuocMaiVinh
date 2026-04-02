@@ -71,7 +71,8 @@ export default function CartContent() {
   const handleExportExcel = () => {
     const exportData: any[] = items.map((item, index) => {
       const cleanedSpec = cleanSpecName(item.specName);
-      const productName = cleanedSpec && cleanedSpec !== '-'
+      const isVisibleSpec = cleanedSpec && cleanedSpec !== '-' && cleanedSpec !== 'Mặc định';
+      const productName = isVisibleSpec
         ? `${item.product.name} (${cleanedSpec})`
         : item.product.name;
 
@@ -184,7 +185,8 @@ export default function CartContent() {
 
     const rowsHtml = items.map((item, index) => {
       const cleanedSpec = cleanSpecName(item.specName);
-      const productName = cleanedSpec && cleanedSpec !== '-'
+      const isVisibleSpec = cleanedSpec && cleanedSpec !== '-' && cleanedSpec !== 'Mặc định';
+      const productName = isVisibleSpec
         ? `${item.product.name} (${cleanedSpec})`
         : item.product.name;
 
@@ -314,7 +316,7 @@ export default function CartContent() {
                       {item.product.name}
                     </h3>
                     <div className="flex flex-wrap gap-2 mt-1">
-                      {item.specName && item.specName !== '-' && (
+                      {item.specName && item.specName !== '-' && cleanSpecName(item.specName) !== 'Mặc định' && (
                         <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-100 text-emerald-800">
                           {cleanSpecName(item.specName)}
                         </span>
