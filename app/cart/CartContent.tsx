@@ -14,6 +14,15 @@ const imgNotFoundUrl = "https://upload.wikimedia.org/wikipedia/commons/a/a3/Imag
 
 import { formatVND } from '@/lib/utils';
 
+const cleanSpecName = (spec: string) => {
+  if (!spec) return spec;
+  // Strip quotes if both start and end exist
+  if (spec.startsWith('"') && spec.endsWith('"')) {
+    return spec.substring(1, spec.length - 1);
+  }
+  return spec;
+};
+
 export default function CartContent() {
   const items = useAppSelector(selectCartItems);
   const dispatch = useAppDispatch();
@@ -61,8 +70,9 @@ export default function CartContent() {
 
   const handleExportExcel = () => {
     const exportData: any[] = items.map((item, index) => {
-      const productName = item.specName && item.specName !== '-'
-        ? `${item.product.name} (${item.specName})`
+      const cleanedSpec = cleanSpecName(item.specName);
+      const productName = cleanedSpec && cleanedSpec !== '-'
+        ? `${item.product.name} (${cleanedSpec})`
         : item.product.name;
 
       return {
@@ -173,8 +183,9 @@ export default function CartContent() {
     }
 
     const rowsHtml = items.map((item, index) => {
-      const productName = item.specName && item.specName !== '-'
-        ? `${item.product.name} (${item.specName})`
+      const cleanedSpec = cleanSpecName(item.specName);
+      const productName = cleanedSpec && cleanedSpec !== '-'
+        ? `${item.product.name} (${cleanedSpec})`
         : item.product.name;
 
       return `
@@ -305,7 +316,7 @@ export default function CartContent() {
                     <div className="flex flex-wrap gap-2 mt-1">
                       {item.specName && item.specName !== '-' && (
                         <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-100 text-emerald-800">
-                          {item.specName}
+                          {cleanSpecName(item.specName)}
                         </span>
                       )}
                       <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-100 text-slate-600">
