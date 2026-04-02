@@ -62,6 +62,37 @@ const HEADER_LABELS: Record<keyof CsvRow, string> = {
 
 const normalize = (s: string) => s.trim().toLowerCase();
 
+/**
+ * Robust CSV line splitter that handles:
+ * 1. Double quoted fields: "Like, this"
+ * 2. Escaped quotes: "He said ""Hello"""
+ */
+function splitCsvLine(line: string) {
+  const result: string[] = [];
+  let curValue = "";
+  let inQuotes = false;
+  
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    if (char === '"') {
+      if (inQuotes && line[i + 1] === '"') {
+        // Handle escaped quotes ""
+        curValue += '"';
+        i++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+    } else if (char === "," && !inQuotes) {
+      result.push(curValue);
+      curValue = "";
+    } else {
+      curValue += char;
+    }
+  }
+  result.push(curValue);
+  return result;
+}
+
 function parseCSV(text: string) {
   const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
 
@@ -70,7 +101,7 @@ function parseCSV(text: string) {
   }
 
   // Tìm cột dựa trên header (case-insensitive)
-  const headers = lines[0].split(",").map((h) => normalize(h));
+  const headers = splitCsvLine(lines[0]).map((h) => normalize(h));
   const colIndices: Record<string, number> = {};
   const missingHeaders: string[] = [];
 
@@ -95,7 +126,7 @@ function parseCSV(text: string) {
   const rows: CsvRow[] = [];
 
   for (let i = 1; i < lines.length; i++) {
-    const cols = lines[i].split(",");
+    const cols = splitCsvLine(lines[i]);
     const name = cols[colIndices.name]?.trim() || "";
     const spec = cols[colIndices.spec]?.trim() || "";
     const unit = cols[colIndices.unit]?.trim() || "";
