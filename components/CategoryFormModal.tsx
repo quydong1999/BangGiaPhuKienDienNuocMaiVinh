@@ -260,7 +260,7 @@ export function CategoryFormModal({ isOpen, onClose, initialData, productCount }
             {...register("title")}
             type="text"
             disabled={isPending || isCompressing}
-            className="w-full p-2.5 border border-gray-400 focus:ring-2 focus:ring-emerald-500 outline-none transition-shadow disabled:bg-slate-100 disabled:text-slate-500"
+            className="w-full p-2.5 border border-gray-400 focus:ring-2 focus:ring-emerald-500 outline-none text-base transition-shadow disabled:bg-slate-100 disabled:text-slate-500"
             placeholder="VD: Phụ kiện ống nước uPVC"
           />
           {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title.message}</p>}
@@ -273,7 +273,7 @@ export function CategoryFormModal({ isOpen, onClose, initialData, productCount }
             {...register("slug")}
             readOnly
             type="text"
-            className="w-full p-2.5 border border-gray-400 bg-slate-50 outline-none text-slate-500 text-sm cursor-not-allowed"
+            className="w-full p-2.5 border border-gray-400 bg-slate-50 outline-none text-slate-500 text-base cursor-not-allowed"
             placeholder="Sẽ tạo tự động từ tên bài viết"
           />
           {errors.slug && <p className="text-red-500 text-xs mt-1">{errors.slug.message}</p>}
@@ -289,7 +289,7 @@ export function CategoryFormModal({ isOpen, onClose, initialData, productCount }
             disabled={isPending || isCompressing}
             onChange={(e) => { setShortTitleEdited(true); setValue("shortTitle", e.target.value, { shouldValidate: true }); }}
             type="text"
-            className="w-full p-2.5 border border-gray-400 focus:ring-2 focus:ring-emerald-500 outline-none transition-shadow disabled:bg-slate-100 disabled:text-slate-500"
+            className="w-full p-2.5 border border-gray-400 focus:ring-2 focus:ring-emerald-500 outline-none text-base transition-shadow disabled:bg-slate-100 disabled:text-slate-500"
             placeholder="VD: uPVC Đạt Hoà"
           />
           {errors.shortTitle && <p className="text-red-500 text-xs mt-1">{errors.shortTitle.message}</p>}

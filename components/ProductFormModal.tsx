@@ -250,7 +250,7 @@ export function ProductFormModal({
             {...register("name")}
             type="text"
             disabled={isPending || isCompressing}
-            className="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none transition-all disabled:bg-slate-100"
+            className="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none text-base transition-all disabled:bg-slate-100"
             placeholder="VD: Co 90 uPVC"
           />
           {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
@@ -282,7 +282,7 @@ export function ProductFormModal({
                     <input
                       {...register(`specs.${sIdx}.name`)}
                       placeholder="VD: Ø21, Loại 1..."
-                      className="w-full p-2 bg-white rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none text-sm transition-all"
+                      className="w-full p-2 bg-white rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none text-base transition-all"
                     />
                   </div>
 
@@ -401,7 +401,7 @@ function PriceFieldArray({ nestIndex, control, register, errors, disabled }: any
               <input
                 {...register(`specs.${nestIndex}.prices.${kIdx}.unit`)}
                 placeholder="Đơn vị (VD: Cái)"
-                className="w-full p-2 bg-white rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none text-xs"
+                className="w-full p-2 bg-white rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none text-base"
               />
             </div>
             <div className="flex-1">
@@ -409,7 +409,7 @@ function PriceFieldArray({ nestIndex, control, register, errors, disabled }: any
                 {...register(`specs.${nestIndex}.prices.${kIdx}.price`, { valueAsNumber: true })}
                 type="number"
                 placeholder="Giá bán"
-                className="w-full p-2 bg-white rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none text-xs"
+                className="w-full p-2 bg-white rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none text-base"
               />
             </div>
             {fields.length > 1 && (

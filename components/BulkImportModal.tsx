@@ -807,7 +807,7 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
                   onChange={(e) => setConfirmInput(e.target.value.replace(/\D/g, ''))}
                   placeholder="000000"
                   autoFocus
-                  className="w-24 text-center font-mono text-sm tracking-[0.25em] border border-slate-300 rounded-lg px-2 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  className="w-24 text-center font-mono text-base tracking-[0.25em] border border-slate-300 rounded-lg px-2 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                 />
                 <button
                   onClick={handleImport}
