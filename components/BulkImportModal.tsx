@@ -214,6 +214,7 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
 
   const processFile = (file: File) => {
     if (!file.name.endsWith(".csv")) {
+      console.error("❌ File không hợp lệ: Chỉ hỗ trợ file CSV (.csv). File đã chọn:", file.name);
       setParseErrors(["Chỉ hỗ trợ file CSV (.csv)"]);
       return;
     }
@@ -223,6 +224,15 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
     reader.onload = (e) => {
       const text = e.target?.result as string;
       const { rows, errors, totalLines } = parseCSV(text);
+      
+      if (errors.length > 0) {
+        console.group("❌ Lỗi phân tích file CSV:");
+        errors.forEach(err => console.error(err));
+        console.groupEnd();
+      } else {
+        console.log("✅ File CSV hợp lệ. Số dòng:", totalLines);
+      }
+
       setCsvRows(rows);
       setParseErrors(errors);
       setParsedCount(totalLines);
