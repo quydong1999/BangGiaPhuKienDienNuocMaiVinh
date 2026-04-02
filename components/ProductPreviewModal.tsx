@@ -224,54 +224,53 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 md:space-y-6 custom-scrollbar">
+          <div className="flex-1 overflow-y-auto p-4 md:p-6 custom-scrollbar">
             {product.specs.length > 0 ? (
-              <>
-                {/* Row 2: Specifications */}
-                <div className="space-y-2 md:space-y-3">
-                  <span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Quy cách</span>
-                  <div className="flex flex-wrap gap-2">
-                    {product.specs.map((spec, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => handleSpecSelect(idx)}
-                        className={`px-2 py-1 rounded-sm text-xs md:text-sm transition-all border-2 ${selectedSpecIdx === idx
-                          ? 'bg-emerald-50 border-emerald-500 text-emerald-700 shadow-sm'
-                          : 'bg-white border-slate-100 text-slate-600 hover:border-slate-300'
-                          }`}
-                      >
-                        {spec.name || 'Mặc định'}
-                      </button>
-                    ))}
-                  </div>
+              <div className="space-y-2 md:space-y-3">
+                <span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Quy cách</span>
+                <div className="flex flex-wrap gap-2">
+                  {product.specs.map((spec, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => handleSpecSelect(idx)}
+                      className={`px-2 py-1 rounded-sm text-xs md:text-sm transition-all border-2 ${selectedSpecIdx === idx
+                        ? 'bg-emerald-50 border-emerald-500 text-emerald-700 shadow-sm'
+                        : 'bg-white border-slate-100 text-slate-600 hover:border-slate-300'
+                        }`}
+                    >
+                      {spec.name || 'Mặc định'}
+                    </button>
+                  ))}
                 </div>
-
-                {/* Row 3: Units (based on currentSpec) */}
-                <div className="space-y-2 md:space-y-3">
-                  <span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Đơn vị tính</span>
-                  <div className="flex flex-wrap gap-2">
-                    {currentSpec?.prices.map((price, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => setSelectedPriceIdx(idx)}
-                        className={`px-2 py-1 rounded-sm text-xs md:text-sm transition-all border-2 ${selectedPriceIdx === idx
-                          ? 'bg-emerald-50 border-emerald-500 text-emerald-700 shadow-sm'
-                          : 'bg-white border-slate-100 text-slate-600 hover:border-slate-300'
-                          }`}
-                      >
-                        {price.unit}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </>
+              </div>
             ) : (
-              <div className="flex flex-col items-center justify-center py-10 text-slate-400 italic">
+              <div className="flex flex-col items-center justify-center h-full py-10 text-slate-400 italic">
                 <Info size={40} className="mb-2 opacity-20" />
                 <p>Sản phẩm chưa có thông tin quy cách.</p>
               </div>
             )}
           </div>
+
+          {/* Fixed Units Section */}
+          {product.specs.length > 0 && (
+            <div className="px-4 md:px-6 py-4 border-t border-slate-50 space-y-2 md:space-y-3">
+              <span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Đơn vị tính</span>
+              <div className="flex flex-wrap gap-2">
+                {currentSpec?.prices.map((price, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setSelectedPriceIdx(idx)}
+                    className={`px-2 py-1 rounded-sm text-xs md:text-sm transition-all border-2 ${selectedPriceIdx === idx
+                      ? 'bg-emerald-50 border-emerald-500 text-emerald-700 shadow-sm'
+                      : 'bg-white border-slate-100 text-slate-600 hover:border-slate-300'
+                      }`}
+                  >
+                    {price.unit}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Row 4: Quantity & Add to Cart (Split into 2 rows, centered label) */}
           <div className="p-4 md:p-6 bg-slate-50/50 border-t border-slate-100 flex flex-col gap-3 md:gap-4">

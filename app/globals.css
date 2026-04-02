@@ -21,6 +21,14 @@ a[aria-disabled="true"],
   cursor: not-allowed;
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
+body {
+  min-height: 100vh;
+}
+
 @utility scrollbar-hide {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */

@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { closeModal } from '@/store/modalSlice';
@@ -25,6 +26,42 @@ export function ModalProvider() {
   const dispatch = useAppDispatch();
 
   useHotkey('Escape', () => dispatch(closeModal()), { enabled: isOpen });
+  // Prevent background scrolling when a modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    // Cleanup on unmount or when isOpen changes
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
+  // Prevent browser back from navigating away when modal is open
+  useEffect(() => {
+    if (!isOpen) return;
+
+    // Push a new entry to the history stack
+    window.history.pushState({ modalOpen: true }, '');
+
+    const handlePopState = () => {
+      // If back button is pressed, close the modal
+      dispatch(closeModal());
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      
+      // If the modal was closed via UI (not back button), remove the history entry we added
+      if (window.history.state?.modalOpen) {
+        window.history.back();
+      }
+    };
+  }, [isOpen, dispatch]);
 
   let ActiveModal = type ? MODAL_COMPONENTS[type] : null;
 
