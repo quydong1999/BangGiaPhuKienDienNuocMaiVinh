@@ -97,15 +97,20 @@ export default function ProductList({ data = [], filterField, visibleFields, cat
     return flattenedData.filter((item: FlattenedProduct) => (item as any)[filterField] === selectedField);
   }, [flattenedData, selectedField, filterField]);
 
-  // Cuộn tới sản phẩm từ URL và chuyển trang thích hợp
+  // Cuộn tới sản phẩm từ URL và mở ProductPreviewModal
   useEffect(() => {
     const productId = searchParams.get('productId');
     if (productId) {
       const index = filteredData.findIndex((p: FlattenedProduct) => p._id === productId);
-      // ... (rest of scroll logic stays similar)
       if (index !== -1) {
         const targetPage = Math.floor(index / ITEMS_PER_PAGE) + 1;
         setCurrentPage(targetPage);
+
+        // Open ProductPreviewModal for the matched product
+        const matchedProduct = data.find(p => p._id === productId);
+        if (matchedProduct) {
+          dispatch(openModal({ type: 'productPreview', props: { product: matchedProduct, categoryImageUrl } }));
+        }
 
         setTimeout(() => {
           const element = document.getElementById(`product-${productId}`);

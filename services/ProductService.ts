@@ -27,7 +27,7 @@ import type {
 export class ProductService {
   private static instance: ProductService;
 
-  private constructor() {}
+  private constructor() { }
 
   public static getInstance(): ProductService {
     if (!ProductService.instance) {
@@ -102,24 +102,10 @@ export class ProductService {
       {
         $search: {
           index: 'product-search',
-          compound: {
-            should: [
-              {
-                text: {
-                  query,
-                  path: 'name',
-                  fuzzy: { maxEdits: 1 },
-                  score: { boost: { value: 3 } },
-                },
-              },
-              {
-                text: {
-                  query,
-                  path: ['specs.name', 'name.raw'],
-                  fuzzy: { maxEdits: 1 },
-                },
-              },
-            ],
+          text: {
+            query,
+            path: 'name',
+            fuzzy: { maxEdits: 1 },
           },
         },
       },
@@ -180,7 +166,7 @@ export class ProductService {
         await session.abortTransaction();
         return {
           success: false,
-          message: 'Thiếu thông tin bắt buộc (tên, cấu hình hoặc danh mục)',
+          message: 'Thiếu thông tin bắt buộc (tên, quy cách hoặc danh mục)',
         };
       }
 
@@ -190,7 +176,7 @@ export class ProductService {
           await session.abortTransaction();
           return {
             success: false,
-            message: `Cấu hình "${spec.name || 'không tên'}" phải có ít nhất một mức giá`,
+            message: `Quy cách "${spec.name || 'không tên'}" phải có ít nhất một mức giá`,
           };
         }
       }
@@ -257,14 +243,14 @@ export class ProductService {
       if (input.specs) {
         if (input.specs.length === 0) {
           await session.abortTransaction();
-          return { success: false, message: 'Danh sách cấu hình không được để trống' };
+          return { success: false, message: 'Danh sách quy cách không được để trống' };
         }
         for (const spec of input.specs) {
           if (!spec.name || !spec.prices || spec.prices.length === 0) {
             await session.abortTransaction();
             return {
               success: false,
-              message: `Cấu hình "${spec.name || 'không tên'}" phải có nhất một mức giá`,
+              message: `Quy cách "${spec.name || 'không tên'}" phải có nhất một mức giá`,
             };
           }
         }

@@ -3,11 +3,12 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Loader2, Search } from 'lucide-react';
-import Link from 'next/link';
+import Image from 'next/image';
 import { HomeHeader } from '@/components/HomeHeader';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
-import type { Product, FlattenedProduct } from '@/types/types';
-import { flattenProducts, formatVND } from '@/lib/utils';
+import type { Product } from '@/types/types';
+import { formatVND } from '@/lib/utils';
+import { getBlurPlaceholder, getOptimizedImageUrl } from '@/lib/image-blur';
 
 interface SearchProduct extends Product {
   categoryName?: string;
@@ -17,8 +18,11 @@ interface SearchProduct extends Product {
   categoryId: string;
 }
 
+const imgNotFoundUrl = "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?_=20210521171500";
+
 function SearchResults() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const query = searchParams.get('q') || '';
   const [results, setResults] = useState<SearchProduct[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,8 +40,8 @@ function SearchResults() {
         const res = await fetch(`/api/products/search?q=${encodeURIComponent(query)}`);
         const data = await res.json();
         if (data.success) {
-          // Phẳng hóa kết quả tìm kiếm để hiển thị từng biến thể
-          setResults(flattenProducts(data.data) as SearchProduct[]);
+          // Không flatten — giữ nguyên từng product (group by name)
+          setResults(data.data as SearchProduct[]);
         }
       } catch (error) {
         console.error("Search fetch error:", error);
@@ -48,6 +52,13 @@ function SearchResults() {
 
     fetchResults();
   }, [query]);
+
+  const handleProductClick = (item: SearchProduct) => {
+    // Redirect to category page with productId to auto-open ProductPreviewModal
+    if (item.categorySlug) {
+      router.push(`/${item.categorySlug}?productId=${item._id}`);
+    }
+  };
 
   if (loading) {
     return (
@@ -60,60 +71,69 @@ function SearchResults() {
 
   return (
     <section aria-label="Kết quả tìm kiếm" className="space-y-6">
-      <h2 className="text-lg font-medium text-slate-800">
-        Kết quả cho: <span className="font-bold text-emerald-600">"{query}"</span>
-      </h2>
-      <span className="text-sm text-slate-500">
-        Tìm thấy {results.length} sản phẩm
-      </span>
+      <div>
+        <h2 className="text-lg font-medium text-slate-800">
+          Kết quả cho: <span className="font-bold text-emerald-600">"{query}"</span>
+        </h2>
+        <span className="text-sm text-slate-500">
+          Tìm thấy {results.length} sản phẩm
+        </span>
+      </div>
 
       {results.length > 0 ? (
-        <div className="bg-white border border-slate-200 shadow-sm overflow-hidden rounded-lg">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm whitespace-nowrap">
-              <caption className="sr-only">Bảng kết quả tìm kiếm sản phẩm</caption>
-              <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-medium">
-                <tr>
-                  <th className="px-4 py-3">Tên sản phẩm</th>
-                  <th className="px-4 py-3">Quy cách</th>
-                  <th className="px-4 py-3">Danh mục</th>
-                  <th className="px-4 py-3">Đơn vị</th>
-                  <th className="px-4 py-3 text-right">Giá bán</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-200">
-                {results.map((item: any) => (
-                  <tr
-                    key={item._id_variant}
-                    className="hover:bg-slate-50 transition-colors"
-                  >
-                    <td className="px-4 py-3 font-medium text-slate-900">
-                      <Link
-                        href={`/${item.categorySlug}?productId=${item._id}`}
-                        className="hover:underline transition-colors"
-                      >
-                        {item.name}
-                      </Link>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="text-xs font-medium px-2 py-1 rounded-md bg-emerald-100 text-emerald-800">
-                        {item.spec}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="px-2 py-1 text-slate-600">
-                        {item.categoryShortTitle}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-slate-600">{item.unit}</td>
-                    <td className="px-4 py-3 text-right font-bold text-slate-900">
-                      {formatVND(item.priceSell)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          {results.map((item, index) => {
+            const allPrices = item.specs?.flatMap(s => s.prices.map(p => p.price)) || [];
+            const minPrice = allPrices.length > 0 ? Math.min(...allPrices) : 0;
+            const maxPrice = allPrices.length > 0 ? Math.max(...allPrices) : 0;
+
+            const isSingleVariant = item.specs?.length === 1 && item.specs[0].prices?.length === 1;
+            const singleUnit = isSingleVariant ? item.specs[0].prices[0].unit : "";
+
+            return (
+              <button
+                key={item._id}
+                type="button"
+                onClick={() => handleProductClick(item)}
+                className="group relative flex flex-col h-full bg-white shadow-sm hover:shadow-md hover:-translate-y-1 transition-all overflow-hidden active:scale-95"
+              >
+                <div className="relative w-full aspect-[4/3] bg-slate-100 flex-shrink-0">
+                  <Image
+                    src={getOptimizedImageUrl(item.images?.[0]?.secure_url ?? imgNotFoundUrl, 400)}
+                    alt={item.name}
+                    fill
+                    sizes="(min-width: 768px) 200px, 50vw"
+                    className="object-cover group-hover:scale-105 transition-transform"
+                    priority={index < 5}
+                    quality={60}
+                    {...getBlurPlaceholder(item.images?.[0]?.secure_url)}
+                  />
+                </div>
+                <div className="p-2 sm:p-3 flex-1 flex flex-col text-left w-full">
+                  <div className="text-xs sm:text-sm font-semibold text-slate-900 line-clamp-2">
+                    {item.name}
+                  </div>
+                  {item.categoryShortTitle && (
+                    <span className="mt-1 text-[10px] sm:text-xs font-medium px-1.5 py-0.5 rounded bg-slate-100 text-slate-500 w-fit">
+                      {item.categoryShortTitle}
+                    </span>
+                  )}
+                  <div className="mt-auto pt-2 flex flex-col">
+                    <span className="text-xs sm:text-sm font-bold text-emerald-600">
+                      {minPrice === maxPrice ? (
+                        <>
+                          {formatVND(minPrice)}
+                          {singleUnit && <span className="text-sm font-medium text-slate-400"> / {singleUnit}</span>}
+                        </>
+                      ) : (
+                        `${formatVND(minPrice)} - ${formatVND(maxPrice)}`
+                      )}
+                    </span>
+                  </div>
+                </div>
+              </button>
+            );
+          })}
         </div>
       ) : (
         <div className="text-center py-20 bg-white border border-slate-200 rounded-lg">
@@ -126,8 +146,6 @@ function SearchResults() {
 }
 
 export default function SearchContent() {
-  const router = useRouter();
-
   return (
     <main id="main-content" className="min-h-screen bg-light-grey flex flex-col">
       {/* Header & Breadcrumb */}

@@ -60,7 +60,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Tìm kiếm sản phẩm (tên, quy cách...)"
+            placeholder="Tìm kiếm theo tên sản phẩm..."
             className="w-full py-4 pl-12 pr-12 text-lg border-none outline-none placeholder:text-slate-400 text-slate-800"
           />
           <button

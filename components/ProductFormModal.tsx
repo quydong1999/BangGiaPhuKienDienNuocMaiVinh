@@ -27,7 +27,7 @@ const specSchema = z.object({
 
 const productSchema = z.object({
   name: z.string().min(1, { message: "Tên sản phẩm không được bỏ trống" }),
-  specs: z.array(specSchema).min(1, { message: "Cần ít nhất 1 cấu hình" }),
+  specs: z.array(specSchema).min(1, { message: "Cần ít nhất 1 quy cách" }),
   images: z.any().optional(),
 });
 
@@ -50,7 +50,7 @@ export function ProductFormModal({
   const router = useRouter();
   const { setPendingProductCategoryId, startRefresh } = useSkeleton();
   const [submitError, setSubmitError] = useState<string | null>(null);
-  
+
   interface ImagePreview {
     id: string;
     url: string;
@@ -73,9 +73,9 @@ export function ProductFormModal({
   } = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
     mode: "onChange",
-    defaultValues: { 
-      name: "", 
-      specs: [{ name: "", prices: [{ unit: "", price: 0 }] }] 
+    defaultValues: {
+      name: "",
+      specs: [{ name: "", prices: [{ unit: "", price: 0 }] }]
     },
   });
 
@@ -89,11 +89,11 @@ export function ProductFormModal({
       if (initialData) {
         reset({
           name: initialData.name,
-          specs: initialData.specs.length > 0 
-            ? initialData.specs 
+          specs: initialData.specs.length > 0
+            ? initialData.specs
             : [{ name: "", prices: [{ unit: "", price: 0 }] }],
         });
-        
+
         // Load initial images
         const initialImages = (initialData.images || []).map(img => ({
           id: img.secure_url || img.url || Math.random().toString(),
@@ -114,9 +114,9 @@ export function ProductFormModal({
         setImages(initialImages.slice(0, 10));
         setSelectedCategoryId(initialData.categoryId || categoryId);
       } else {
-        reset({ 
-          name: "", 
-          specs: [{ name: "", prices: [{ unit: "", price: 0 }] }] 
+        reset({
+          name: "",
+          specs: [{ name: "", prices: [{ unit: "", price: 0 }] }]
         });
         setImages([]);
         setSelectedCategoryId(categoryId);
@@ -148,7 +148,7 @@ export function ProductFormModal({
     formData.append("name", data.name);
     formData.append("categoryId", selectedCategoryId);
     formData.append("specs", JSON.stringify(data.specs));
-    
+
     // new images
     const newFiles = images.filter(img => !img.isRetained && img.file).map(img => img.file as File);
     for (const file of newFiles) {
@@ -185,7 +185,7 @@ export function ProductFormModal({
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.length) return;
-    
+
     if (images.length + e.target.files.length > 10) {
       alert("Chỉ được tải lên tối đa 10 ảnh.");
       return;
@@ -215,7 +215,7 @@ export function ProductFormModal({
     } finally {
       setIsCompressing(false);
     }
-    
+
     // reset input
     e.target.value = '';
   };
@@ -258,21 +258,12 @@ export function ProductFormModal({
 
         {/* Specs Array */}
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <label className="text-sm font-bold text-slate-700">Cấu hình & Giá *</label>
-            <button
-              type="button"
-              onClick={() => appendSpec({ name: "", prices: [{ unit: "", price: 0 }] })}
-              className="text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-bold transition-colors"
-            >
-              <Plus size={14} /> Thêm cấu hình
-            </button>
-          </div>
+          <label className="text-sm font-bold text-slate-700">Cấu hình & Giá *</label>
 
           <div className="space-y-4">
             {specFields.map((spec, sIdx) => (
-              <div 
-                key={spec.id} 
+              <div
+                key={spec.id}
                 className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-4 relative group"
               >
                 {specFields.length > 1 && (
@@ -296,17 +287,25 @@ export function ProductFormModal({
                   </div>
 
                   {/* Prices Array nested in Spec */}
-                  <PriceFieldArray 
-                    nestIndex={sIdx} 
-                    control={control} 
-                    register={register} 
-                    errors={errors} 
+                  <PriceFieldArray
+                    nestIndex={sIdx}
+                    control={control}
+                    register={register}
+                    errors={errors}
                     disabled={isPending}
                   />
                 </div>
               </div>
             ))}
           </div>
+
+          <button
+            type="button"
+            onClick={() => appendSpec({ name: "", prices: [{ unit: "", price: 0 }] })}
+            className="w-full flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border-2 border-dashed border-emerald-300 bg-emerald-50/50 text-emerald-700 hover:bg-emerald-100 hover:border-emerald-400 font-bold text-xs transition-colors"
+          >
+            <Plus size={14} /> Thêm quy cách
+          </button>
         </div>
 
         {/* Hình ảnh */}
@@ -363,11 +362,11 @@ export function ProductFormModal({
           isCompressing={isCompressing}
           isValid={isValid}
           onDelete={() => {
-              if (window.confirm("Xóa sản phẩm này?")) {
-                  deleteMutation.mutate(initialData!._id, {
-                      onSuccess: () => { onClose(); router.refresh(); }
-                  });
-              }
+            if (window.confirm("Xóa sản phẩm này?")) {
+              deleteMutation.mutate(initialData!._id, {
+                onSuccess: () => { onClose(); router.refresh(); }
+              });
+            }
           }}
         />
       </FormModal.Body>
@@ -427,7 +426,7 @@ function PriceFieldArray({ nestIndex, control, register, errors, disabled }: any
         ))}
       </div>
       {errors.specs?.[nestIndex]?.prices && (
-          <p className="text-red-500 text-[10px] mt-1">{errors.specs[nestIndex].prices.message}</p>
+        <p className="text-red-500 text-[10px] mt-1">{errors.specs[nestIndex].prices.message}</p>
       )}
     </div>
   );
