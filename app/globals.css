@@ -20,3 +20,12 @@ a[aria-disabled="true"],
 [role="button"][aria-disabled="true"] {
   cursor: not-allowed;
 }
+
+@utility scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+}
+
