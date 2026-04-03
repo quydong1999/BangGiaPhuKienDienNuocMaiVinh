@@ -219,7 +219,7 @@ export default function ProductList({ data = [], filterField, visibleFields, cat
                           className="px-4 py-3"
                         >
                           <span
-                            className={`text-xs font-medium px-2 py-1 rounded-md bg-emerald-100 text-emerald-800`}
+                            className={`text-xs font-medium px-2 py-1 bg-emerald-100 text-emerald-800`}
                           >
                             {value}
                           </span>
@@ -275,7 +275,7 @@ export default function ProductList({ data = [], filterField, visibleFields, cat
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               disabled={currentPage === 1}
-              className="p-2 sm:px-3 sm:py-2 rounded-md border border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-emerald-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
+              className="p-2 sm:px-3 sm:py-2 border border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-emerald-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
               aria-label="Trang đầu"
               title="Trang đầu"
             >
@@ -289,7 +289,7 @@ export default function ProductList({ data = [], filterField, visibleFields, cat
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               disabled={currentPage === 1}
-              className="p-2 sm:px-3 sm:py-2 rounded-md border border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-emerald-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
+              className="p-2 sm:px-3 sm:py-2 border border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-emerald-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
               aria-label="Trang trước"
               title="Trang trước"
             >
@@ -308,7 +308,7 @@ export default function ProductList({ data = [], filterField, visibleFields, cat
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               disabled={currentPage === totalPages}
-              className="p-2 sm:px-3 sm:py-2 rounded-md border border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-emerald-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
+              className="p-2 sm:px-3 sm:py-2 border border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-emerald-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
               aria-label="Trang sau"
               title="Trang sau"
             >
@@ -322,7 +322,7 @@ export default function ProductList({ data = [], filterField, visibleFields, cat
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               disabled={currentPage === totalPages}
-              className="p-2 sm:px-3 sm:py-2 rounded-md border border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-emerald-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
+              className="p-2 sm:px-3 sm:py-2 border border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-emerald-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
               aria-label="Trang cuối"
               title="Trang cuối"
             >

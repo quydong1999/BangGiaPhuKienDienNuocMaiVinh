@@ -274,7 +274,7 @@ export default function CartContent() {
         <p className="text-sm text-slate-500 mb-6">Bạn chưa thêm sản phẩm nào vào giỏ hàng.</p>
         <Link
           href="/"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 transition-colors"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 transition-colors"
         >
           Tiếp tục mua hàng
         </Link>
@@ -317,11 +317,11 @@ export default function CartContent() {
                     </h3>
                     <div className="flex flex-wrap gap-2 mt-1">
                       {item.specName && item.specName !== '-' && cleanSpecName(item.specName) !== 'Mặc định' && (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                        <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-bold bg-emerald-100 text-emerald-800">
                           {cleanSpecName(item.specName)}
                         </span>
                       )}
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-100 text-slate-600">
+                      <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-bold bg-slate-100 text-slate-600">
                         ĐVT: {item.unit}
                       </span>
                     </div>
@@ -329,7 +329,7 @@ export default function CartContent() {
                   <button
                     type="button"
                     onClick={() => dispatch(removeFromCart(item.cartId))}
-                    className="flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-md text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                    className="flex-shrink-0 w-7 h-7 flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
                     aria-label={`Xóa ${item.product.name}`}
                   >
                     <Trash2 size={14} />
@@ -342,7 +342,7 @@ export default function CartContent() {
                       type="button"
                       onClick={() => commitQuantity(item.cartId, String(item.quantity - 1), item.quantity)}
                       disabled={item.quantity <= 0.01}
-                      className="w-7 h-7 flex items-center justify-center rounded-md border border-slate-300 text-slate-600 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                      className="w-7 h-7 flex items-center justify-center border border-slate-300 text-slate-600 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                       aria-label="Giảm số lượng"
                     >
                       <Minus size={12} />
@@ -362,7 +362,7 @@ export default function CartContent() {
                           commitQuantity(item.cartId, (e.target as HTMLInputElement).value, item.quantity);
                         }
                       }}
-                      className={`w-12 text-center text-sm font-semibold tabular-nums border rounded-md py-1 focus:outline-none focus:ring-1 ${editingQty[item.cartId] !== undefined && (isNaN(parseFloat(editingQty[item.cartId].replace(',', '.'))) || parseFloat(editingQty[item.cartId].replace(',', '.')) < 0.01)
+                      className={`w-12 text-center text-sm font-semibold tabular-nums border py-1 focus:outline-none focus:ring-1 ${editingQty[item.cartId] !== undefined && (isNaN(parseFloat(editingQty[item.cartId].replace(',', '.'))) || parseFloat(editingQty[item.cartId].replace(',', '.')) < 0.01)
                         ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
                         : 'border-slate-200 focus:border-emerald-500 focus:ring-emerald-500'
                         }`}
@@ -370,7 +370,7 @@ export default function CartContent() {
                     <button
                       type="button"
                       onClick={() => commitQuantity(item.cartId, String(item.quantity + 1), item.quantity)}
-                      className="w-7 h-7 flex items-center justify-center rounded-md border border-slate-300 text-slate-600 hover:bg-slate-100 transition-colors"
+                      className="w-7 h-7 flex items-center justify-center border border-slate-300 text-slate-600 hover:bg-slate-100 transition-colors"
                       aria-label="Tăng số lượng"
                     >
                       <Plus size={12} />
@@ -398,7 +398,7 @@ export default function CartContent() {
             <button
               type="button"
               onClick={handleExportExcel}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-lg border border-emerald-600 text-emerald-600 font-semibold hover:bg-emerald-50 active:scale-[0.98] transition-all"
+              className="w-full flex items-center justify-center gap-2 py-3 border border-emerald-600 text-emerald-600 font-semibold hover:bg-emerald-50 active:scale-[0.98] transition-all"
             >
               <FileSpreadsheet size={18} />
               Xuất Excel
@@ -406,7 +406,7 @@ export default function CartContent() {
             <button
               type="button"
               onClick={handlePrint}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-lg border border-emerald-600 text-emerald-600 font-semibold hover:bg-emerald-50 active:scale-[0.98] transition-all"
+              className="w-full flex items-center justify-center gap-2 py-3 border border-emerald-600 text-emerald-600 font-semibold hover:bg-emerald-50 active:scale-[0.98] transition-all"
             >
               <Printer size={18} />
               In hóa đơn
@@ -416,7 +416,7 @@ export default function CartContent() {
             type="button"
             onClick={handleCheckout}
             disabled={hasInvalidQty}
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] transition-all"
+            className="w-full flex items-center justify-center gap-2 py-3 bg-emerald-600 text-white font-semibold hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] transition-all"
           >
             <ShoppingBag size={18} />
             Thanh toán

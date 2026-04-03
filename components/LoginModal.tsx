@@ -37,7 +37,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9, y: 20 }}
                 transition={{ type: "spring", duration: 0.4, bounce: 0.3 }}
-                className="relative bg-white rounded-2xl shadow-xl p-8 w-full max-w-sm mx-4 flex flex-col items-center gap-6"
+                className="relative bg-white rounded-xl shadow-xl p-8 w-full max-w-sm mx-4 flex flex-col items-center gap-6"
             >
                 <h2 className="text-xl font-semibold text-gray-800">Đăng nhập</h2>
                 <p className="text-sm text-gray-500 text-center">
@@ -46,7 +46,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
                 <button
                     onClick={handleGoogleSignIn}
-                    className="flex items-center gap-3 w-full justify-center border border-gray-300 rounded-lg px-4 py-3 hover:bg-gray-50 transition"
+                    className="flex items-center gap-3 w-full justify-center border border-gray-300 px-4 py-3 hover:bg-gray-50 transition"
                 >
                     {/* Google Icon */}
                     <svg className="w-5 h-5" viewBox="0 0 24 24">

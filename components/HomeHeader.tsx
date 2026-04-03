@@ -124,7 +124,7 @@ export function HomeHeader({
                         {showAddCategory && (
                           <button
                             onClick={() => { dispatch(openModal({ type: 'categoryForm' })); setIsDropdownOpen(false); }}
-                            className="flex items-center gap-2 text-sm text-slate-600 hover:bg-slate-50 rounded-lg px-2 py-1.5 transition-colors"
+                            className="flex items-center gap-2 text-sm text-slate-600 hover:bg-slate-50 px-2 py-1.5 transition-colors"
                           >
                             <FolderPlus size={14} />
                             Thêm danh mục
@@ -154,7 +154,7 @@ export function HomeHeader({
                               }));
                               setIsDropdownOpen(false);
                             }}
-                            className="hidden sm:flex items-center gap-2 text-sm text-slate-600 hover:bg-slate-50 rounded-lg px-2 py-1.5 transition-colors"
+                            className="hidden sm:flex items-center gap-2 text-sm text-slate-600 hover:bg-slate-50 px-2 py-1.5 transition-colors"
                           >
                             <FileSpreadsheet size={14} />
                             Nhập hàng loạt
@@ -162,7 +162,7 @@ export function HomeHeader({
                         )}
                         <button
                           onClick={() => { signOut(); setIsDropdownOpen(false); }}
-                          className="flex items-center gap-2 text-sm text-red-500 hover:bg-red-50 rounded-lg px-2 py-1.5 transition-colors"
+                          className="flex items-center gap-2 text-sm text-red-500 hover:bg-red-50 px-2 py-1.5 transition-colors"
                         >
                           <LogOut size={14} />
                           Đăng xuất
@@ -171,7 +171,7 @@ export function HomeHeader({
                     ) : (
                       <button
                         onClick={() => { dispatch(openModal({ type: 'login' })); setIsDropdownOpen(false); }}
-                        className="flex items-center gap-2 text-sm text-slate-600 hover:bg-slate-50 rounded-lg px-2 py-1.5 transition-colors"
+                        className="flex items-center gap-2 text-sm text-slate-600 hover:bg-slate-50 px-2 py-1.5 transition-colors"
                       >
                         <LogIn size={14} />
                         Đăng nhập

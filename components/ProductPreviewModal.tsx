@@ -121,7 +121,7 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        className="relative bg-white max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl rounded-2xl flex flex-col md:flex-row text-sm md:text-base"
+        className="relative bg-white max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl rounded-xl flex flex-col md:flex-row text-sm md:text-base"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Left: Image */}
@@ -233,7 +233,7 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
                     <button
                       key={idx}
                       onClick={() => handleSpecSelect(idx)}
-                      className={`px-2 py-1 rounded-sm text-xs md:text-sm transition-all border-2 ${selectedSpecIdx === idx
+                      className={`px-2 py-1 text-xs md:text-sm transition-all border-2 ${selectedSpecIdx === idx
                         ? 'bg-emerald-50 border-emerald-500 text-emerald-700 shadow-sm'
                         : 'bg-white border-slate-100 text-slate-600 hover:border-slate-300'
                         }`}
@@ -260,7 +260,7 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
                   <button
                     key={idx}
                     onClick={() => setSelectedPriceIdx(idx)}
-                    className={`px-2 py-1 rounded-sm text-xs md:text-sm transition-all border-2 ${selectedPriceIdx === idx
+                    className={`px-2 py-1 text-xs md:text-sm transition-all border-2 ${selectedPriceIdx === idx
                       ? 'bg-emerald-50 border-emerald-500 text-emerald-700 shadow-sm'
                       : 'bg-white border-slate-100 text-slate-600 hover:border-slate-300'
                       }`}
@@ -276,7 +276,7 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
           <div className="p-4 md:p-6 bg-slate-50/50 border-t border-slate-100 flex flex-col gap-3 md:gap-4">
             <div className="flex items-center justify-between">
               <span className="text-xs md:text-sm font-bold text-slate-500">Số lượng</span>
-              <div className={`flex items-center bg-white border rounded-xl overflow-hidden h-10 md:h-12 shadow-sm w-[120px] md:w-[140px] transition-colors ${editingQty !== null && (isNaN(parseFloat(editingQty.replace(',', '.'))) || parseFloat(editingQty.replace(',', '.')) < 0.01)
+              <div className={`flex items-center bg-white border overflow-hidden h-10 md:h-12 shadow-sm w-[120px] md:w-[140px] transition-colors ${editingQty !== null && (isNaN(parseFloat(editingQty.replace(',', '.'))) || parseFloat(editingQty.replace(',', '.')) < 0.01)
                 ? 'border-red-500 ring-1 ring-red-500'
                 : 'border-slate-200'
                 }`}>
@@ -330,7 +330,7 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
             <button
               onClick={handleAddToCart}
               disabled={!currentPrice || (editingQty !== null && (isNaN(parseFloat(editingQty.replace(',', '.'))) || parseFloat(editingQty.replace(',', '.')) < 0.01))}
-              className={`w-full h-11 md:h-14 relative flex items-center justify-center gap-2 md:gap-3 rounded-xl text-xs md:text-sm font-black transition-all shadow-lg active:scale-[0.98] ${isJustAdded
+              className={`w-full h-11 md:h-14 relative flex items-center justify-center gap-2 md:gap-3 text-xs md:text-sm font-black transition-all shadow-lg active:scale-[0.98] ${isJustAdded
                 ? 'bg-emerald-500 text-white shadow-emerald-200'
                 : 'bg-slate-900 text-white hover:bg-emerald-600 shadow-slate-200'
                 } disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed`}

@@ -250,7 +250,7 @@ export function ProductFormModal({
             {...register("name")}
             type="text"
             disabled={isPending || isCompressing}
-            className="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none text-base transition-all disabled:bg-slate-100"
+            className="w-full p-2.5 border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none text-base transition-all disabled:bg-slate-100"
             placeholder="VD: Co 90 uPVC"
           />
           {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
@@ -264,7 +264,7 @@ export function ProductFormModal({
             {specFields.map((spec, sIdx) => (
               <div
                 key={spec.id}
-                className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-4 relative group"
+                className="p-4 border border-slate-200 bg-slate-50/50 space-y-4 relative group"
               >
                 {specFields.length > 1 && (
                   <button
@@ -282,7 +282,7 @@ export function ProductFormModal({
                     <input
                       {...register(`specs.${sIdx}.name`)}
                       placeholder="VD: Ø21, Loại 1..."
-                      className="w-full p-2 bg-white rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none text-base transition-all"
+                      className="w-full p-2 bg-white border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none text-base transition-all"
                     />
                   </div>
 
@@ -302,7 +302,7 @@ export function ProductFormModal({
           <button
             type="button"
             onClick={() => appendSpec({ name: "", prices: [{ unit: "", price: 0 }] })}
-            className="w-full flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border-2 border-dashed border-emerald-300 bg-emerald-50/50 text-emerald-700 hover:bg-emerald-100 hover:border-emerald-400 font-bold text-xs transition-colors"
+            className="w-full flex items-center justify-center gap-1.5 px-3 py-2.5 border-2 border-dashed border-emerald-300 bg-emerald-50/50 text-emerald-700 hover:bg-emerald-100 hover:border-emerald-400 font-bold text-xs transition-colors"
           >
             <Plus size={14} /> Thêm quy cách
           </button>
@@ -314,7 +314,7 @@ export function ProductFormModal({
           {images.length > 0 ? (
             <div className="grid grid-cols-5 gap-3">
               {images.map((img) => (
-                <div key={img.id} className="relative aspect-square border border-slate-200 bg-white rounded-xl overflow-hidden group">
+                <div key={img.id} className="relative aspect-square border border-slate-200 bg-white overflow-hidden group">
                   <img src={img.url} alt="Preview" className="w-full h-full object-contain p-1" />
                   <button
                     type="button"
@@ -326,7 +326,7 @@ export function ProductFormModal({
                 </div>
               ))}
               {images.length < 10 && (
-                <div className="relative border-2 border-dashed border-slate-200 rounded-xl aspect-square flex flex-col items-center justify-center gap-1 hover:bg-slate-50 transition-colors cursor-pointer bg-slate-50/50">
+                <div className="relative border-2 border-dashed border-slate-200 aspect-square flex flex-col items-center justify-center gap-1 hover:bg-slate-50 transition-colors cursor-pointer bg-slate-50/50">
                   <Plus size={20} className="text-slate-400" />
                   <span className="text-[10px] text-slate-500 font-medium">Thêm ảnh</span>
                   <input
@@ -341,7 +341,7 @@ export function ProductFormModal({
               )}
             </div>
           ) : (
-            <div className="relative border-2 border-dashed border-slate-200 rounded-xl h-32 flex flex-col items-center justify-center gap-2 hover:bg-slate-50 transition-colors cursor-pointer overflow-hidden bg-slate-50/50">
+            <div className="relative border-2 border-dashed border-slate-200 h-32 flex flex-col items-center justify-center gap-2 hover:bg-slate-50 transition-colors cursor-pointer overflow-hidden bg-slate-50/50">
               <Upload size={24} className="text-slate-400" />
               <span className="text-xs text-slate-500 font-medium">Kéo thả hoặc nhấn để tải nhiều ảnh</span>
               <input
@@ -401,7 +401,7 @@ function PriceFieldArray({ nestIndex, control, register, errors, disabled }: any
               <input
                 {...register(`specs.${nestIndex}.prices.${kIdx}.unit`)}
                 placeholder="Đơn vị (VD: Cái)"
-                className="w-full p-2 bg-white rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none text-base"
+                className="w-full p-2 bg-white border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none text-base"
               />
             </div>
             <div className="flex-1">
@@ -409,7 +409,7 @@ function PriceFieldArray({ nestIndex, control, register, errors, disabled }: any
                 {...register(`specs.${nestIndex}.prices.${kIdx}.price`, { valueAsNumber: true })}
                 type="number"
                 placeholder="Giá bán"
-                className="w-full p-2 bg-white rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none text-base"
+                className="w-full p-2 bg-white border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none text-base"
               />
             </div>
             {fields.length > 1 && (

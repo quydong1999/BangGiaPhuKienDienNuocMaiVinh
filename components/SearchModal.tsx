@@ -174,20 +174,20 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] sm:pt-24 px-4 bg-slate-900/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-2 sm:pt-24 px-3 sm:px-4 bg-slate-900/60 backdrop-blur-sm"
       onClick={onClose}
     >
       <motion.div
-        initial={{ opacity: 0, y: -30, scale: 0.97 }}
+        initial={{ opacity: 0, y: -20, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: -30, scale: 0.97 }}
-        transition={{ type: "spring", duration: 0.35, bounce: 0.15 }}
-        className={`w-full max-w-2xl bg-white shadow-2xl overflow-hidden ${showDropdown ? 'rounded-2xl' : 'rounded-full'}`}
+        exit={{ opacity: 0, y: -20, scale: 0.98 }}
+        transition={{ type: "spring", duration: 0.3, bounce: 0.1 }}
+        className={`w-full max-w-2xl bg-white shadow-2xl overflow-hidden ${showDropdown ? 'rounded-xl' : 'rounded-full'}`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search Input */}
-        <form onSubmit={handleSubmit} className="relative flex items-center px-4 sm:px-5 py-3">
-          <Search size={20} className="flex-shrink-0 text-slate-400" />
+        <form onSubmit={handleSubmit} className="relative flex items-center px-4 sm:px-5 py-2.5 sm:py-3">
+          <Search size={18} className="flex-shrink-0 text-slate-400" />
           <input
             ref={inputRef}
             type="text"
@@ -195,11 +195,11 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Tìm kiếm theo tên sản phẩm..."
-            className="w-full py-2 px-3 text-base border-none outline-none placeholder:text-slate-400 text-slate-800"
+            className="w-full py-1.5 sm:py-2 px-3 text-base border-none outline-none placeholder:text-slate-400 text-slate-800"
             autoComplete="off"
           />
           {isLoading ? (
-            <Loader2 size={20} className="flex-shrink-0 text-slate-400 animate-spin" />
+            <Loader2 size={18} className="flex-shrink-0 text-slate-400 animate-spin" />
           ) : query.trim().length >= 2 ? (
             <button
               type="submit"
@@ -224,12 +224,12 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
               <div className="border-t border-slate-100" />
 
               {isLoading && suggestions.length === 0 ? (
-                <div className="flex items-center gap-3 px-5 py-4 text-sm text-slate-400">
+                <div className="flex items-center gap-3 px-4 py-3 text-sm text-slate-400">
                   <Loader2 size={16} className="animate-spin" />
                   Đang tìm kiếm...
                 </div>
               ) : hasSuggestions ? (
-                <div ref={listRef} className="max-h-[50vh] overflow-y-auto overscroll-contain py-1">
+                <div ref={listRef} className="max-h-[40vh] overflow-y-auto overscroll-contain py-0.5">
                   {suggestions.map((item, index) => (
                     <button
                       key={item._id}
@@ -237,51 +237,34 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                       type="button"
                       onClick={() => navigateToProduct(item)}
                       onMouseEnter={() => setSelectedIndex(index)}
-                      className={`w-full flex items-center gap-3 px-4 sm:px-5 py-2.5 text-left transition-colors cursor-pointer ${selectedIndex === index
+                      className={`w-full flex items-center gap-2.5 px-3 sm:px-4 py-1.5 text-left transition-colors cursor-pointer ${selectedIndex === index
                           ? 'bg-emerald-50'
                           : 'hover:bg-slate-50'
                         }`}
                     >
                       {/* Product Image */}
-                      <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0">
+                      <div className="relative w-8 h-8 overflow-hidden bg-slate-100 flex-shrink-0">
                         <Image
-                          src={getOptimizedImageUrl(item.images?.[0]?.secure_url ?? imgNotFoundUrl, 100)}
+                          src={getOptimizedImageUrl(item.images?.[0]?.secure_url ?? imgNotFoundUrl, 64)}
                           alt={item.name}
                           fill
-                          sizes="48px"
+                          sizes="32px"
                           className="object-cover"
                           quality={50}
                         />
                       </div>
 
-                      {/* Product Info */}
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm text-slate-800 line-clamp-1">
-                          {highlightMatch(item.name, debouncedQuery)}
-                        </div>
-                        <div className="flex items-center gap-2 mt-0.5">
-                          {item.categoryShortTitle && (
-                            <span className="text-[11px] text-slate-400 truncate">
-                              {item.categoryShortTitle}
-                            </span>
-                          )}
-                          {getPriceText(item) && (
-                            <>
-                              <span className="text-slate-200">•</span>
-                              <span className="text-[11px] font-semibold text-emerald-600 whitespace-nowrap">
-                                {getPriceText(item)}
-                              </span>
-                            </>
-                          )}
-                        </div>
+                      {/* Product Name */}
+                      <div className="flex-1 min-w-0 text-[13px] sm:text-sm text-slate-800 truncate">
+                        {highlightMatch(item.name, debouncedQuery)}
                       </div>
 
-                      {/* Arrow indicator */}
-                      <ArrowRight
-                        size={14}
-                        className={`flex-shrink-0 transition-opacity ${selectedIndex === index ? 'text-emerald-500 opacity-100' : 'opacity-0'
-                          }`}
-                      />
+                      {/* Price */}
+                      {getPriceText(item) && (
+                        <span className="flex-shrink-0 text-[12px] sm:text-[13px] font-semibold text-emerald-600 whitespace-nowrap">
+                          {getPriceText(item)}
+                        </span>
+                      )}
                     </button>
                   ))}
 
@@ -289,15 +272,15 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   <button
                     type="button"
                     onClick={() => navigateToSearch(query)}
-                    className="w-full flex items-center justify-center gap-2 px-5 py-3 text-sm font-medium text-emerald-600 hover:bg-emerald-50 border-t border-slate-100 transition-colors cursor-pointer"
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-emerald-600 hover:bg-emerald-50 border-t border-slate-100 transition-colors cursor-pointer"
                   >
                     <TrendingUp size={14} />
                     Xem tất cả kết quả cho &ldquo;{query.trim()}&rdquo;
                   </button>
                 </div>
               ) : debouncedQuery.length >= 2 && !isLoading ? (
-                <div className="flex flex-col items-center gap-1 px-5 py-6 text-slate-400">
-                  <Search size={24} className="text-slate-200" />
+                <div className="flex flex-col items-center gap-1 px-4 py-4 text-slate-400">
+                  <Search size={20} className="text-slate-200" />
                   <span className="text-sm">Không tìm thấy sản phẩm nào</span>
                 </div>
               ) : null}
