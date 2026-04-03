@@ -10,7 +10,7 @@ if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN
 class RedisService {
   private static instance: Redis;
 
-  private constructor() {}
+  private constructor() { }
 
   public static getInstance(): Redis {
     if (!RedisService.instance) {
