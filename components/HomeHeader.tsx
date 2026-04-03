@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { Search, LogOut, LogIn, UserRound, FolderPlus, PackagePlus, FileSpreadsheet, ShoppingCart } from 'lucide-react';
+import { Search, LogOut, LogIn, UserRound, FolderPlus, PackagePlus, FileSpreadsheet, ShoppingCart, FileText } from 'lucide-react';
 import { signOut } from "next-auth/react"
 import { useAdmin } from "@/hooks/useAdmin"
 import Link from 'next/link';
@@ -160,6 +160,14 @@ export function HomeHeader({
                             Nhập hàng loạt
                           </button>
                         )}
+                        <Link
+                          href="/admin"
+                          onClick={() => setIsDropdownOpen(false)}
+                          className="flex items-center gap-2 text-sm text-slate-600 hover:bg-slate-50 px-2 py-1.5 transition-colors font-medium border-b border-slate-50 pb-2 mb-1"
+                        >
+                          <UserRound size={14} className="text-emerald-600" />
+                          Bảng điều khiển Admin
+                        </Link>
                         <button
                           onClick={() => { signOut(); setIsDropdownOpen(false); }}
                           className="flex items-center gap-2 text-sm text-red-500 hover:bg-red-50 px-2 py-1.5 transition-colors"

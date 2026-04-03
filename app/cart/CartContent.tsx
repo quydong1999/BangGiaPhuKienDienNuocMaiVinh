@@ -3,11 +3,13 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Minus, Plus, Trash2, ShoppingBag, FileSpreadsheet, Printer } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { Minus, Plus, Trash2, ShoppingBag, FileSpreadsheet, Printer, Save } from 'lucide-react';
 import * as XLSX from 'xlsx-js-style';
 import { getBlurPlaceholder, getOptimizedImageUrl } from '@/lib/image-blur';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { selectCartItems, removeFromCart, updateQuantity, clearCart } from '@/store/cartSlice';
+import { openModal } from '@/store/modalSlice';
 import Swal from 'sweetalert2';
 
 const imgNotFoundUrl = "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?_=20210521171500";
@@ -24,6 +26,7 @@ const cleanSpecName = (spec: string) => {
 };
 
 export default function CartContent() {
+  const { data: session } = useSession();
   const items = useAppSelector(selectCartItems);
   const dispatch = useAppDispatch();
 
@@ -55,6 +58,21 @@ export default function CartContent() {
   const grandTotal = items.reduce((sum, item) => {
     return sum + item.price * item.quantity;
   }, 0);
+
+  const handleSaveInvoice = () => {
+    if (!session?.user?.isAdmin) {
+      Swal.fire('Quyền truy cập', 'Chỉ Admin mới có thể thực hiện tính năng này.', 'warning');
+      return;
+    }
+
+    dispatch(openModal({
+      type: 'saveInvoice',
+      props: {
+        items,
+        grandTotal
+      }
+    }));
+  };
 
   const handleCheckout = () => {
     Swal.fire({
@@ -394,14 +412,15 @@ export default function CartContent() {
           <span className="text-lg font-bold text-emerald-700">{formatVND(grandTotal)}</span>
         </div>
         <div className="space-y-3">
-          <div className="hidden md:grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
             <button
               type="button"
               onClick={handleExportExcel}
               className="w-full flex items-center justify-center gap-2 py-3 border border-emerald-600 text-emerald-600 font-semibold hover:bg-emerald-50 active:scale-[0.98] transition-all"
             >
               <FileSpreadsheet size={18} />
-              Xuất Excel
+              <span className="hidden sm:inline">Xuất Excel</span>
+              <span className="sm:hidden">Excel</span>
             </button>
             <button
               type="button"
@@ -409,8 +428,19 @@ export default function CartContent() {
               className="w-full flex items-center justify-center gap-2 py-3 border border-emerald-600 text-emerald-600 font-semibold hover:bg-emerald-50 active:scale-[0.98] transition-all"
             >
               <Printer size={18} />
-              In hóa đơn
+              <span className="hidden sm:inline">In hóa đơn</span>
+              <span className="sm:hidden">In</span>
             </button>
+            {session?.user?.isAdmin && (
+              <button
+                type="button"
+                onClick={handleSaveInvoice}
+                className="col-span-2 lg:col-span-1 w-full flex items-center justify-center gap-2 py-3 bg-blue-600 text-white font-semibold hover:bg-blue-700 active:scale-[0.98] transition-all"
+              >
+                <Save size={18} />
+                Lưu HĐ
+              </button>
+            )}
           </div>
           <button
             type="button"

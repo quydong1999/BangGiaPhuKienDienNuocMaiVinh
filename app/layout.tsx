@@ -3,7 +3,6 @@ import OneTapProvider from "@/components/providers/OneTapProvider";
 import type { Metadata, Viewport } from 'next';
 import { Roboto } from 'next/font/google';
 import './globals.css';
-import { SiteFooter } from '@/components/SiteFooter';
 import QueryProvider from '@/components/providers/query-provider';
 import { SkeletonProvider } from '@/components/providers/skeleton-provider';
 import BusinessSchema from '@/components/providers/BusinessSchema';
@@ -78,7 +77,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   <OneTapProvider />
                   <div className="flex flex-col min-h-screen">
                     {children}
-                    <SiteFooter />
                   </div>
                   <ModalProvider />
                   <CartHydration />

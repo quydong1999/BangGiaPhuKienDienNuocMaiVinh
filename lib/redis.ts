@@ -34,6 +34,8 @@ export const CACHE_KEYS = {
   PRODUCTS_BY_CATEGORY: (categoryId: string) => `products:category:${categoryId}`,
   PRODUCTS_ALL: 'products:all',
   SEARCH_QUERY: (query: string) => `search:${query}`,
+  CUSTOMERS_ALL: 'customers:all',
+  INVOICES_ALL: 'invoices:all',
 };
 
 /**
