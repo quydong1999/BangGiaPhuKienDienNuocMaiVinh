@@ -74,18 +74,6 @@ export default function CartContent() {
     }));
   };
 
-  const handleCheckout = () => {
-    Swal.fire({
-      icon: 'success',
-      title: 'Thanh toán thành công!',
-      text: 'Cảm ơn bạn đã mua hàng. Đơn hàng của bạn đã được ghi nhận.',
-      confirmButtonColor: '#059669',
-      confirmButtonText: 'OK',
-    }).then(() => {
-      dispatch(clearCart());
-    });
-  };
-
   const handleExportExcel = () => {
     const exportData: any[] = items.map((item, index) => {
       const cleanedSpec = cleanSpecName(item.specName);
@@ -405,14 +393,14 @@ export default function CartContent() {
         })}
       </div>
 
-      {/* Summary & Checkout */}
+      {/* Summary & Actions */}
       <div className="bg-white border border-slate-200 shadow-sm p-4 space-y-4">
         <div className="flex items-center justify-between">
           <span className="text-sm text-slate-600">Tổng ({items.length} mặt hàng)</span>
           <span className="text-lg font-bold text-emerald-700">{formatVND(grandTotal)}</span>
         </div>
         <div className="space-y-3">
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
               onClick={handleExportExcel}
@@ -431,26 +419,18 @@ export default function CartContent() {
               <span className="hidden sm:inline">In hóa đơn</span>
               <span className="sm:hidden">In</span>
             </button>
-            {session?.user?.isAdmin && (
-              <button
-                type="button"
-                onClick={handleSaveInvoice}
-                className="col-span-2 lg:col-span-1 w-full flex items-center justify-center gap-2 py-3 bg-blue-600 text-white font-semibold hover:bg-blue-700 active:scale-[0.98] transition-all"
-              >
-                <Save size={18} />
-                Lưu HĐ
-              </button>
-            )}
           </div>
-          <button
-            type="button"
-            onClick={handleCheckout}
-            disabled={hasInvalidQty}
-            className="w-full flex items-center justify-center gap-2 py-3 bg-emerald-600 text-white font-semibold hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] transition-all"
-          >
-            <ShoppingBag size={18} />
-            Thanh toán
-          </button>
+          {session?.user?.isAdmin && (
+            <button
+              type="button"
+              onClick={handleSaveInvoice}
+              disabled={hasInvalidQty}
+              className="w-full flex items-center justify-center gap-2 py-3 bg-emerald-600 text-white font-black uppercase tracking-widest hover:bg-emerald-700 shadow-lg shadow-emerald-100 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] transition-all"
+            >
+              <Save size={18} />
+              Lưu Hóa Đơn
+            </button>
+          )}
         </div>
       </div>
     </div>

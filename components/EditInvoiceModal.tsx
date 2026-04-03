@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useAppDispatch } from "@/store/hooks";
 import { FormModal } from "./FormModal";
 import { Save, User, Calendar, CheckCircle2, DollarSign } from "lucide-react";
+import { Combobox } from "./Combobox";
 import Swal from "sweetalert2";
 import { formatVND } from "@/lib/utils";
 
@@ -99,50 +100,33 @@ export function EditInvoiceModal({ isOpen, onClose, invoice, onSuccess }: EditIn
       <FormModal.Body onSubmit={handleSubmit}>
         <div className="space-y-4 py-2">
           {/* Customer Name */}
-          <div className="space-y-1.5">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1 flex items-center gap-1.5">
-              <User size={12} />
-              Tên khách hàng (Chủ nhà)
-            </label>
-            <input
-              type="text"
-              list="customer-list-edit-modal"
-              className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all font-medium"
-              value={formData.customerName}
-              onChange={(e) => {
-                const val = e.target.value;
-                setFormData(prev => ({
-                  ...prev,
-                  customerName: val,
-                  recipientName: isRecipientManual ? prev.recipientName : val
-                }));
-              }}
-              required
-            />
-            <datalist id="customer-list-edit-modal">
-              {customers.map(c => (
-                <option key={c._id} value={c.name} />
-              ))}
-            </datalist>
-          </div>
+          <Combobox
+            label="Tên khách hàng (Chủ nhà)"
+            options={customers.map(c => c.name)}
+            value={formData.customerName}
+            onChange={(val: string) => {
+              setFormData(prev => ({
+                ...prev,
+                customerName: val,
+                recipientName: isRecipientManual ? prev.recipientName : val
+              }));
+            }}
+            placeholder="Nhập tên khách hàng..."
+            required
+          />
 
           {/* Recipient Name */}
-          <div className="space-y-1.5">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1 flex items-center gap-1.5">
-              <User size={12} />
-              Người lấy hàng (Thợ)
-            </label>
-            <input
-              type="text"
-              className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all font-medium"
-              value={formData.recipientName}
-              onChange={(e) => {
-                setIsRecipientManual(true);
-                setFormData({ ...formData, recipientName: e.target.value });
-              }}
-              required
-            />
-          </div>
+          <Combobox
+            label="Người lấy hàng (Thợ)"
+            options={customers.map(c => c.name)}
+            value={formData.recipientName}
+            onChange={(val: string) => {
+              setIsRecipientManual(true);
+              setFormData({ ...formData, recipientName: val });
+            }}
+            placeholder="Nhập tên người lấy hàng..."
+            required
+          />
 
           <div className="grid grid-cols-2 gap-4">
             {/* Invoice Date */}
