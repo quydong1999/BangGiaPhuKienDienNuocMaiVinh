@@ -18,7 +18,7 @@ interface HomeHeaderProps {
   categoryLayout?: string;
 }
 
-export function HomeHeader({ 
+export function HomeHeader({
   compact = false,
   showAddCategory = false,
   categoryId,
@@ -58,7 +58,7 @@ export function HomeHeader({
           <div className="w-full sm:flex-1 order-3 sm:order-2 sm:max-w-2xl sm:mx-4 z-10">
             <button
               onClick={() => dispatch(openModal({ type: 'search' }))}
-              className={`w-full flex items-center gap-2 h-10 px-3 sm:px-4 rounded-lg transition-all border text-sm focus:outline-none ${compact
+              className={`w-full flex items-center gap-2 h-10 px-3 sm:px-4 rounded-full transition-all border text-sm focus:outline-none ${compact
                 ? 'bg-white/30 hover:bg-white/40 border-white/20 text-white/90 shadow-inner'
                 : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-500 shadow-sm'
                 }`}
@@ -132,12 +132,12 @@ export function HomeHeader({
                         )}
                         {categoryId && (
                           <button
-                            onClick={() => { 
-                              dispatch(openModal({ 
-                                type: 'productForm', 
-                                props: { categoryId } 
-                              })); 
-                              setIsDropdownOpen(false); 
+                            onClick={() => {
+                              dispatch(openModal({
+                                type: 'productForm',
+                                props: { categoryId }
+                              }));
+                              setIsDropdownOpen(false);
                             }}
                             className="flex items-center gap-2 text-sm text-slate-600 hover:bg-slate-50 rounded-lg px-2 py-1.5 transition-colors"
                           >
@@ -147,12 +147,12 @@ export function HomeHeader({
                         )}
                         {categoryId && (
                           <button
-                            onClick={() => { 
-                              dispatch(openModal({ 
-                                type: 'bulkImport', 
-                                props: { categoryId } 
-                              })); 
-                              setIsDropdownOpen(false); 
+                            onClick={() => {
+                              dispatch(openModal({
+                                type: 'bulkImport',
+                                props: { categoryId }
+                              }));
+                              setIsDropdownOpen(false);
                             }}
                             className="hidden sm:flex items-center gap-2 text-sm text-slate-600 hover:bg-slate-50 rounded-lg px-2 py-1.5 transition-colors"
                           >
