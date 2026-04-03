@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Eye, Search, FileText, Calendar, Filter, RotateCcw, Pencil, Trash2, Undo } from 'lucide-react';
+import { Eye, Search, FileText, Calendar, Filter, RotateCcw, Pencil, Trash2 } from 'lucide-react';
 import { formatVND } from '@/lib/utils';
 import { format } from 'date-fns';
 import { vi } from 'date-fns/locale';
@@ -34,11 +34,11 @@ export default function InvoicesListClient({ initialInvoices }: InvoicesListClie
     const invDate = new Date(inv.invoiceDate);
     invDate.setHours(0, 0, 0, 0);
 
-    const matchesSearch = 
+    const matchesSearch =
       inv.invoiceNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
       inv.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       inv.recipientName.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
     const matchesStatus = statusFilter === '' || inv.status === statusFilter;
 
     let matchesDate = true;
@@ -52,7 +52,7 @@ export default function InvoicesListClient({ initialInvoices }: InvoicesListClie
       end.setHours(0, 0, 0, 0);
       matchesDate = matchesDate && invDate <= end;
     }
-    
+
     return matchesSearch && matchesStatus && matchesDate;
   });
 
@@ -87,7 +87,7 @@ export default function InvoicesListClient({ initialInvoices }: InvoicesListClie
           setInvoices(prev => prev.filter(i => i._id !== inv._id));
           Swal.fire({
             icon: 'success',
-            title: 'Đã chuyển vào thùng rác',
+            title: 'Đã xóa hóa đơn',
             toast: true,
             position: 'top-end',
             showConfirmButton: false,
@@ -165,18 +165,18 @@ export default function InvoicesListClient({ initialInvoices }: InvoicesListClie
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2">
-            <button 
-                onClick={() => {
-                    setSearchTerm('');
-                    setStatusFilter('');
-                    setStartDate('');
-                    setEndDate('');
-                }}
-                className="flex items-center justify-center gap-2 text-xs font-bold text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 transition-all uppercase tracking-widest border border-slate-200 rounded-lg px-4 py-2.5 h-[42px] bg-white shadow-sm active:scale-95"
-            >
-                <RotateCcw size={14} />
-                Đặt lại
-            </button>
+          <button
+            onClick={() => {
+              setSearchTerm('');
+              setStatusFilter('');
+              setStartDate('');
+              setEndDate('');
+            }}
+            className="flex items-center justify-center gap-2 text-xs font-bold text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 transition-all uppercase tracking-widest border border-slate-200 rounded-lg px-4 py-2.5 h-[42px] bg-white shadow-sm active:scale-95"
+          >
+            <RotateCcw size={14} />
+            Đặt lại
+          </button>
         </div>
       </div>
 
@@ -218,11 +218,6 @@ export default function InvoicesListClient({ initialInvoices }: InvoicesListClie
                         <span className={`inline-flex w-fit px-2 py-1 rounded-full text-[10px] font-bold uppercase ${statusMap[inv.status]?.color}`}>
                           {statusMap[inv.status]?.label}
                         </span>
-                        {inv.status === 'paid' && inv.paidAt && (
-                          <span className="text-[10px] text-slate-400 mt-1 font-medium">
-                            Ngày: {format(new Date(inv.paidAt), 'dd/MM/yyyy', { locale: vi })}
-                          </span>
-                        )}
                       </div>
                     </td>
                     <td className="px-4 py-3 text-sm whitespace-nowrap">

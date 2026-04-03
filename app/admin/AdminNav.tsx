@@ -32,7 +32,6 @@ export default function AdminNav({ user }: AdminNavProps) {
 
   const getPageTitle = (path: string) => {
     if (path === '/admin') return 'Dashboard';
-    if (path === '/admin/invoices/trash') return 'Hóa đơn đã xóa';
     if (path.startsWith('/admin/invoices')) return 'Quản lý hóa đơn';
     if (path.startsWith('/admin/customers')) return 'Danh sách khách hàng';
     if (path.startsWith('/admin/settings')) return 'Cài đặt hệ thống';
