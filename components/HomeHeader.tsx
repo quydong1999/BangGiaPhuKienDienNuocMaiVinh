@@ -161,12 +161,12 @@ export function HomeHeader({
                           </button>
                         )}
                         <Link
-                          href="/admin"
+                          href="/admin/invoices"
                           onClick={() => setIsDropdownOpen(false)}
                           className="flex items-center gap-2 text-sm text-slate-600 hover:bg-slate-50 px-2 py-1.5 transition-colors font-medium border-b border-slate-50 pb-2 mb-1"
                         >
-                          <UserRound size={14} className="text-emerald-600" />
-                          Bảng điều khiển Admin
+                          <UserRound size={14} />
+                          Hóa đơn
                         </Link>
                         <button
                           onClick={() => { signOut(); setIsDropdownOpen(false); }}

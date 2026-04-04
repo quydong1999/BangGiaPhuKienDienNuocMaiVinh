@@ -18,7 +18,7 @@ export default async function AdminLayout({
       <AdminNav user={session.user} />
 
       {/* Main Content Area */}
-      <div className="flex-1 md:ml-64 flex flex-col overflow-hidden">
+      <div className="flex-1 md:ml-64 flex flex-col overflow-hidden pt-16 md:pt-0">
         {/* Dynamic Page Content */}
         <main className="flex-1 p-4 lg:p-6 flex flex-col overflow-hidden">
           {children}
