@@ -132,10 +132,19 @@ export default function InvoicesListClient({ initialInvoices }: InvoicesListClie
   };
 
   const handleEdit = (invoice: any) => {
+    let previousInvoices = [...invoices];
     dispatch(openModal({
       type: 'editInvoice',
       props: {
         invoice,
+        onOptimisticUpdate: (optimistic: any) => {
+          // Keep a snapshot for rollback
+          previousInvoices = [...invoices];
+          setInvoices(prev => prev.map(i => i._id === optimistic._id ? { ...i, ...optimistic } : i));
+        },
+        onRollback: () => {
+          setInvoices(previousInvoices);
+        },
         onSuccess: (updated: any) => {
           setInvoices(prev => prev.map(i => i._id === updated._id ? updated : i));
         }
@@ -156,10 +165,12 @@ export default function InvoicesListClient({ initialInvoices }: InvoicesListClie
     });
 
     if (result.isConfirmed) {
+      const previousInvoices = [...invoices];
+      setInvoices(prev => prev.filter(i => i._id !== inv._id));
+
       try {
         const resp = await fetch(`/api/invoices/${inv._id}`, { method: 'DELETE' });
         if (resp.ok) {
-          setInvoices(prev => prev.filter(i => i._id !== inv._id));
           Swal.fire({
             icon: 'success',
             title: 'Đã xóa hóa đơn',
@@ -172,6 +183,7 @@ export default function InvoicesListClient({ initialInvoices }: InvoicesListClie
           throw new Error();
         }
       } catch (e) {
+        setInvoices(previousInvoices);
         Swal.fire('Lỗi', 'Không thể xóa hóa đơn.', 'error');
       }
     }

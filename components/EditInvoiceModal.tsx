@@ -13,9 +13,11 @@ interface EditInvoiceModalProps {
   onClose: () => void;
   invoice: any;
   onSuccess?: (updatedInvoice: any) => void;
+  onOptimisticUpdate?: (optimisticInvoice: any) => void;
+  onRollback?: () => void;
 }
 
-export function EditInvoiceModal({ isOpen, onClose, invoice, onSuccess }: EditInvoiceModalProps) {
+export function EditInvoiceModal({ isOpen, onClose, invoice, onSuccess, onOptimisticUpdate, onRollback }: EditInvoiceModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [customers, setCustomers] = useState<any[]>([]);
   const [isRecipientManual, setIsRecipientManual] = useState(false);
@@ -58,8 +60,12 @@ export function EditInvoiceModal({ isOpen, onClose, invoice, onSuccess }: EditIn
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
     try {
+      // Optimistic update
+      if (onOptimisticUpdate) {
+        onOptimisticUpdate({ ...invoice, ...formData });
+      }
+
       const response = await fetch(`/api/invoices/${invoice._id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -83,6 +89,7 @@ export function EditInvoiceModal({ isOpen, onClose, invoice, onSuccess }: EditIn
         throw new Error('Cập nhật thất bại');
       }
     } catch (error) {
+      if (onRollback) onRollback();
       Swal.fire('Lỗi', 'Không thể cập nhật thông tin hóa đơn. Vui lòng thử lại.', 'error');
     } finally {
       setIsSubmitting(false);
