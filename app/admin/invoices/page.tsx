@@ -1,6 +1,6 @@
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
-import { invoiceService } from '@/services';
+import { Suspense } from 'react';
 import InvoicesListClient from './InvoicesListClient';
 
 export default async function InvoicesAdminPage() {
@@ -9,7 +9,6 @@ export default async function InvoicesAdminPage() {
     redirect('/');
   }
 
-  const invoices = await invoiceService.findAll();
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -18,7 +17,14 @@ export default async function InvoicesAdminPage() {
           <h1 className="text-3xl font-black text-slate-800 uppercase">Hóa đơn</h1>
         </div>
       </div>
-      <InvoicesListClient initialInvoices={JSON.parse(JSON.stringify(invoices))} />
+      <Suspense fallback={
+        <div className="flex flex-col gap-6 animate-pulse">
+          <div className="h-[42px] bg-slate-100 rounded-lg w-full"></div>
+          <div className="h-[400px] bg-slate-50 rounded-lg w-full"></div>
+        </div>
+      }>
+        <InvoicesListClient />
+      </Suspense>
     </div>
   );
 }

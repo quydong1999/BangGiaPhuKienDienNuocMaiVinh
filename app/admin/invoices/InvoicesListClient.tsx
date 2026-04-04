@@ -14,7 +14,6 @@ import { openModal } from '@/store/modalSlice';
 import Swal from 'sweetalert2';
 
 interface InvoicesListClientProps {
-  initialInvoices: any[];
 }
 
 const statusMap: any = {
@@ -23,8 +22,9 @@ const statusMap: any = {
   'cancelled': { label: 'Đã hủy', color: 'bg-slate-100 text-slate-700' },
 };
 
-export default function InvoicesListClient({ initialInvoices }: InvoicesListClientProps) {
-  const [invoices, setInvoices] = useState(initialInvoices);
+export default function InvoicesListClient({}: InvoicesListClientProps) {
+  const [invoices, setInvoices] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -51,6 +51,25 @@ export default function InvoicesListClient({ initialInvoices }: InvoicesListClie
     setLocalStart(queryStart);
     setLocalEnd(queryEnd);
   }, [querySearch, queryStatus, queryStart, queryEnd]);
+
+  useEffect(() => {
+    const fetchInvoices = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch('/api/invoices');
+        if (response.ok) {
+          const data = await response.json();
+          setInvoices(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch invoices:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInvoices();
+  }, []);
 
   const filteredInvoices = invoices.filter(inv => {
     const invDate = new Date(inv.invoiceDate);
@@ -271,101 +290,108 @@ export default function InvoicesListClient({ initialInvoices }: InvoicesListClie
       </div>
 
       {/* Invoices List */}
-      <div className="bg-white border border-slate-200 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-slate-50 border-b border-slate-200">
-                <th 
-                  className="px-4 py-3 text-sm font-semibold text-slate-700 cursor-pointer hover:bg-slate-100 transition-colors group"
-                  onClick={() => toggleSort('date')}
-                >
-                  <div className="flex items-center gap-1.5">
-                    Ngày lập
-                    {getSortIcon('date')}
-                  </div>
-                </th>
-                <th className="px-4 py-3 text-sm font-semibold text-slate-700">Mã HĐ</th>
-                <th className="px-4 py-3 text-sm font-semibold text-slate-700">Khách hàng / Người lấy</th>
-                <th 
-                  className="px-4 py-3 text-sm font-semibold text-slate-700 cursor-pointer hover:bg-slate-100 transition-colors group"
-                  onClick={() => toggleSort('amount')}
-                >
-                  <div className="flex items-center gap-1.5">
-                    Giá trị
-                    {getSortIcon('amount')}
-                  </div>
-                </th>
-                <th className="px-4 py-3 text-sm font-semibold text-slate-700">Trạng thái</th>
-                <th className="px-4 py-3 text-sm font-semibold text-slate-700">Thao tác</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {sortedInvoices.length > 0 ? (
-                sortedInvoices.map((inv) => (
-                  <tr key={inv._id} className="hover:bg-slate-50/50 transition-colors">
-                    <td className="px-4 py-3 text-sm text-slate-600 whitespace-nowrap">
-                      {format(new Date(inv.invoiceDate), 'dd/MM/yyyy', { locale: vi })}
-                    </td>
-                    <td className="px-4 py-3 text-sm font-mono font-bold text-emerald-700 whitespace-nowrap">
-                      {inv.invoiceNumber}
-                    </td>
-                    <td className="px-4 py-3 text-sm">
-                      <div className="font-semibold text-slate-900">{inv.customerName}</div>
-                      {inv.recipientName && inv.recipientName !== inv.customerName && (
-                        <div className="text-xs text-slate-500">Lấy bởi: {inv.recipientName}</div>
-                      )}
-                    </td>
-                    <td className="px-4 py-3 text-sm font-bold text-slate-900 whitespace-nowrap">
-                      {formatVND(inv.totalAmount)}
-                    </td>
-                    <td className="px-4 py-3 text-sm whitespace-nowrap">
-                      <div className="flex flex-col">
-                        <span className={`inline-flex w-fit px-2 py-1 rounded-full text-[10px] font-bold uppercase ${statusMap[inv.status]?.color}`}>
-                          {statusMap[inv.status]?.label}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 text-sm whitespace-nowrap">
-                      <div className="flex items-center gap-3">
-                        <Link
-                          href={`/admin/invoices/${inv._id}`}
-                          className="inline-flex items-center gap-1 text-emerald-600 hover:text-emerald-700 font-semibold"
-                          title="Xem chi tiết"
-                        >
-                          <Eye size={16} />
-                          Chi tiết
-                        </Link>
-                        <button
-                          onClick={() => handleEdit(inv)}
-                          className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-700 font-semibold"
-                          title="Chỉnh sửa thông tin"
-                        >
-                          <Pencil size={14} />
-                          Sửa
-                        </button>
-                        <button
-                          onClick={() => handleDelete(inv)}
-                          className="inline-flex items-center gap-1 text-red-600 hover:text-red-700 font-semibold"
-                          title="Xóa hóa đơn"
-                        >
-                          <Trash2 size={14} />
-                          Xóa
-                        </button>
-                      </div>
+      <div className="bg-white border border-slate-200 shadow-sm overflow-hidden min-h-[400px]">
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-20 gap-4">
+            <div className="w-10 h-10 border-4 border-emerald-500/20 border-t-emerald-600 rounded-full animate-spin"></div>
+            <p className="text-sm font-medium text-slate-500 uppercase tracking-widest">Đang tải dữ liệu...</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-slate-50 border-b border-slate-200">
+                  <th 
+                    className="px-4 py-3 text-sm font-semibold text-slate-700 cursor-pointer hover:bg-slate-100 transition-colors group"
+                    onClick={() => toggleSort('date')}
+                  >
+                    <div className="flex items-center gap-1.5">
+                      Ngày lập
+                      {getSortIcon('date')}
+                    </div>
+                  </th>
+                  <th className="px-4 py-3 text-sm font-semibold text-slate-700">Mã HĐ</th>
+                  <th className="px-4 py-3 text-sm font-semibold text-slate-700">Khách hàng / Người lấy</th>
+                  <th 
+                    className="px-4 py-3 text-sm font-semibold text-slate-700 cursor-pointer hover:bg-slate-100 transition-colors group"
+                    onClick={() => toggleSort('amount')}
+                  >
+                    <div className="flex items-center gap-1.5">
+                      Giá trị
+                      {getSortIcon('amount')}
+                    </div>
+                  </th>
+                  <th className="px-4 py-3 text-sm font-semibold text-slate-700">Trạng thái</th>
+                  <th className="px-4 py-3 text-sm font-semibold text-slate-700">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {sortedInvoices.length > 0 ? (
+                  sortedInvoices.map((inv) => (
+                    <tr key={inv._id} className="hover:bg-slate-50/50 transition-colors">
+                      <td className="px-4 py-3 text-sm text-slate-600 whitespace-nowrap">
+                        {format(new Date(inv.invoiceDate), 'dd/MM/yyyy', { locale: vi })}
+                      </td>
+                      <td className="px-4 py-3 text-sm font-mono font-bold text-emerald-700 whitespace-nowrap">
+                        {inv.invoiceNumber}
+                      </td>
+                      <td className="px-4 py-3 text-sm">
+                        <div className="font-semibold text-slate-900">{inv.customerName}</div>
+                        {inv.recipientName && inv.recipientName !== inv.customerName && (
+                          <div className="text-xs text-slate-500">Lấy bởi: {inv.recipientName}</div>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-sm font-bold text-slate-900 whitespace-nowrap">
+                        {formatVND(inv.totalAmount)}
+                      </td>
+                      <td className="px-4 py-3 text-sm whitespace-nowrap">
+                        <div className="flex flex-col">
+                          <span className={`inline-flex w-fit px-2 py-1 rounded-full text-[10px] font-bold uppercase ${statusMap[inv.status]?.color}`}>
+                            {statusMap[inv.status]?.label}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-sm whitespace-nowrap">
+                        <div className="flex items-center gap-3">
+                          <Link
+                            href={`/admin/invoices/${inv._id}`}
+                            className="inline-flex items-center gap-1 text-emerald-600 hover:text-emerald-700 font-semibold"
+                            title="Xem chi tiết"
+                          >
+                            <Eye size={16} />
+                            Chi tiết
+                          </Link>
+                          <button
+                            onClick={() => handleEdit(inv)}
+                            className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-700 font-semibold"
+                            title="Chỉnh sửa thông tin"
+                          >
+                            <Pencil size={14} />
+                            Sửa
+                          </button>
+                          <button
+                            onClick={() => handleDelete(inv)}
+                            className="inline-flex items-center gap-1 text-red-600 hover:text-red-700 font-semibold"
+                            title="Xóa hóa đơn"
+                          >
+                            <Trash2 size={14} />
+                            Xóa
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={6} className="px-4 py-8 text-center text-slate-500 italic">
+                      Không tìm thấy hóa đơn nào phù hợp.
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-slate-500 italic">
-                    Không tìm thấy hóa đơn nào phù hợp.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );
