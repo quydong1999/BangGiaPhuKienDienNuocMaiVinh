@@ -95,7 +95,6 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
 
     setTimeout(() => {
       setAddedItemKey(null);
-      onClose();
     }, 800);
   };
 

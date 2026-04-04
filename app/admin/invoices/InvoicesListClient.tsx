@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Eye, Search, FileText, Calendar, Filter, RotateCcw, Pencil, Trash2 } from 'lucide-react';
+import { Eye, Search, FileText, Calendar, Filter, RotateCcw, Pencil, Trash2, ArrowUpDown, ChevronUp, ChevronDown } from 'lucide-react';
 import { formatVND } from '@/lib/utils';
 import { format } from 'date-fns';
 import { vi } from 'date-fns/locale';
@@ -25,36 +26,110 @@ const statusMap: any = {
 export default function InvoicesListClient({ initialInvoices }: InvoicesListClientProps) {
   const [invoices, setInvoices] = useState(initialInvoices);
   const dispatch = useAppDispatch();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  // Get current filter values from URL
+  const querySearch = searchParams.get('search') || '';
+  const queryStatus = searchParams.get('status') || '';
+  const queryStart = searchParams.get('start') || '';
+  const queryEnd = searchParams.get('end') || '';
+  const sortBy = searchParams.get('sortBy') || 'date';
+  const sortOrder = searchParams.get('order') || 'desc';
+
+  // Local state for inputs (not applied until Filter button is clicked)
+  const [localSearch, setLocalSearch] = useState(querySearch);
+  const [localStatus, setLocalStatus] = useState(queryStatus);
+  const [localStart, setLocalStart] = useState(queryStart);
+  const [localEnd, setLocalEnd] = useState(queryEnd);
+
+  // Sync local state when URL params change (e.g. on page load or browser back/forward)
+  useEffect(() => {
+    setLocalSearch(querySearch);
+    setLocalStatus(queryStatus);
+    setLocalStart(queryStart);
+    setLocalEnd(queryEnd);
+  }, [querySearch, queryStatus, queryStart, queryEnd]);
 
   const filteredInvoices = invoices.filter(inv => {
     const invDate = new Date(inv.invoiceDate);
     invDate.setHours(0, 0, 0, 0);
 
     const matchesSearch =
-      inv.invoiceNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      inv.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      inv.recipientName.toLowerCase().includes(searchTerm.toLowerCase());
+      inv.invoiceNumber.toLowerCase().includes(querySearch.toLowerCase()) ||
+      inv.customerName.toLowerCase().includes(querySearch.toLowerCase()) ||
+      inv.recipientName.toLowerCase().includes(querySearch.toLowerCase());
 
-    const matchesStatus = statusFilter === '' || inv.status === statusFilter;
+    const matchesStatus = queryStatus === '' || inv.status === queryStatus;
 
     let matchesDate = true;
-    if (startDate) {
-      const start = new Date(startDate);
+    if (queryStart) {
+      const start = new Date(queryStart);
       start.setHours(0, 0, 0, 0);
       matchesDate = matchesDate && invDate >= start;
     }
-    if (endDate) {
-      const end = new Date(endDate);
+    if (queryEnd) {
+      const end = new Date(queryEnd);
       end.setHours(0, 0, 0, 0);
       matchesDate = matchesDate && invDate <= end;
     }
 
     return matchesSearch && matchesStatus && matchesDate;
   });
+
+  const sortedInvoices = [...filteredInvoices].sort((a, b) => {
+    let valA, valB;
+    if (sortBy === 'date') {
+      valA = new Date(a.invoiceDate).getTime();
+      valB = new Date(b.invoiceDate).getTime();
+    } else if (sortBy === 'amount') {
+      valA = a.totalAmount;
+      valB = b.totalAmount;
+    } else {
+      return 0;
+    }
+
+    if (sortOrder === 'asc') return valA - valB;
+    return valB - valA;
+  });
+
+  const toggleSort = (field: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    const currentSort = params.get('sortBy');
+    const currentOrder = params.get('order');
+
+    if (currentSort === field) {
+      params.set('order', currentOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      params.set('sortBy', field);
+      params.set('order', 'desc');
+    }
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
+  const getSortIcon = (field: string) => {
+    if (sortBy !== field) return <ArrowUpDown size={14} className="text-slate-300" />;
+    return sortOrder === 'asc' ? <ChevronUp size={14} className="text-emerald-500" /> : <ChevronDown size={14} className="text-emerald-500" />;
+  };
+
+  const handleFilter = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (localSearch) params.set('search', localSearch); else params.delete('search');
+    if (localStatus) params.set('status', localStatus); else params.delete('status');
+    if (localStart) params.set('start', localStart); else params.delete('start');
+    if (localEnd) params.set('end', localEnd); else params.delete('end');
+    
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
+  const handleReset = () => {
+    setLocalSearch('');
+    setLocalStatus('');
+    setLocalStart('');
+    setLocalEnd('');
+    router.push(pathname);
+  };
 
   const handleEdit = (invoice: any) => {
     dispatch(openModal({
@@ -116,8 +191,9 @@ export default function InvoicesListClient({ initialInvoices }: InvoicesListClie
                 type="text"
                 placeholder="Mã HĐ, tên khách hàng..."
                 className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all shadow-sm shadow-slate-100"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                value={localSearch}
+                onChange={(e) => setLocalSearch(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleFilter()}
               />
             </div>
           </div>
@@ -129,8 +205,8 @@ export default function InvoicesListClient({ initialInvoices }: InvoicesListClie
               <Filter className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
               <select
                 className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 appearance-none transition-all shadow-sm shadow-slate-100"
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
+                value={localStatus}
+                onChange={(e) => setLocalStatus(e.target.value)}
               >
                 <option value="">Tất cả</option>
                 <option value="pending">Chưa thanh toán</option>
@@ -146,8 +222,8 @@ export default function InvoicesListClient({ initialInvoices }: InvoicesListClie
             <input
               type="date"
               className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all shadow-sm shadow-slate-100"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
+              value={localStart}
+              onChange={(e) => setLocalStart(e.target.value)}
             />
           </div>
 
@@ -157,8 +233,8 @@ export default function InvoicesListClient({ initialInvoices }: InvoicesListClie
             <input
               type="date"
               className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all shadow-sm shadow-slate-100"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
+              value={localEnd}
+              onChange={(e) => setLocalEnd(e.target.value)}
             />
           </div>
         </div>
@@ -166,12 +242,14 @@ export default function InvoicesListClient({ initialInvoices }: InvoicesListClie
         {/* Action Buttons */}
         <div className="flex items-center gap-2">
           <button
-            onClick={() => {
-              setSearchTerm('');
-              setStatusFilter('');
-              setStartDate('');
-              setEndDate('');
-            }}
+            onClick={handleFilter}
+            className="flex items-center justify-center gap-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition-all uppercase tracking-widest rounded-lg px-4 py-2.5 h-[42px] shadow-sm active:scale-95"
+          >
+            <Search size={14} />
+            Lọc
+          </button>
+          <button
+            onClick={handleReset}
             className="flex items-center justify-center gap-2 text-xs font-bold text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 transition-all uppercase tracking-widest border border-slate-200 rounded-lg px-4 py-2.5 h-[42px] bg-white shadow-sm active:scale-95"
           >
             <RotateCcw size={14} />
@@ -186,17 +264,33 @@ export default function InvoicesListClient({ initialInvoices }: InvoicesListClie
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200">
-                <th className="px-4 py-3 text-sm font-semibold text-slate-700">Ngày lập</th>
+                <th 
+                  className="px-4 py-3 text-sm font-semibold text-slate-700 cursor-pointer hover:bg-slate-100 transition-colors group"
+                  onClick={() => toggleSort('date')}
+                >
+                  <div className="flex items-center gap-1.5">
+                    Ngày lập
+                    {getSortIcon('date')}
+                  </div>
+                </th>
                 <th className="px-4 py-3 text-sm font-semibold text-slate-700">Mã HĐ</th>
                 <th className="px-4 py-3 text-sm font-semibold text-slate-700">Khách hàng / Người lấy</th>
-                <th className="px-4 py-3 text-sm font-semibold text-slate-700">Giá trị</th>
+                <th 
+                  className="px-4 py-3 text-sm font-semibold text-slate-700 cursor-pointer hover:bg-slate-100 transition-colors group"
+                  onClick={() => toggleSort('amount')}
+                >
+                  <div className="flex items-center gap-1.5">
+                    Giá trị
+                    {getSortIcon('amount')}
+                  </div>
+                </th>
                 <th className="px-4 py-3 text-sm font-semibold text-slate-700">Trạng thái</th>
                 <th className="px-4 py-3 text-sm font-semibold text-slate-700">Thao tác</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {filteredInvoices.length > 0 ? (
-                filteredInvoices.map((inv) => (
+              {sortedInvoices.length > 0 ? (
+                sortedInvoices.map((inv) => (
                   <tr key={inv._id} className="hover:bg-slate-50/50 transition-colors">
                     <td className="px-4 py-3 text-sm text-slate-600 whitespace-nowrap">
                       {format(new Date(inv.invoiceDate), 'dd/MM/yyyy', { locale: vi })}

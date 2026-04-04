@@ -5,8 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   ArrowLeft, Printer, FileSpreadsheet, Save,
-  User, Calendar, CheckCircle2, DollarSign,
-  ChevronRight, ShoppingBag
+  User, Calendar, DollarSign, ShoppingBag
 } from 'lucide-react';
 import { Combobox } from '@/components/Combobox';
 import { formatVND } from '@/lib/utils';
@@ -101,7 +100,8 @@ export default function InvoiceDetailClient({ initialInvoice }: InvoiceDetailCli
   const handleExportExcel = () => {
     const exportData: any[] = invoice.items.map((item: any, index: number) => ({
       'STT': index + 1,
-      'Tên sản phẩm': item.specName && item.specName !== 'Mặc định' ? `${item.name} (${item.specName})` : item.name,
+      'Tên sản phẩm': item.name,
+      'Quy cách': item.specName && item.specName !== 'Mặc định' ? item.specName : '',
       'Số lượng': item.quantity,
       'Đơn vị tính': item.unit,
       'Đơn giá': item.price,
@@ -118,7 +118,7 @@ export default function InvoiceDetailClient({ initialInvoice }: InvoiceDetailCli
     });
 
     const worksheet = XLSX.utils.json_to_sheet(exportData);
-    worksheet['!cols'] = [{ wch: 5 }, { wch: 40 }, { wch: 10 }, { wch: 12 }, { wch: 15 }, { wch: 15 }];
+    worksheet['!cols'] = [{ wch: 5 }, { wch: 40 }, { wch: 15 }, { wch: 10 }, { wch: 12 }, { wch: 15 }, { wch: 15 }];
 
     const range = XLSX.utils.decode_range(worksheet['!ref']!);
     for (let R = range.s.r; R <= range.e.r; ++R) {
@@ -143,7 +143,8 @@ export default function InvoiceDetailClient({ initialInvoice }: InvoiceDetailCli
     const rowsHtml = invoice.items.map((item: any, index: number) => `
       <tr>
         <td style="text-align:center">${index + 1}</td>
-        <td>${item.name} ${item.specName && item.specName !== 'Mặc định' ? `(${item.specName})` : ''}</td>
+        <td>${item.name}</td>
+        <td>${item.specName && item.specName !== 'Mặc định' ? item.specName : ''}</td>
         <td style="text-align:center">${item.quantity}</td>
         <td style="text-align:center">${item.unit}</td>
         <td style="text-align:right">${formatVND(item.price)}</td>
@@ -184,6 +185,7 @@ export default function InvoiceDetailClient({ initialInvoice }: InvoiceDetailCli
               <tr>
                 <th>STT</th>
                 <th>Sản phẩm</th>
+                <th>Quy cách</th>
                 <th>SL</th>
                 <th>ĐVT</th>
                 <th>Đơn giá</th>
@@ -193,7 +195,7 @@ export default function InvoiceDetailClient({ initialInvoice }: InvoiceDetailCli
             <tbody>${rowsHtml}</tbody>
             <tfoot>
               <tr>
-                <td colspan="5" style="text-align:center; font-weight:bold">TỔNG CỘNG</td>
+                <td colspan="6" style="text-align:center; font-weight:bold">TỔNG CỘNG</td>
                 <td style="text-align:right; font-weight:bold">${formatVND(invoice.totalAmount)}</td>
               </tr>
             </tfoot>
@@ -207,8 +209,8 @@ export default function InvoiceDetailClient({ initialInvoice }: InvoiceDetailCli
   };
 
   return (
-    <div className="min-h-screen pb-24 bg-white">
-      <div className="w-full">
+    <div className="flex-1 flex flex-col overflow-hidden bg-white border border-slate-200 shadow-sm rounded-xl">
+      <div className="flex-1 overflow-y-auto w-full">
         {/* Metadata Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 border-b border-slate-200">
           <div className="p-4 border-r border-slate-100 space-y-4">
@@ -291,13 +293,18 @@ export default function InvoiceDetailClient({ initialInvoice }: InvoiceDetailCli
           </div>
         </div>
 
-        {/* Items Table */}
+        {/* Items Table Section */}
         <div className="w-full overflow-x-auto">
+          <div className="p-4 border-b border-slate-200 bg-slate-50 flex items-center gap-2">
+            <ShoppingBag size={14} className="text-emerald-600" />
+            <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Danh sách sản phẩm</h2>
+          </div>
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200">
                 <th className="px-4 py-2 text-left text-[9px] font-black uppercase text-slate-400 tracking-wider w-12">STT</th>
-                <th className="px-4 py-2 text-left text-[9px] font-black uppercase text-slate-400 tracking-wider">Sản phẩm / Quy cách</th>
+                <th className="px-4 py-2 text-left text-[9px] font-black uppercase text-slate-400 tracking-wider">Sản phẩm</th>
+                <th className="px-4 py-2 text-left text-[9px] font-black uppercase text-slate-400 tracking-wider">Quy cách</th>
                 <th className="px-4 py-2 text-center text-[9px] font-black uppercase text-slate-400 tracking-wider">Số lượng</th>
                 <th className="px-4 py-2 text-center text-[9px] font-black uppercase text-slate-400 tracking-wider">ĐVT</th>
                 <th className="px-4 py-2 text-right text-[9px] font-black uppercase text-slate-400 tracking-wider">Đơn giá</th>
@@ -310,6 +317,8 @@ export default function InvoiceDetailClient({ initialInvoice }: InvoiceDetailCli
                   <td className="px-4 py-2 text-xs text-slate-400 font-medium tabular-nums">{idx + 1}</td>
                   <td className="px-4 py-2">
                     <div className="text-xs font-bold text-slate-900">{item.name}</div>
+                  </td>
+                  <td className="px-4 py-2">
                     {item.specName && item.specName !== 'Mặc định' && (
                       <div className="text-[9px] font-bold text-emerald-600 uppercase tracking-tighter mt-0.5">{item.specName}</div>
                     )}
@@ -325,57 +334,47 @@ export default function InvoiceDetailClient({ initialInvoice }: InvoiceDetailCli
                 </tr>
               ))}
             </tbody>
-            <tfoot>
-              <tr className="bg-emerald-600">
-                <td colSpan={4} className="px-4 py-4 text-center text-[10px] font-black text-emerald-50 uppercase tracking-widest border-r border-emerald-500/30">
-                  Tổng cộng giá trị hóa đơn
-                </td>
-                <td colSpan={2} className="px-4 py-4 text-right text-2xl font-black text-white tabular-nums">
-                  {formatVND(invoice.totalAmount)}
-                </td>
-              </tr>
-            </tfoot>
           </table>
         </div>
       </div>
 
       {/* STICKY FOOTER */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 px-4 py-2 shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.1)]">
+      <div className="flex-none bg-slate-50/50 border-t border-slate-200 px-6 py-3">
         <div className="flex items-center justify-between gap-4">
-          <div className="hidden sm:flex items-center gap-4 text-slate-400">
+          <div className="hidden sm:flex items-center gap-4">
             <div className="flex flex-col">
-              <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Invoice</span>
-              <span className="text-xs font-bold text-slate-900">#{invoice.invoiceNumber}</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Hóa đơn</span>
+              <span className="text-sm font-bold text-slate-900">#{invoice.invoiceNumber}</span>
             </div>
-            <div className="w-px h-6 bg-slate-200" />
+            <div className="w-px h-8 bg-slate-200" />
             <div className="flex flex-col">
-              <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Total</span>
-              <span className="text-xs font-black text-emerald-700">{formatVND(invoice.totalAmount)}</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Số tiền</span>
+              <span className="text-sm font-black text-emerald-700">{formatVND(invoice.totalAmount)}</span>
             </div>
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <button
               onClick={handlePrint}
-              className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 font-bold text-xs hover:bg-slate-200 transition-all active:scale-95 rounded"
+              className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-50 transition-all active:scale-95 rounded-lg shadow-sm"
             >
               <Printer size={16} />
-              In
+              In hóa đơn
             </button>
             <button
               onClick={handleExportExcel}
-              className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 border border-emerald-100 font-bold text-xs hover:bg-emerald-100 transition-all active:scale-95 rounded"
+              className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-slate-200 text-emerald-700 font-bold text-xs hover:bg-emerald-50 transition-all active:scale-95 rounded-lg shadow-sm"
             >
               <FileSpreadsheet size={16} />
-              Excel
+              Xuất Excel
             </button>
             <button
               onClick={handleSave}
               disabled={!isDirty || isUpdating}
-              className={`flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-8 py-2 font-bold text-xs transition-all rounded shadow-sm active:scale-95 
+              className={`flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-8 py-2.5 font-bold text-xs transition-all rounded-lg shadow-sm active:scale-95 
                 ${isDirty && !isUpdating
-                  ? 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-emerald-200'
-                  : 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'}
+                  ? 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-emerald-100'
+                  : 'bg-slate-100 text-slate-300 cursor-not-allowed shadow-none'}
               `}
             >
               {isUpdating ? (
@@ -383,7 +382,7 @@ export default function InvoiceDetailClient({ initialInvoice }: InvoiceDetailCli
               ) : (
                 <Save size={16} />
               )}
-              Lưu
+              Lưu thay đổi
             </button>
           </div>
         </div>

@@ -16,10 +16,10 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
   }
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex items-center justify-between mb-8">
+    <div className="h-full flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="flex items-center justify-between mb-4 flex-none">
         <div className="space-y-1">
-          <h1 className="text-3xl font-black text-slate-800 uppercase">{`Chi tiết hóa đơn số: ${invoice.invoiceNumber}`}</h1>
+          <h1 className="text-3xl font-black text-slate-800 uppercase leading-tight">Chi tiết hóa đơn</h1>
         </div>
       </div>
       <InvoiceDetailClient initialInvoice={JSON.parse(JSON.stringify(invoice))} />
