@@ -11,7 +11,7 @@ const InvoiceItemSchema = new Schema({
 }, { _id: false });
 
 const InvoiceSchema = new Schema({
-  invoiceNumber: { type: String, required: true, unique: true },
+  invoiceNumber: { type: String, unique: true }, // Not required anymore, will be auto-set if missing
   customerName: { type: String, required: true },
   recipientName: { type: String, required: true },
   customerPhone: { type: String },
@@ -27,6 +27,13 @@ const InvoiceSchema = new Schema({
   createdBy: { type: String, required: true }, // Admin email
   paidAt: { type: Date }
 }, { timestamps: true });
+
+// Pre-save hook to set invoiceNumber to _id if not provided
+(InvoiceSchema as any).pre('save', function(this: any) {
+  if (!this.invoiceNumber) {
+    this.invoiceNumber = this._id.toString();
+  }
+});
 
 const Invoice = models.Invoice || model('Invoice', InvoiceSchema);
 
