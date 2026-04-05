@@ -10,7 +10,7 @@ import { useState } from 'react';
 const PaymentPage = () => {
   const [copied, setCopied] = useState<string | null>(null);
 
-  const BANK_ID = "agribank";
+  const BANK_ID = "vba";
   const ACCOUNT_NO = "4305205241021";
   const ACCOUNT_NAME = "MAI THI VINH";
   const AMOUNT = 10000;
@@ -36,8 +36,8 @@ const PaymentPage = () => {
 
       <div className="w-full max-w-2xl mx-auto px-4 py-8 space-y-6">
         {/* Back Button */}
-        <Link 
-          href="/" 
+        <Link
+          href="/"
           className="inline-flex items-center gap-2 text-slate-500 hover:text-emerald-600 transition-colors group mb-2"
         >
           <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
@@ -46,14 +46,14 @@ const PaymentPage = () => {
 
         {/* Header Section */}
         <div className="text-center space-y-2">
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-3xl font-bold text-slate-800"
           >
             Thanh toán trực tuyến
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.1 }}
@@ -64,7 +64,7 @@ const PaymentPage = () => {
         </div>
 
         {/* Main Content Card */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
@@ -74,17 +74,17 @@ const PaymentPage = () => {
           <div className="h-2 bg-gradient-to-r from-emerald-500 to-teal-500 w-full" />
 
           <div className="p-6 sm:p-8 space-y-8">
-            
+
             {/* QR Code Section */}
             <div className="flex flex-col items-center justify-center space-y-4">
               <div className="relative group p-4 bg-slate-50 rounded-2xl border border-slate-100 shadow-inner">
-                <img 
-                  src={qrUrl} 
-                  alt="VietQR Code" 
+                <img
+                  src={qrUrl}
+                  alt="VietQR Code"
                   className="w-64 h-64 sm:w-72 sm:h-72 object-contain rounded-lg"
                 />
                 <div className="absolute inset-0 flex items-center justify-center bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                   <QrCode size={40} className="text-emerald-600/20" />
+                  <QrCode size={40} className="text-emerald-600/20" />
                 </div>
               </div>
               <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">
@@ -112,7 +112,7 @@ const PaymentPage = () => {
                   <div className="text-xs text-slate-400 font-medium">Số tài khoản</div>
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-slate-800 text-lg tracking-wide">{ACCOUNT_NO}</span>
-                    <button 
+                    <button
                       onClick={() => copyToClipboard(ACCOUNT_NO, 'acc')}
                       className="text-slate-400 hover:text-emerald-600 transition-colors p-1"
                     >
@@ -140,7 +140,7 @@ const PaymentPage = () => {
                   <div className="text-xs text-slate-400 font-medium">Nội dung</div>
                   <div className="flex items-start justify-between gap-2">
                     <span className="font-medium text-slate-600 text-sm leading-tight line-clamp-2">{DESCRIPTION}</span>
-                    <button 
+                    <button
                       onClick={() => copyToClipboard(DESCRIPTION, 'desc')}
                       className="text-slate-400 hover:text-emerald-600 transition-colors p-1 flex-shrink-0"
                     >
@@ -153,7 +153,7 @@ const PaymentPage = () => {
 
             {/* Action Button */}
             <div className="pt-2">
-              <button 
+              <button
                 onClick={handlePayment}
                 className="group relative w-full bg-emerald-600 hover:bg-emerald-700 text-white py-5 rounded-2xl font-bold text-lg shadow-xl shadow-emerald-200 transition-all active:scale-[0.98] flex items-center justify-center gap-3 overflow-hidden"
               >
@@ -172,7 +172,7 @@ const PaymentPage = () => {
         {/* Troubleshooting / Note */}
         <div className="bg-amber-50 rounded-2xl p-4 border border-amber-100 flex gap-3">
           <div className="mt-0.5 text-amber-600 flex-shrink-0">
-             <Landmark size={20} />
+            <Landmark size={20} />
           </div>
           <div className="text-sm text-amber-800 leading-relaxed">
             <strong>Lưu ý:</strong> Vui lòng giữ nguyên nội dung chuyển khoản để hệ thống có thể đối soát tự động. Nếu gặp sự cố, hãy chụp ảnh màn hình giao dịch và gửi cho hỗ trợ.
