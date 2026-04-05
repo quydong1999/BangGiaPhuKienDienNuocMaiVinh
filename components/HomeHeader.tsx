@@ -92,6 +92,18 @@ export function HomeHeader({
               )}
             </Link>
 
+            {/* Thanh toán Button (Prominent) */}
+            <Link
+              href="/payment"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all border ${compact
+                  ? 'bg-white/20 hover:bg-white/30 border-white/30 text-white'
+                  : 'bg-emerald-50 hover:bg-emerald-100 border-emerald-100 text-emerald-700'
+                }`}
+            >
+              <CreditCard size={14} />
+              <span className="hidden xs:inline">Thanh toán</span>
+            </Link>
+
             {!isLoading && (
               <div className="relative" ref={dropdownRef}>
 
