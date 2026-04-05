@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { Search, LogOut, LogIn, UserRound, FolderPlus, PackagePlus, FileSpreadsheet, ShoppingCart, FileText } from 'lucide-react';
+import { Search, LogOut, LogIn, UserRound, FolderPlus, PackagePlus, FileSpreadsheet, ShoppingCart, FileText, CreditCard } from 'lucide-react';
 import { signOut } from "next-auth/react"
 import { useAdmin } from "@/hooks/useAdmin"
 import Link from 'next/link';
@@ -168,22 +168,40 @@ export function HomeHeader({
                           <UserRound size={14} />
                           Hóa đơn
                         </Link>
+                        <Link
+                          href="/payment"
+                          onClick={() => setIsDropdownOpen(false)}
+                          className="flex items-center gap-2 text-sm text-slate-600 hover:bg-slate-50 px-2 py-1.5 transition-colors font-medium"
+                        >
+                          <CreditCard size={14} />
+                          Thanh toán
+                        </Link>
                         <button
                           onClick={() => { signOut(); setIsDropdownOpen(false); }}
-                          className="flex items-center gap-2 text-sm text-red-500 hover:bg-red-50 px-2 py-1.5 transition-colors"
+                          className="flex items-center gap-2 text-sm text-red-500 hover:bg-red-50 px-2 py-1.5 transition-colors mt-1 border-t border-slate-50 pt-2"
                         >
                           <LogOut size={14} />
                           Đăng xuất
                         </button>
                       </>
                     ) : (
-                      <button
-                        onClick={() => { dispatch(openModal({ type: 'login' })); setIsDropdownOpen(false); }}
-                        className="flex items-center gap-2 text-sm text-slate-600 hover:bg-slate-50 px-2 py-1.5 transition-colors"
-                      >
-                        <LogIn size={14} />
-                        Đăng nhập
-                      </button>
+                      <>
+                        <button
+                          onClick={() => { dispatch(openModal({ type: 'login' })); setIsDropdownOpen(false); }}
+                          className="flex items-center gap-2 text-sm text-slate-600 hover:bg-slate-50 px-2 py-1.5 transition-colors border-b border-slate-50 pb-2"
+                        >
+                          <LogIn size={14} />
+                          Đăng nhập
+                        </button>
+                        <Link
+                          href="/payment"
+                          onClick={() => setIsDropdownOpen(false)}
+                          className="flex items-center gap-2 text-sm text-slate-600 hover:bg-slate-50 px-2 py-1.5 transition-colors mt-1"
+                        >
+                          <CreditCard size={14} />
+                          Thanh toán
+                        </Link>
+                      </>
                     )}
                   </div>
                 )}
