@@ -94,7 +94,7 @@ const PaymentPage = () => {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `VietQR_MaiVinh_${ACCOUNT_NO}.jpg`;
+      link.download = `VietQR_MaiVinh_${ACCOUNT_NO}`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
