@@ -80,7 +80,7 @@ const PaymentPage = () => {
 
   const handlePayment = () => {
     const appId = selectedApp?.appId || "timo";
-    const vietQrLink = `https://dl.vietqr.io/pay?app=${appId}&ba=${ACCOUNT_NO}@VBA&am=${AMOUNT}&tn=${encodeURIComponent(DESCRIPTION)}`;
+    const vietQrLink = `https://dl.vietqr.io/pay?app=${appId}&va=${ACCOUNT_NO}-VBA&am=${AMOUNT}&addInfo=${encodeURIComponent(DESCRIPTION)}`;
     window.location.href = vietQrLink;
   };
 
