@@ -10,7 +10,7 @@ import { useState } from 'react';
 const PaymentPage = () => {
   const [copied, setCopied] = useState<string | null>(null);
 
-  const BANK_ID = "vba";
+  const BANK_ID = "timo";
   const ACCOUNT_NO = "4305205241021";
   const ACCOUNT_NAME = "MAI THI VINH";
   const AMOUNT = 10000;
