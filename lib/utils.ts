@@ -18,6 +18,7 @@ export function flattenProducts(products: Product[]) {
         spec: spec.name,
         unit: price.unit,
         priceSell: price.price, // Map to old field name for easier table rendering
+        basePrice: price.basePrice || 0,
         _id_variant: `${product._id}-${spec.name}-${price.unit}`,
       }))
     )
