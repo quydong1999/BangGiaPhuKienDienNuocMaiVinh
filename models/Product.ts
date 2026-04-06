@@ -21,7 +21,8 @@ const ProductSchema = new Schema({
     }],
     default: []
   },
-  categoryId: { type: Schema.Types.ObjectId, ref: 'Category' }
+  categoryId: { type: Schema.Types.ObjectId, ref: 'Category' },
+  basePrice: { type: Number, default: 0 }
 }, { timestamps: true });
 
 const Product = models.Product || model('Product', ProductSchema);

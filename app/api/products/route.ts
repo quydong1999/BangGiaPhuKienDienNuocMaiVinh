@@ -42,6 +42,7 @@ export async function POST(req: Request) {
     const name = formData.get('name') as string;
     const specsRaw = formData.get('specs') as string;
     const categoryId = formData.get('categoryId') as string;
+    const basePrice = Number(formData.get('basePrice')) || 0;
     const imageFiles = formData.getAll('images') as File[];
 
     let specs = [];
@@ -78,6 +79,7 @@ export async function POST(req: Request) {
       name,
       specs,
       categoryId,
+      basePrice,
       images: imagesData.length > 0 ? imagesData : null,
     };
 

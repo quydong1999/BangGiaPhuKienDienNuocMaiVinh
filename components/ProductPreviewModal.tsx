@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { getBlurPlaceholder, getOptimizedImageUrl } from '@/lib/image-blur';
 import { ShoppingCart, Check, Info, Plus, Minus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import type { Product } from '@/types/types';
 import { useAppDispatch } from '@/store/hooks';
 import { addToCart } from '@/store/cartSlice';
@@ -32,6 +33,9 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
   const [quantity, setQuantity] = useState(1);
   const [editingQty, setEditingQty] = useState<string | null>(null);
   const [addedItemKey, setAddedItemKey] = useState<string | null>(null);
+  const [showBasePrice, setShowBasePrice] = useState(false);
+  const { data: session } = useSession();
+  const isAdmin = !!session?.user;
 
   const dispatch = useAppDispatch();
 
@@ -208,10 +212,20 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
         <div className="flex-1 flex flex-col min-h-0 bg-white">
           {/* Header, Title & Price (Static) */}
           <div className="p-4 md:p-6 pb-3 md:pb-4 border-b border-slate-100">
-            <h2 className="text-base md:text-xl font-bold text-slate-800 leading-tight line-clamp-2">
-              {product.name}
-            </h2>
-            <div className="mt-2 md:mt-3">
+            <div className="flex items-center flex-wrap gap-2">
+              <h2 className="text-base md:text-xl font-bold text-slate-800 leading-tight">
+                {product.name}
+              </h2>
+              {isAdmin && (
+                <button
+                  onClick={() => setShowBasePrice(!showBasePrice)}
+                  className="text-[10px] md:text-xs font-bold text-emerald-600 hover:text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100 transition-colors uppercase select-none active:scale-95 duration-200"
+                >
+                  {showBasePrice ? "Ẩn giá nhập" : "Xem giá nhập"}
+                </button>
+              )}
+            </div>
+            <div className="mt-2 md:mt-3 flex items-center flex-wrap gap-x-4 gap-y-2">
               <div className="flex items-baseline gap-1.5 md:gap-2">
                 <span className="text-xl md:text-2xl font-black text-emerald-600">
                   {currentPrice ? formatVND(currentPrice.price) : 'Liên hệ'}
@@ -220,6 +234,19 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
                   <span className="text-xs md:text-sm font-medium text-slate-400">/ {currentPrice.unit}</span>
                 )}
               </div>
+
+              {isAdmin && showBasePrice && (
+                <div className="flex items-center gap-2 border-l border-slate-200 pl-4">
+                  <div className="flex items-baseline gap-1.5 md:gap-2 animate-in fade-in slide-in-from-left-2 duration-300">
+                    <span className="text-xl md:text-2xl font-black text-red-600">
+                      {formatVND(product.basePrice || 0)}
+                    </span>
+                    {currentPrice && (
+                      <span className="text-xs md:text-sm font-medium text-slate-400">/ {currentPrice.unit}</span>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

@@ -45,6 +45,7 @@ export type Product = {
   specs: ProductSpec[];
   images?: CloudinaryImage[];
   categoryId?: string;
+  basePrice: number;
 };
 
 export interface FlattenedProduct extends Omit<Product, 'specs'> {
@@ -52,4 +53,5 @@ export interface FlattenedProduct extends Omit<Product, 'specs'> {
   spec: string;
   unit: string;
   priceSell: number;
+  basePrice: number;
 }

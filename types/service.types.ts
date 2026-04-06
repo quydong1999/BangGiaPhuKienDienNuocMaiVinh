@@ -42,6 +42,7 @@ export interface IProduct {
   specs: IProductSpec[];
   images?: ICloudinaryImage[];
   categoryId: string;
+  basePrice: number;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -50,6 +51,7 @@ export interface IProductCreateInput {
   name: string;
   specs: IProductSpec[];
   categoryId: string;
+  basePrice?: number;
   images?: ICloudinaryImage[] | null;
 }
 
@@ -57,6 +59,7 @@ export interface IProductUpdateInput {
   name?: string;
   specs?: IProductSpec[];
   categoryId?: string;
+  basePrice?: number;
   images?: ICloudinaryImage[] | null;
 }
 
@@ -116,6 +119,7 @@ export interface IBulkImportRow {
   spec: string;
   unit: string;
   price: number;
+  basePrice?: number;
   action: BulkImportAction;
 }
 

@@ -188,7 +188,10 @@ export class ProductService {
         return { success: false, message: 'Danh mục không tồn tại' };
       }
 
-      const newProduct = await Product.create([input], { session });
+      const newProduct = await Product.create([{
+        ...input,
+        basePrice: input.basePrice || 0
+      }], { session });
       const createdProduct = newProduct[0];
 
       await session.commitTransaction();
@@ -357,7 +360,11 @@ export class ProductService {
       };
 
       // 4. Gom nhóm new_product rows → Map<name, specs>
-      const newProductsMap = new Map<string, { originalName: string; specs: Map<string, { originalSpec: string; prices: { unit: string; price: number }[] }> }>();
+      const newProductsMap = new Map<string, { 
+        originalName: string; 
+        basePrice?: number;
+        specs: Map<string, { originalSpec: string; prices: { unit: string; price: number }[] }> 
+      }>();
 
       for (const row of rows) {
         if (row.action === 'new_product') {
@@ -371,14 +378,20 @@ export class ProductService {
             entry.specs.set(specKey, { originalSpec: row.spec, prices: [] });
           }
           entry.specs.get(specKey)!.prices.push({ unit: row.unit, price: row.price });
+          // Lấy basePrice từ row nếu có, ưu tiên giá trị khác 0
+          if (row.basePrice !== undefined && row.basePrice !== 0) {
+            entry.basePrice = row.basePrice;
+          }
         }
       }
+
 
       // 5. Batch create new products
       if (newProductsMap.size > 0) {
         const newProducts = Array.from(newProductsMap.values()).map(entry => ({
           name: entry.originalName,
           categoryId,
+          basePrice: entry.basePrice || 0,
           specs: Array.from(entry.specs.values()).map(spec => ({
             name: spec.originalSpec,
             prices: spec.prices,
@@ -426,6 +439,14 @@ export class ProductService {
           if (!entry) continue;
           entry.updatePrices.push({ specName: row.spec, unit: row.unit, price: row.price });
         }
+
+        // Cập nhật basePrice cho entry nếu row có basePrice
+        if (row.basePrice !== undefined && row.basePrice !== 0) {
+          const entry = getOrCreateUpdate(row.name);
+          if (entry) {
+            entry.product.basePrice = row.basePrice;
+          }
+        }
       }
 
       // 7. Execute updates per product (batch within each product)
@@ -470,6 +491,12 @@ export class ProductService {
               modified = true;
             }
           }
+        }
+
+        // 7d. Update basePrice if it was changed in rows
+        // Note: product.basePrice might have been set in the loop above
+        if (product.isModified('basePrice')) {
+          modified = true;
         }
 
         if (modified) {

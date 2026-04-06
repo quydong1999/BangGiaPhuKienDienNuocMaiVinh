@@ -29,6 +29,7 @@ interface CsvRow {
   spec: string;
   unit: string;
   price: number;
+  basePrice: number;
 }
 
 interface AnalyzedRow extends CsvRow {
@@ -49,6 +50,7 @@ const HEADER_MAP: Record<string, keyof CsvRow> = {
   "quy cách": "spec",
   "đơn vị tính": "unit",
   "giá bán": "price",
+  "giá nhập": "basePrice",
 };
 
 const HEADER_LABELS: Record<keyof CsvRow, string> = {
@@ -56,6 +58,7 @@ const HEADER_LABELS: Record<keyof CsvRow, string> = {
   spec: "Quy cách",
   unit: "Đơn vị tính",
   price: "Giá bán",
+  basePrice: "Giá nhập",
 };
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -108,7 +111,9 @@ function parseCSV(text: string) {
   for (const [headerText, field] of Object.entries(HEADER_MAP)) {
     const idx = headers.findIndex((h) => h === headerText);
     if (idx === -1) {
-      missingHeaders.push(HEADER_LABELS[field]);
+      if (field !== "basePrice") {
+        missingHeaders.push(HEADER_LABELS[field as keyof CsvRow]);
+      }
     } else {
       colIndices[field] = idx;
     }
@@ -132,6 +137,8 @@ function parseCSV(text: string) {
     const unit = cols[colIndices.unit]?.trim() || "";
     const priceStr = cols[colIndices.price]?.trim() || "";
     const price = Number(priceStr);
+    const basePriceStr = colIndices.basePrice !== undefined ? cols[colIndices.basePrice]?.trim() : "";
+    const basePrice = basePriceStr ? Number(basePriceStr) : 0;
 
     // Bỏ qua dòng hoàn toàn trống
     if (!name && !spec && !unit && !priceStr) continue;
@@ -146,7 +153,7 @@ function parseCSV(text: string) {
     }
 
     if (!hasError) {
-      rows.push({ name, spec, unit, price });
+      rows.push({ name, spec, unit, price, basePrice: isNaN(basePrice) ? 0 : basePrice });
     }
   }
 
@@ -183,6 +190,7 @@ function analyzeImport(csvRows: CsvRow[], existingProducts: Product[]): Analyzed
       return { ...row, action: "update_price" as const, currentPrice: existingPrice };
     }
 
+    // Luôn trả về basePrice từ row
     return { ...row, action: "unchanged" as const };
   });
 }

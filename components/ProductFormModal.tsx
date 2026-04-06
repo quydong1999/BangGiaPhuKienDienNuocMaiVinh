@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCreateProduct, useUpdateProduct, useDeleteProduct } from "@/hooks/useProducts";
 import { useSkeleton } from "@/components/providers/skeleton-provider";
-import { Upload, Plus, Trash2, ChevronRight, Package } from "lucide-react";
+import { Upload, Plus, Trash2, ChevronRight, Package, DollarSign } from "lucide-react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -28,6 +28,7 @@ const specSchema = z.object({
 const productSchema = z.object({
   name: z.string().min(1, { message: "Tên sản phẩm không được bỏ trống" }),
   specs: z.array(specSchema).min(1, { message: "Cần ít nhất 1 quy cách" }),
+  basePrice: z.number().min(0, { message: "Giá nhập không được âm" }),
   images: z.any().optional(),
 });
 
@@ -75,6 +76,7 @@ export function ProductFormModal({
     mode: "onChange",
     defaultValues: {
       name: "",
+      basePrice: 0,
       specs: [{ name: "", prices: [{ unit: "", price: 0 }] }]
     },
   });
@@ -89,6 +91,7 @@ export function ProductFormModal({
       if (initialData) {
         reset({
           name: initialData.name,
+          basePrice: initialData.basePrice || 0,
           specs: initialData.specs.length > 0
             ? initialData.specs
             : [{ name: "", prices: [{ unit: "", price: 0 }] }],
@@ -116,6 +119,7 @@ export function ProductFormModal({
       } else {
         reset({
           name: "",
+          basePrice: 0,
           specs: [{ name: "", prices: [{ unit: "", price: 0 }] }]
         });
         setImages([]);
@@ -147,6 +151,7 @@ export function ProductFormModal({
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("categoryId", selectedCategoryId);
+    formData.append("basePrice", (data.basePrice || 0).toString());
     formData.append("specs", JSON.stringify(data.specs));
 
     // new images
@@ -254,6 +259,24 @@ export function ProductFormModal({
             placeholder="VD: Co 90 uPVC"
           />
           {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
+        </div>
+
+        {/* Giá nhập */}
+        <div className="space-y-1">
+          <label className="text-sm font-bold text-slate-700">Giá nhập (Dùng để tính lợi nhuận)</label>
+          <div className="relative">
+            <input
+              {...register("basePrice", { valueAsNumber: true })}
+              type="number"
+              disabled={isPending || isCompressing}
+              className="w-full p-2.5 pl-10 border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none text-base transition-all disabled:bg-slate-100"
+              placeholder="0"
+            />
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+              <DollarSign size={18} />
+            </div>
+          </div>
+          {errors.basePrice && <p className="text-red-500 text-xs mt-1">{errors.basePrice.message}</p>}
         </div>
 
         {/* Specs Array */}

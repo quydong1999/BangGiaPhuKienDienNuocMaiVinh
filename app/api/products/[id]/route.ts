@@ -31,6 +31,8 @@ export async function PATCH(
     const name = formData.get('name') as string;
     const specsRaw = formData.get('specs') as string;
     const categoryId = formData.get('categoryId') as string;
+    const basePriceStr = formData.get('basePrice');
+    const basePrice = basePriceStr !== null ? Number(basePriceStr) : undefined;
     const imageFiles = formData.getAll('images') as File[];
     const retainedImageIdsRaw = formData.get('retainedImageIds') as string;
     let retainedImageIds: string[] = [];
@@ -93,6 +95,7 @@ export async function PATCH(
 
     if (name) input.name = name;
     if (categoryId) input.categoryId = categoryId;
+    if (basePrice !== undefined) input.basePrice = basePrice;
     if (specsRaw) {
       try {
         input.specs = JSON.parse(specsRaw);
