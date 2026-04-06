@@ -35,6 +35,7 @@ interface CsvRow {
 interface AnalyzedRow extends CsvRow {
   action: BulkImportAction;
   currentPrice?: number;
+  currentBasePrice?: number;
 }
 
 interface BulkImportModalProps {
@@ -161,8 +162,8 @@ function parseCSV(text: string) {
 }
 
 function analyzeImport(csvRows: CsvRow[], existingProducts: Product[]): AnalyzedRow[] {
-  // Build lookup: Map<normalizedName, Map<normalizedSpec, Map<normalizedUnit, price>>>
-  const productMap = new Map<string, Map<string, Map<string, number>>>();
+  // Build lookup: Map<normalizedName, { basePrice, specs: Map<normalizedSpec, Map<normalizedUnit, price>> }>
+  const productMap = new Map<string, { basePrice: number, specs: Map<string, Map<string, number>> }>();
 
   for (const product of existingProducts) {
     const specMap = new Map<string, Map<string, number>>();
@@ -173,24 +174,36 @@ function analyzeImport(csvRows: CsvRow[], existingProducts: Product[]): Analyzed
       }
       specMap.set(normalize(spec.name), priceMap);
     }
-    productMap.set(normalize(product.name), specMap);
+    productMap.set(normalize(product.name), { basePrice: product.basePrice || 0, specs: specMap });
   }
 
   return csvRows.map((row) => {
-    const specMap = productMap.get(normalize(row.name));
-    if (!specMap) return { ...row, action: "new_product" as const };
+    const productInfo = productMap.get(normalize(row.name));
+    if (!productInfo) return { ...row, action: "new_product" as const };
 
+    const specMap = productInfo.specs;
     const priceMap = specMap.get(normalize(row.spec));
     if (!priceMap) return { ...row, action: "new_spec" as const };
 
     const existingPrice = priceMap.get(normalize(row.unit));
-    if (existingPrice === undefined) return { ...row, action: "new_price" as const };
+    const existingBasePrice = productInfo.basePrice;
 
-    if (existingPrice !== row.price) {
-      return { ...row, action: "update_price" as const, currentPrice: existingPrice };
+    if (existingPrice === undefined) {
+      return { ...row, action: "new_price" as const, currentBasePrice: existingBasePrice };
     }
 
-    // Luôn trả về basePrice từ row
+    const priceChanged = existingPrice !== row.price;
+    const basePriceChanged = existingBasePrice !== row.basePrice;
+
+    if (priceChanged || basePriceChanged) {
+      return { 
+        ...row, 
+        action: "update_price" as const, 
+        currentPrice: existingPrice,
+        currentBasePrice: existingBasePrice
+      };
+    }
+
     return { ...row, action: "unchanged" as const };
   });
 }
@@ -529,6 +542,7 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
                           <th className="text-left px-4 py-2 text-xs font-medium text-slate-500">Quy cách</th>
                           <th className="text-left px-4 py-2 text-xs font-medium text-slate-500">ĐVT</th>
                           <th className="text-right px-4 py-2 text-xs font-medium text-slate-500">Giá bán</th>
+                          <th className="text-right px-4 py-2 text-xs font-medium text-slate-500">Giá nhập</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -538,7 +552,10 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
                             <td className="px-4 py-2 text-slate-600">{row.spec}</td>
                             <td className="px-4 py-2 text-slate-600">{row.unit}</td>
                             <td className="px-4 py-2 text-right text-slate-700 font-medium">
-                              {row.price.toLocaleString("vi-VN")}đ
+                              {row.price.toLocaleString("vi-VN")}
+                            </td>
+                            <td className="px-4 py-2 text-right text-slate-500 font-medium whitespace-nowrap">
+                              {row.basePrice.toLocaleString("vi-VN")}
                             </td>
                           </tr>
                         ))}
@@ -629,7 +646,8 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
                           <th className="text-left px-3 py-2 text-xs font-medium text-slate-500">Tên SP</th>
                           <th className="text-left px-3 py-2 text-xs font-medium text-slate-500">Quy cách</th>
                           <th className="text-left px-3 py-2 text-xs font-medium text-slate-500">ĐVT</th>
-                          <th className="text-right px-3 py-2 text-xs font-medium text-slate-500">Giá</th>
+                          <th className="text-right px-3 py-2 text-xs font-medium text-slate-500 min-w-[80px]">Giá bán</th>
+                          <th className="text-right px-3 py-2 text-xs font-medium text-slate-500 min-w-[80px]">Giá nhập</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -656,19 +674,36 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
                                 <td className="px-3 py-2 text-slate-600">{row.spec}</td>
                                 <td className="px-3 py-2 text-slate-600">{row.unit}</td>
                                 <td className="px-3 py-2 text-right">
-                                  {row.action === "update_price" && row.currentPrice !== undefined ? (
+                                  {row.action === "update_price" && row.currentPrice !== undefined && row.currentPrice !== row.price ? (
                                     <span className="flex items-center justify-end gap-1">
-                                      <span className="text-slate-400 line-through text-xs">
+                                      <span className="text-slate-400 line-through text-[10px]">
                                         {row.currentPrice.toLocaleString("vi-VN")}
                                       </span>
-                                      <ArrowRight size={12} className="text-slate-400" />
+                                      <ArrowRight size={10} className="text-slate-400" />
                                       <span className="text-amber-700 font-medium">
-                                        {row.price.toLocaleString("vi-VN")}đ
+                                        {row.price.toLocaleString("vi-VN")}
                                       </span>
                                     </span>
                                   ) : (
                                     <span className="text-slate-700 font-medium">
-                                      {row.price.toLocaleString("vi-VN")}đ
+                                      {row.price.toLocaleString("vi-VN")}
+                                    </span>
+                                  )}
+                                </td>
+                                <td className="px-3 py-2 text-right">
+                                  {row.action === "update_price" && row.currentBasePrice !== undefined && row.currentBasePrice !== row.basePrice ? (
+                                    <span className="flex items-center justify-end gap-1">
+                                      <span className="text-slate-400 line-through text-[10px]">
+                                        {row.currentBasePrice.toLocaleString("vi-VN")}
+                                      </span>
+                                      <ArrowRight size={10} className="text-slate-400" />
+                                      <span className="text-red-700 font-medium whitespace-nowrap">
+                                        {row.basePrice.toLocaleString("vi-VN")}
+                                      </span>
+                                    </span>
+                                  ) : (
+                                    <span className="text-slate-500 font-medium whitespace-nowrap">
+                                      {row.basePrice.toLocaleString("vi-VN")}
                                     </span>
                                   )}
                                 </td>
