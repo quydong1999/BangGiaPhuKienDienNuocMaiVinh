@@ -32,6 +32,7 @@ export type Category = {
 export type ProductPrice = {
   unit: string;
   price: number;
+  basePrice: number;
 };
 
 export type ProductSpec = {
@@ -45,7 +46,6 @@ export type Product = {
   specs: ProductSpec[];
   images?: CloudinaryImage[];
   categoryId?: string;
-  basePrice: number;
 };
 
 export interface FlattenedProduct extends Omit<Product, 'specs'> {

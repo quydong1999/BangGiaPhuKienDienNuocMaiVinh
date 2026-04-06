@@ -239,7 +239,7 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
                 <div className="flex items-center gap-2 border-l border-slate-200 pl-4">
                   <div className="flex items-baseline gap-1.5 md:gap-2 animate-in fade-in slide-in-from-left-2 duration-300">
                     <span className="text-xl md:text-2xl font-black text-red-600">
-                      {formatVND(product.basePrice || 0)}
+                      {formatVND(currentPrice?.basePrice || 0)}
                     </span>
                     {currentPrice && (
                       <span className="text-xs md:text-sm font-medium text-slate-400">/ {currentPrice.unit}</span>

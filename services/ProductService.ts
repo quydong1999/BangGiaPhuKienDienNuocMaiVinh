@@ -189,8 +189,7 @@ export class ProductService {
       }
 
       const newProduct = await Product.create([{
-        ...input,
-        basePrice: input.basePrice || 0
+        ...input
       }], { session });
       const createdProduct = newProduct[0];
 
@@ -362,8 +361,7 @@ export class ProductService {
       // 4. Gom nhóm new_product rows → Map<name, specs>
       const newProductsMap = new Map<string, { 
         originalName: string; 
-        basePrice?: number;
-        specs: Map<string, { originalSpec: string; prices: { unit: string; price: number }[] }> 
+        specs: Map<string, { originalSpec: string; prices: { unit: string; price: number; basePrice: number }[] }> 
       }>();
 
       for (const row of rows) {
@@ -377,11 +375,7 @@ export class ProductService {
           if (!entry.specs.has(specKey)) {
             entry.specs.set(specKey, { originalSpec: row.spec, prices: [] });
           }
-          entry.specs.get(specKey)!.prices.push({ unit: row.unit, price: row.price });
-          // Lấy basePrice từ row nếu có, ưu tiên giá trị khác 0
-          if (row.basePrice !== undefined && row.basePrice !== 0) {
-            entry.basePrice = row.basePrice;
-          }
+          entry.specs.get(specKey)!.prices.push({ unit: row.unit, price: row.price, basePrice: row.basePrice || 0 });
         }
       }
 
@@ -391,7 +385,6 @@ export class ProductService {
         const newProducts = Array.from(newProductsMap.values()).map(entry => ({
           name: entry.originalName,
           categoryId,
-          basePrice: entry.basePrice || 0,
           specs: Array.from(entry.specs.values()).map(spec => ({
             name: spec.originalSpec,
             prices: spec.prices,
@@ -405,9 +398,9 @@ export class ProductService {
       // Map<normalizedProductName, { new_specs, new_prices, update_prices }>
       type UpdateEntry = {
         product: typeof existingProducts[0];
-        newSpecs: Map<string, { originalSpec: string; prices: { unit: string; price: number }[] }>;
-        newPrices: { specName: string; unit: string; price: number }[];
-        updatePrices: { specName: string; unit: string; price: number }[];
+        newSpecs: Map<string, { originalSpec: string; prices: { unit: string; price: number; basePrice: number }[] }>;
+        newPrices: { specName: string; unit: string; price: number; basePrice: number }[];
+        updatePrices: { specName: string; unit: string; price: number; basePrice: number }[];
       };
       const updatesMap = new Map<string, UpdateEntry>();
 
@@ -429,24 +422,18 @@ export class ProductService {
           if (!entry.newSpecs.has(specKey)) {
             entry.newSpecs.set(specKey, { originalSpec: row.spec, prices: [] });
           }
-          entry.newSpecs.get(specKey)!.prices.push({ unit: row.unit, price: row.price });
+          entry.newSpecs.get(specKey)!.prices.push({ unit: row.unit, price: row.price, basePrice: row.basePrice || 0 });
         } else if (row.action === 'new_price') {
           const entry = getOrCreateUpdate(row.name);
           if (!entry) continue;
-          entry.newPrices.push({ specName: row.spec, unit: row.unit, price: row.price });
+          entry.newPrices.push({ specName: row.spec, unit: row.unit, price: row.price, basePrice: row.basePrice || 0 });
         } else if (row.action === 'update_price') {
           const entry = getOrCreateUpdate(row.name);
           if (!entry) continue;
-          entry.updatePrices.push({ specName: row.spec, unit: row.unit, price: row.price });
+          entry.updatePrices.push({ specName: row.spec, unit: row.unit, price: row.price, basePrice: row.basePrice || 0 });
         }
 
-        // Cập nhật basePrice cho entry nếu row có basePrice
-        if (row.basePrice !== undefined && row.basePrice !== 0) {
-          const entry = getOrCreateUpdate(row.name);
-          if (entry) {
-            entry.product.basePrice = row.basePrice;
-          }
-        }
+
       }
 
       // 7. Execute updates per product (batch within each product)
@@ -470,7 +457,7 @@ export class ProductService {
             (s: any) => normalize(s.name) === normalize(np.specName)
           );
           if (spec) {
-            spec.prices.push({ unit: np.unit, price: np.price });
+            spec.prices.push({ unit: np.unit, price: np.price, basePrice: np.basePrice });
             result.pricesAdded++;
             modified = true;
           }
@@ -487,17 +474,14 @@ export class ProductService {
             );
             if (price) {
               price.price = up.price;
+              price.basePrice = up.basePrice;
               result.pricesUpdated++;
               modified = true;
             }
           }
         }
 
-        // 7d. Update basePrice if it was changed in rows
-        // Note: product.basePrice might have been set in the loop above
-        if (product.isModified('basePrice')) {
-          modified = true;
-        }
+
 
         if (modified) {
           await product.save({ session });

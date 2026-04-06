@@ -2,7 +2,8 @@ import mongoose, { Schema, model, models } from 'mongoose';
 
 const PriceSchema = new Schema({
   unit: { type: String, required: true },
-  price: { type: Number, required: true }
+  price: { type: Number, required: true },
+  basePrice: { type: Number, default: 0 }
 }, { _id: false });
 
 const SpecSchema = new Schema({
@@ -22,7 +23,6 @@ const ProductSchema = new Schema({
     default: []
   },
   categoryId: { type: Schema.Types.ObjectId, ref: 'Category' },
-  basePrice: { type: Number, default: 0 }
 }, { timestamps: true });
 
 const Product = models.Product || model('Product', ProductSchema);

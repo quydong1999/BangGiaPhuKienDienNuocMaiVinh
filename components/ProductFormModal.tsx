@@ -17,7 +17,8 @@ import { cn } from "@/lib/utils";
 
 const priceSchema = z.object({
   unit: z.string().min(1, { message: "Đơn vị không được bỏ trống" }),
-  price: z.number().min(0, { message: "Giá không hợp lệ" }),
+  price: z.number().min(0, { message: "Giá bán không hợp lệ" }),
+  basePrice: z.number().min(0, { message: "Giá nhập không hợp lệ" }),
 });
 
 const specSchema = z.object({
@@ -28,7 +29,6 @@ const specSchema = z.object({
 const productSchema = z.object({
   name: z.string().min(1, { message: "Tên sản phẩm không được bỏ trống" }),
   specs: z.array(specSchema).min(1, { message: "Cần ít nhất 1 quy cách" }),
-  basePrice: z.number().min(0, { message: "Giá nhập không được âm" }),
   images: z.any().optional(),
 });
 
@@ -76,8 +76,7 @@ export function ProductFormModal({
     mode: "onChange",
     defaultValues: {
       name: "",
-      basePrice: 0,
-      specs: [{ name: "", prices: [{ unit: "", price: 0 }] }]
+      specs: [{ name: "", prices: [{ unit: "", price: 0, basePrice: 0 }] }]
     },
   });
 
@@ -91,10 +90,9 @@ export function ProductFormModal({
       if (initialData) {
         reset({
           name: initialData.name,
-          basePrice: initialData.basePrice || 0,
           specs: initialData.specs.length > 0
             ? initialData.specs
-            : [{ name: "", prices: [{ unit: "", price: 0 }] }],
+            : [{ name: "", prices: [{ unit: "", price: 0, basePrice: 0 }] }],
         });
 
         // Load initial images
@@ -119,8 +117,7 @@ export function ProductFormModal({
       } else {
         reset({
           name: "",
-          basePrice: 0,
-          specs: [{ name: "", prices: [{ unit: "", price: 0 }] }]
+          specs: [{ name: "", prices: [{ unit: "", price: 0, basePrice: 0 }] }]
         });
         setImages([]);
         setSelectedCategoryId(categoryId);
@@ -151,7 +148,6 @@ export function ProductFormModal({
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("categoryId", selectedCategoryId);
-    formData.append("basePrice", (data.basePrice || 0).toString());
     formData.append("specs", JSON.stringify(data.specs));
 
     // new images
@@ -261,24 +257,6 @@ export function ProductFormModal({
           {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
         </div>
 
-        {/* Giá nhập */}
-        <div className="space-y-1">
-          <label className="text-sm font-bold text-slate-700">Giá nhập (Dùng để tính lợi nhuận)</label>
-          <div className="relative">
-            <input
-              {...register("basePrice", { valueAsNumber: true })}
-              type="number"
-              disabled={isPending || isCompressing}
-              className="w-full p-2.5 pl-10 border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none text-base transition-all disabled:bg-slate-100"
-              placeholder="0"
-            />
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
-              <DollarSign size={18} />
-            </div>
-          </div>
-          {errors.basePrice && <p className="text-red-500 text-xs mt-1">{errors.basePrice.message}</p>}
-        </div>
-
         {/* Specs Array */}
         <div className="space-y-4">
           <label className="text-sm font-bold text-slate-700">Cấu hình & Giá *</label>
@@ -324,7 +302,7 @@ export function ProductFormModal({
 
           <button
             type="button"
-            onClick={() => appendSpec({ name: "", prices: [{ unit: "", price: 0 }] })}
+            onClick={() => appendSpec({ name: "", prices: [{ unit: "", price: 0, basePrice: 0 }] })}
             className="w-full flex items-center justify-center gap-1.5 px-3 py-2.5 border-2 border-dashed border-emerald-300 bg-emerald-50/50 text-emerald-700 hover:bg-emerald-100 hover:border-emerald-400 font-bold text-xs transition-colors"
           >
             <Plus size={14} /> Thêm quy cách
@@ -410,7 +388,7 @@ function PriceFieldArray({ nestIndex, control, register, errors, disabled }: any
         <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Đơn vị & Giá *</span>
         <button
           type="button"
-          onClick={() => append({ unit: "", price: 0 })}
+          onClick={() => append({ unit: "", price: 0, basePrice: 0 })}
           className="text-[10px] flex items-center gap-1 font-bold text-emerald-600 hover:text-emerald-700"
         >
           <Plus size={12} /> Thêm đơn vị
@@ -432,7 +410,15 @@ function PriceFieldArray({ nestIndex, control, register, errors, disabled }: any
                 {...register(`specs.${nestIndex}.prices.${kIdx}.price`, { valueAsNumber: true })}
                 type="number"
                 placeholder="Giá bán"
-                className="w-full p-2 bg-white border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none text-base"
+                className="w-full p-2 bg-white border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none text-[13px] md:text-sm"
+              />
+            </div>
+            <div className="flex-1">
+              <input
+                {...register(`specs.${nestIndex}.prices.${kIdx}.basePrice`, { valueAsNumber: true })}
+                type="number"
+                placeholder="Giá nhập"
+                className="w-full p-2 bg-white border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none text-[13px] md:text-sm"
               />
             </div>
             {fields.length > 1 && (

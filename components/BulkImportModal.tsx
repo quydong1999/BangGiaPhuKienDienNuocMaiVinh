@@ -162,19 +162,19 @@ function parseCSV(text: string) {
 }
 
 function analyzeImport(csvRows: CsvRow[], existingProducts: Product[]): AnalyzedRow[] {
-  // Build lookup: Map<normalizedName, { basePrice, specs: Map<normalizedSpec, Map<normalizedUnit, price>> }>
-  const productMap = new Map<string, { basePrice: number, specs: Map<string, Map<string, number>> }>();
+  // Build lookup: Map<normalizedName, { specs: Map<normalizedSpec, Map<normalizedUnit, {price, basePrice}>> }>
+  const productMap = new Map<string, { specs: Map<string, Map<string, { price: number, basePrice: number }>> }>();
 
   for (const product of existingProducts) {
-    const specMap = new Map<string, Map<string, number>>();
+    const specMap = new Map<string, Map<string, { price: number, basePrice: number }>>();
     for (const spec of product.specs) {
-      const priceMap = new Map<string, number>();
+      const priceMap = new Map<string, { price: number, basePrice: number }>();
       for (const p of spec.prices) {
-        priceMap.set(normalize(p.unit), p.price);
+        priceMap.set(normalize(p.unit), { price: p.price, basePrice: p.basePrice || 0 });
       }
       specMap.set(normalize(spec.name), priceMap);
     }
-    productMap.set(normalize(product.name), { basePrice: product.basePrice || 0, specs: specMap });
+    productMap.set(normalize(product.name), { specs: specMap });
   }
 
   return csvRows.map((row) => {
@@ -185,11 +185,12 @@ function analyzeImport(csvRows: CsvRow[], existingProducts: Product[]): Analyzed
     const priceMap = specMap.get(normalize(row.spec));
     if (!priceMap) return { ...row, action: "new_spec" as const };
 
-    const existingPrice = priceMap.get(normalize(row.unit));
-    const existingBasePrice = productInfo.basePrice;
+    const existing = priceMap.get(normalize(row.unit));
+    const existingPrice = existing?.price;
+    const existingBasePrice = existing?.basePrice ?? 0;
 
     if (existingPrice === undefined) {
-      return { ...row, action: "new_price" as const, currentBasePrice: existingBasePrice };
+      return { ...row, action: "new_price" as const, currentBasePrice: 0 };
     }
 
     const priceChanged = existingPrice !== row.price;
