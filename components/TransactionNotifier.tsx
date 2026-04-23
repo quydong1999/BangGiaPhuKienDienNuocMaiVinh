@@ -105,18 +105,14 @@ export default function TransactionNotifier() {
             }
           );
 
-          // Tính năng đọc to bằng giọng "Chị Google" (Google Translate TTS)
-          const amountText = new Intl.NumberFormat('vi-VN').format(amount);
-          const textToSpeak = isIncoming 
-            ? `Đã nhận thành công ${amountText} đồng.` 
-            : `Đã chuyển thành công ${amountText} đồng.`;
-          
+          // Phát âm thanh "ting ting" khi có thông báo mới
           try {
-            const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=vi&q=${encodeURIComponent(textToSpeak)}`;
-            const audio = new Audio(url);
-            audio.play().catch(err => console.warn('Không thể tự động phát âm thanh (trình duyệt chặn autoplay):', err));
+            const audio = new Audio('/ting.mp3');
+            audio.play().catch(err => {
+              console.warn('Không thể phát âm thanh thông báo tự động (cần tương tác của người dùng trước):', err);
+            });
           } catch (err) {
-            console.error('Lỗi khi phát giọng đọc Google:', err);
+            console.error('Lỗi khi phát âm thanh:', err);
           }
 
           // Dispatch custom event để các component khác có thể listen
