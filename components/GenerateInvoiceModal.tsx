@@ -13,6 +13,10 @@ import {
   TrendingUp,
   AlertCircle,
   Sparkles,
+  Plus,
+  Minus,
+  Lock,
+  Unlock,
 } from "lucide-react";
 import { formatVND } from "@/lib/utils";
 import Swal from "sweetalert2";
@@ -60,6 +64,7 @@ export function GenerateInvoiceModal({
   // Preview data
   const [generatedItems, setGeneratedItems] = useState<GeneratedItem[]>([]);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [lockedItems, setLockedItems] = useState<Set<number>>(new Set());
 
   // Fetch customers for combobox
   useEffect(() => {
@@ -89,6 +94,7 @@ export function GenerateInvoiceModal({
       setMinTotal("");
       setMaxTotal("");
       setIsRecipientManual(false);
+      setLockedItems(new Set());
       setFormData({
         customerName: "Khách tự động",
         recipientName: "Khách tự động",
@@ -138,18 +144,79 @@ export function GenerateInvoiceModal({
     }
   }, [minTotal, maxTotal]);
 
+  // Toggle lock for an item
+  const toggleLock = useCallback((idx: number) => {
+    setLockedItems((prev) => {
+      const next = new Set(prev);
+      if (next.has(idx)) next.delete(idx);
+      else next.add(idx);
+      return next;
+    });
+  }, []);
+
+  // Adjust quantity for an item
+  const adjustQuantity = useCallback(
+    (idx: number, delta: number) => {
+      setGeneratedItems((prev) => {
+        const next = [...prev];
+        const item = { ...next[idx] };
+        const newQty = Math.max(1, item.quantity + delta);
+        item.quantity = newQty;
+        item.total = item.price * newQty;
+        next[idx] = item;
+        return next;
+      });
+    },
+    []
+  );
+
+  // Recalculate totalAmount whenever generatedItems change
+  useEffect(() => {
+    if (generatedItems.length > 0) {
+      setTotalAmount(generatedItems.reduce((sum, item) => sum + item.total, 0));
+    }
+  }, [generatedItems]);
+
+  // Get unique key for a product item
+  const getItemKey = useCallback(
+    (item: GeneratedItem) =>
+      `${item.productId}-${item.specName}-${item.unit}`,
+    []
+  );
+
   const handleRegenerate = useCallback(async () => {
-    // Go back to re-generate with same params
     setIsGenerating(true);
     setError(null);
 
     try {
+      // Separate locked and unlocked items
+      const kept = generatedItems.filter((_, idx) => lockedItems.has(idx));
+      const keptTotal = kept.reduce((sum, item) => sum + item.total, 0);
+      const keptKeys = kept.map((item) => getItemKey(item));
+
+      const originalMin = Number(minTotal);
+      const originalMax = Number(maxTotal);
+
+      // Calculate remaining budget
+      const adjustedMin = Math.max(0, originalMin - keptTotal);
+      const adjustedMax = Math.max(0, originalMax - keptTotal);
+
+      if (adjustedMax <= 0) {
+        // Locked items already exceed/meet the target
+        // Just keep the locked items
+        setGeneratedItems(kept);
+        setTotalAmount(keptTotal);
+        setIsGenerating(false);
+        return;
+      }
+
       const resp = await fetch("/api/invoices/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          minTotal: Number(minTotal),
-          maxTotal: Number(maxTotal),
+          minTotal: adjustedMin,
+          maxTotal: adjustedMax,
+          excludeKeys: keptKeys,
         }),
       });
 
@@ -159,14 +226,21 @@ export function GenerateInvoiceModal({
         return;
       }
 
-      setGeneratedItems(data.items);
-      setTotalAmount(data.totalAmount);
+      // Merge: locked items first, then new items
+      const merged = [...kept, ...data.items];
+      setGeneratedItems(merged);
+      setTotalAmount(keptTotal + data.totalAmount);
+
+      // Re-map locked indices (locked items are now at the front)
+      const newLocked = new Set<number>();
+      kept.forEach((_, idx) => newLocked.add(idx));
+      setLockedItems(newLocked);
     } catch (e) {
       setError("Không thể kết nối tới server");
     } finally {
       setIsGenerating(false);
     }
-  }, [minTotal, maxTotal]);
+  }, [minTotal, maxTotal, generatedItems, lockedItems, getItemKey]);
 
   const handleSave = useCallback(async () => {
     setIsSaving(true);
@@ -375,15 +449,29 @@ export function GenerateInvoiceModal({
                 </span>
                 <span className="text-[10px] font-bold text-emerald-500">
                   {generatedItems.length} sản phẩm
+                  {lockedItems.size > 0 && (
+                    <> · <Lock size={9} className="inline -mt-0.5" /> {lockedItems.size} giữ lại</>
+                  )}
                 </span>
               </div>
               <p className="text-2xl font-black text-emerald-800 tabular-nums tracking-tight">
                 {formatVND(totalAmount)}
               </p>
-              <p className="text-[10px] text-emerald-500 mt-1">
-                Khoảng: {formatVND(Number(minTotal))} –{" "}
-                {formatVND(Number(maxTotal))}
-              </p>
+              <div className="flex items-center justify-between mt-1">
+                <p className="text-[10px] text-emerald-500">
+                  Khoảng: {formatVND(Number(minTotal))} –{" "}
+                  {formatVND(Number(maxTotal))}
+                </p>
+                {lockedItems.size > 0 && (
+                  <p className="text-[10px] text-amber-600 font-bold">
+                    Đã giữ: {formatVND(
+                      generatedItems
+                        .filter((_, idx) => lockedItems.has(idx))
+                        .reduce((sum, item) => sum + item.total, 0)
+                    )}
+                  </p>
+                )}
+              </div>
             </div>
 
             {/* Info */}
@@ -408,36 +496,91 @@ export function GenerateInvoiceModal({
 
             {/* Items table */}
             <div className="border border-slate-200 rounded-xl overflow-hidden">
-              <div className="px-3 py-2 bg-slate-50 border-b border-slate-100">
+              <div className="px-3 py-2 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
                   <Package size={12} />
                   Danh sách sản phẩm
                 </p>
+                {lockedItems.size > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setLockedItems(new Set())}
+                    className="text-[10px] font-bold text-slate-400 hover:text-red-500 transition-colors"
+                  >
+                    Bỏ giữ tất cả
+                  </button>
+                )}
               </div>
               <div className="divide-y divide-slate-50 max-h-[250px] overflow-y-auto">
-                {generatedItems.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="px-3 py-2.5 flex items-center justify-between gap-2 hover:bg-slate-50/50 transition-colors"
-                  >
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-bold text-slate-800 truncate">
-                        {item.name}
-                      </p>
-                      <p className="text-[10px] text-slate-400">
-                        {item.specName} · {item.unit}
-                      </p>
+                {generatedItems.map((item, idx) => {
+                  const isLocked = lockedItems.has(idx);
+                  return (
+                    <div
+                      key={idx}
+                      className={`px-3 py-2.5 flex items-center gap-2 transition-colors ${
+                        isLocked
+                          ? "bg-amber-50/60 border-l-2 border-l-amber-400"
+                          : "hover:bg-slate-50/50"
+                      }`}
+                    >
+                      {/* Lock checkbox */}
+                      <button
+                        type="button"
+                        onClick={() => toggleLock(idx)}
+                        className={`flex-shrink-0 p-1 rounded-md transition-all ${
+                          isLocked
+                            ? "text-amber-600 bg-amber-100 hover:bg-amber-200"
+                            : "text-slate-300 hover:text-slate-500 hover:bg-slate-100"
+                        }`}
+                        title={isLocked ? "Bỏ giữ" : "Giữ lại"}
+                      >
+                        {isLocked ? <Lock size={14} /> : <Unlock size={14} />}
+                      </button>
+
+                      {/* Product info */}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-bold text-slate-800 truncate">
+                          {item.name}
+                        </p>
+                        <p className="text-[10px] text-slate-400">
+                          {item.specName} · {item.unit}
+                        </p>
+                      </div>
+
+                      {/* Quantity controls */}
+                      <div className="flex items-center gap-1 flex-shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => adjustQuantity(idx, -1)}
+                          disabled={item.quantity <= 1}
+                          className="w-6 h-6 flex items-center justify-center rounded-md border border-slate-200 text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-all disabled:opacity-30 disabled:cursor-not-allowed active:scale-90"
+                        >
+                          <Minus size={12} />
+                        </button>
+                        <span className="w-7 text-center text-xs font-black text-slate-700 tabular-nums">
+                          {item.quantity}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => adjustQuantity(idx, 1)}
+                          className="w-6 h-6 flex items-center justify-center rounded-md border border-slate-200 text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-all active:scale-90"
+                        >
+                          <Plus size={12} />
+                        </button>
+                      </div>
+
+                      {/* Price */}
+                      <div className="text-right flex-shrink-0 min-w-[80px]">
+                        <p className="text-xs font-black text-slate-700 tabular-nums">
+                          {formatVND(item.total)}
+                        </p>
+                        <p className="text-[10px] text-slate-400 tabular-nums">
+                          {item.quantity} × {formatVND(item.price)}
+                        </p>
+                      </div>
                     </div>
-                    <div className="text-right flex-shrink-0">
-                      <p className="text-xs font-black text-slate-700 tabular-nums">
-                        {formatVND(item.total)}
-                      </p>
-                      <p className="text-[10px] text-slate-400 tabular-nums">
-                        {item.quantity} × {formatVND(item.price)}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 

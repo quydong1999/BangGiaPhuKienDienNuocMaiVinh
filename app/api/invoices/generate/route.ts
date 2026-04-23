@@ -83,7 +83,8 @@ function getQuantityByPriceTier(
 function generateRandomItems(
   pool: FlatProduct[],
   minTotal: number,
-  maxTotal: number
+  maxTotal: number,
+  excludeKeys: Set<string> = new Set()
 ): { items: GeneratedItem[]; totalAmount: number } | null {
   const MAX_RETRIES = 10;
 
@@ -102,7 +103,7 @@ function generateRandomItems(
 
     const items: GeneratedItem[] = [];
     let currentTotal = 0;
-    const usedKeys = new Set<string>();
+    const usedKeys = new Set<string>(excludeKeys);
 
     for (let i = 0; i < maxTypes; i++) {
       const remaining = target - currentTotal;
@@ -187,7 +188,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { minTotal, maxTotal } = body;
+    const { minTotal, maxTotal, excludeKeys = [] } = body;
 
     // Validation
     if (!minTotal || !maxTotal || minTotal <= 0 || maxTotal <= 0) {
@@ -225,7 +226,8 @@ export async function POST(req: Request) {
     );
 
     // Generate
-    const generated = generateRandomItems(flatProducts, minTotal, maxTotal);
+    const excludeSet = new Set<string>(excludeKeys as string[]);
+    const generated = generateRandomItems(flatProducts, minTotal, maxTotal, excludeSet);
     if (!generated) {
       return NextResponse.json(
         { error: `Không thể tạo hóa đơn trong khoảng ${minTotal.toLocaleString()} - ${maxTotal.toLocaleString()} đ. Thử mở rộng khoảng giá trị.` },
