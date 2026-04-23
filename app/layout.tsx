@@ -9,6 +9,7 @@ import BusinessSchema from '@/components/providers/BusinessSchema';
 import { ReduxProvider } from '@/components/ReduxProvider';
 import { ModalProvider } from '@/components/ModalProvider';
 import { CartHydration } from '@/components/CartHydration';
+import TransactionNotifier from '@/components/TransactionNotifier';
 
 
 const roboto = Roboto({
@@ -80,6 +81,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   </div>
                   <ModalProvider />
                   <CartHydration />
+                  <TransactionNotifier />
               </SkeletonProvider>
             </SessionProvider>
           </QueryProvider>

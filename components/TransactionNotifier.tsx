@@ -105,6 +105,22 @@ export default function TransactionNotifier() {
             }
           );
 
+          // Tính năng đọc to (Text-to-Speech)
+          if ('speechSynthesis' in window) {
+            const amountText = new Intl.NumberFormat('vi-VN').format(amount);
+            const textToSpeak = isIncoming 
+              ? `Đã nhận thành công ${amountText} đồng.` 
+              : `Đã chuyển thành công ${amountText} đồng.`;
+            
+            // Xóa các hàng đợi đọc trước đó để đọc ngay lập tức (nếu cần)
+            // window.speechSynthesis.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(textToSpeak);
+            utterance.lang = 'vi-VN';
+            utterance.rate = 1.0; // Tốc độ đọc bình thường
+            window.speechSynthesis.speak(utterance);
+          }
+
           // Dispatch custom event để các component khác có thể listen
           window.dispatchEvent(new CustomEvent('new-transaction', { detail: data }));
         } catch (err) {

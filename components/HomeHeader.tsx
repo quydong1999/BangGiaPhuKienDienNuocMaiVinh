@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { Search, LogOut, LogIn, UserRound, FolderPlus, PackagePlus, FileSpreadsheet, ShoppingCart, FileText } from 'lucide-react';
+import { Search, LogOut, LogIn, UserRound, FolderPlus, PackagePlus, FileSpreadsheet, ShoppingCart, FileText, Bell, ArrowDownLeft, ArrowUpRight, X } from 'lucide-react';
 import { signOut } from "next-auth/react"
 import { useAdmin } from "@/hooks/useAdmin"
 import Link from 'next/link';
@@ -29,6 +29,22 @@ export function HomeHeader({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
   const cartCount = useAppSelector(selectCartCount);
+
+  // State cho thông báo giao dịch
+  const [latestTx, setLatestTx] = useState<any>(null);
+  const [hasUnreadTx, setHasUnreadTx] = useState(false);
+  const [showTxDialog, setShowTxDialog] = useState(false);
+
+  useEffect(() => {
+    const handleNewTx = (e: any) => {
+      setLatestTx(e.detail);
+      setHasUnreadTx(true);
+    };
+    window.addEventListener('new-transaction', handleNewTx);
+    return () => window.removeEventListener('new-transaction', handleNewTx);
+  }, []);
+
+  const formatVND = (amount: number) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -92,7 +108,83 @@ export function HomeHeader({
               )}
             </Link>
 
+            {/* Notification Bell */}
+            {isAdmin && (
+              <>
+                <button
+                  onClick={() => {
+                    if (latestTx) {
+                      setShowTxDialog(true);
+                      setHasUnreadTx(false);
+                    }
+                  }}
+                  className={`relative w-8 h-8 flex items-center justify-center rounded-full transition-colors ${compact ? 'text-white/80 hover:text-white hover:bg-white/20' : 'text-slate-500 hover:text-emerald-600 hover:bg-slate-100'} ${!latestTx ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  disabled={!latestTx}
+                  title={latestTx ? "Xem giao dịch mới" : "Chưa có thông báo"}
+                >
+                  <Bell size={18} />
+                  {hasUnreadTx && (
+                    <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white" />
+                  )}
+                </button>
 
+                {/* Dialog for Transaction */}
+                {showTxDialog && latestTx && (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+                    <div className="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">
+                      <div className="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50">
+                        <h3 className="font-bold text-slate-800 flex items-center gap-2">
+                          <Bell size={16} className="text-emerald-600" />
+                          Giao dịch mới nhất
+                        </h3>
+                        <button onClick={() => setShowTxDialog(false)} className="text-slate-400 hover:text-slate-600 transition-colors">
+                          <X size={18} />
+                        </button>
+                      </div>
+                      <div className="p-5">
+                        <div className="flex items-start gap-4">
+                          <div className={`shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${latestTx.amountIn > 0 ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'}`}>
+                            {latestTx.amountIn > 0 ? <ArrowDownLeft size={24} /> : <ArrowUpRight size={24} />}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-bold text-slate-500">
+                              {latestTx.amountIn > 0 ? 'Nhận tiền từ' : 'Chuyển tiền đến'}
+                            </p>
+                            <p className="text-base font-black text-slate-800 truncate">
+                              {latestTx.gateway}
+                            </p>
+                            <p className={`text-2xl font-black mt-1 ${latestTx.amountIn > 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+                              {latestTx.amountIn > 0 ? '+' : '-'}{formatVND(latestTx.amountIn > 0 ? latestTx.amountIn : latestTx.amountOut)}
+                            </p>
+                          </div>
+                        </div>
+                        {latestTx.transactionContent && (
+                          <div className="mt-4 p-3 bg-slate-50 border border-slate-100 rounded-lg text-sm text-slate-700 break-words">
+                            <span className="font-bold block mb-1 text-slate-400 text-[10px] tracking-wider uppercase">Nội dung</span>
+                            {latestTx.transactionContent}
+                          </div>
+                        )}
+                        {latestTx.code && (
+                          <div className="mt-3">
+                            <span className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 bg-blue-50 border border-blue-100 rounded-md px-2 py-1">
+                              Mã: {latestTx.code}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="p-3 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
+                        <button onClick={() => setShowTxDialog(false)} className="text-sm font-bold text-slate-500 hover:text-slate-700 px-3 py-1.5 transition-colors">
+                          Đóng
+                        </button>
+                        <Link href="/admin/transactions" onClick={() => setShowTxDialog(false)} className="text-sm font-bold text-emerald-600 hover:text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-lg transition-colors">
+                          Xem tất cả lịch sử
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
 
             {!isLoading && (
               <div className="relative" ref={dropdownRef}>
