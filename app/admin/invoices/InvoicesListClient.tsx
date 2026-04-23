@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Eye, Search, FileText, Calendar, Filter, RotateCcw, Pencil, Trash2, ArrowUpDown, ChevronUp, ChevronDown } from 'lucide-react';
+import { Eye, Search, FileText, Calendar, Filter, RotateCcw, Pencil, Trash2, ArrowUpDown, ChevronUp, ChevronDown, Zap } from 'lucide-react';
 import { formatVND } from '@/lib/utils';
 import { format } from 'date-fns';
 import { vi } from 'date-fns/locale';
@@ -226,6 +226,26 @@ export default function InvoicesListClient({ }: InvoicesListClientProps) {
 
   return (
     <div className="space-y-6">
+      {/* Generate Invoice Button */}
+      <div className="flex items-center justify-end">
+        <button
+          onClick={() => {
+            dispatch(openModal({
+              type: 'generateInvoice',
+              props: {
+                onSuccess: (newInvoice: any) => {
+                  setInvoices(prev => [newInvoice, ...prev]);
+                }
+              }
+            }));
+          }}
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white text-xs font-bold uppercase tracking-widest rounded-lg hover:from-violet-700 hover:to-fuchsia-700 shadow-lg shadow-violet-200 transition-all active:scale-95"
+        >
+          <Zap size={14} />
+          Tạo HĐ ngẫu nhiên
+        </button>
+      </div>
+
       {/* Filters - Expandable on mobile */}
       <div className="space-y-4">
         {/* Toggle Button for Mobile */}

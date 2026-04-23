@@ -18,6 +18,7 @@ const MODAL_COMPONENTS = {
   bulkImport: dynamic(() => import('./BulkImportModal').then(m => m.BulkImportModal), { ssr: false }),
   saveInvoice: dynamic(() => import('./SaveInvoiceModal').then(m => m.SaveInvoiceModal), { ssr: false }),
   editInvoice: dynamic(() => import('./EditInvoiceModal').then(m => m.EditInvoiceModal), { ssr: false }),
+  generateInvoice: dynamic(() => import('./GenerateInvoiceModal').then(m => m.GenerateInvoiceModal), { ssr: false }),
 } as const;
 
 export type ModalType = keyof typeof MODAL_COMPONENTS;

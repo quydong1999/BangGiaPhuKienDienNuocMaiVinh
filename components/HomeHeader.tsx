@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { Search, LogOut, LogIn, UserRound, FolderPlus, PackagePlus, FileSpreadsheet, ShoppingCart, FileText, CreditCard } from 'lucide-react';
+import { Search, LogOut, LogIn, UserRound, FolderPlus, PackagePlus, FileSpreadsheet, ShoppingCart, FileText } from 'lucide-react';
 import { signOut } from "next-auth/react"
 import { useAdmin } from "@/hooks/useAdmin"
 import Link from 'next/link';
@@ -92,17 +92,7 @@ export function HomeHeader({
               )}
             </Link>
 
-            {/* Thanh toán Button (Prominent) */}
-            <Link
-              href="/payment"
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all border ${compact
-                  ? 'bg-white/20 hover:bg-white/30 border-white/30 text-white'
-                  : 'bg-emerald-50 hover:bg-emerald-100 border-emerald-100 text-emerald-700'
-                }`}
-            >
-              <CreditCard size={14} />
-              <span className="hidden xs:inline">Thanh toán</span>
-            </Link>
+
 
             {!isLoading && (
               <div className="relative" ref={dropdownRef}>
@@ -175,18 +165,10 @@ export function HomeHeader({
                         <Link
                           href="/admin/invoices"
                           onClick={() => setIsDropdownOpen(false)}
-                          className="flex items-center gap-2 text-sm text-slate-600 hover:bg-slate-50 px-2 py-1.5 transition-colors font-medium border-b border-slate-50 pb-2 mb-1"
+                          className="flex items-center gap-2 text-sm text-slate-600 hover:bg-slate-50 px-2 py-1.5 transition-colors font-medium"
                         >
                           <UserRound size={14} />
                           Hóa đơn
-                        </Link>
-                        <Link
-                          href="/payment"
-                          onClick={() => setIsDropdownOpen(false)}
-                          className="flex items-center gap-2 text-sm text-slate-600 hover:bg-slate-50 px-2 py-1.5 transition-colors font-medium"
-                        >
-                          <CreditCard size={14} />
-                          Thanh toán
                         </Link>
                         <button
                           onClick={() => { signOut(); setIsDropdownOpen(false); }}
@@ -200,19 +182,11 @@ export function HomeHeader({
                       <>
                         <button
                           onClick={() => { dispatch(openModal({ type: 'login' })); setIsDropdownOpen(false); }}
-                          className="flex items-center gap-2 text-sm text-slate-600 hover:bg-slate-50 px-2 py-1.5 transition-colors border-b border-slate-50 pb-2"
+                          className="flex items-center gap-2 text-sm text-slate-600 hover:bg-slate-50 px-2 py-1.5 transition-colors"
                         >
                           <LogIn size={14} />
                           Đăng nhập
                         </button>
-                        <Link
-                          href="/payment"
-                          onClick={() => setIsDropdownOpen(false)}
-                          className="flex items-center gap-2 text-sm text-slate-600 hover:bg-slate-50 px-2 py-1.5 transition-colors mt-1"
-                        >
-                          <CreditCard size={14} />
-                          Thanh toán
-                        </Link>
                       </>
                     )}
                   </div>
