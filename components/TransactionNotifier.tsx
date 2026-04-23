@@ -105,20 +105,18 @@ export default function TransactionNotifier() {
             }
           );
 
-          // Tính năng đọc to (Text-to-Speech)
-          if ('speechSynthesis' in window) {
-            const amountText = new Intl.NumberFormat('vi-VN').format(amount);
-            const textToSpeak = isIncoming 
-              ? `Đã nhận thành công ${amountText} đồng.` 
-              : `Đã chuyển thành công ${amountText} đồng.`;
-            
-            // Xóa các hàng đợi đọc trước đó để đọc ngay lập tức (nếu cần)
-            // window.speechSynthesis.cancel();
-            
-            const utterance = new SpeechSynthesisUtterance(textToSpeak);
-            utterance.lang = 'vi-VN';
-            utterance.rate = 1.0; // Tốc độ đọc bình thường
-            window.speechSynthesis.speak(utterance);
+          // Tính năng đọc to bằng giọng "Chị Google" (Google Translate TTS)
+          const amountText = new Intl.NumberFormat('vi-VN').format(amount);
+          const textToSpeak = isIncoming 
+            ? `Đã nhận thành công ${amountText} đồng.` 
+            : `Đã chuyển thành công ${amountText} đồng.`;
+          
+          try {
+            const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=vi&q=${encodeURIComponent(textToSpeak)}`;
+            const audio = new Audio(url);
+            audio.play().catch(err => console.warn('Không thể tự động phát âm thanh (trình duyệt chặn autoplay):', err));
+          } catch (err) {
+            console.error('Lỗi khi phát giọng đọc Google:', err);
           }
 
           // Dispatch custom event để các component khác có thể listen
