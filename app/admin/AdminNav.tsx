@@ -12,7 +12,8 @@ import {
   Users,
   ChevronRight,
   Menu,
-  X
+  X,
+  Banknote
 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -27,6 +28,7 @@ interface AdminNavProps {
 const navItems = [
   // { label: 'Doanh thu', href: '/admin', icon: LayoutDashboard },
   { label: 'Hóa đơn', href: '/admin/invoices', icon: FileText },
+  { label: 'Giao dịch', href: '/admin/transactions', icon: Banknote },
 ];
 
 export default function AdminNav({ user }: AdminNavProps) {

@@ -2,6 +2,7 @@ import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import AdminNav from './AdminNav';
 import React from 'react';
+import TransactionNotifier from '@/components/TransactionNotifier';
 
 export default async function AdminLayout({
   children,
@@ -24,6 +25,10 @@ export default async function AdminLayout({
           {children}
         </main>
       </div>
+
+      {/* Real-time Transaction Notifications */}
+      <TransactionNotifier />
     </div>
   );
 }
+
