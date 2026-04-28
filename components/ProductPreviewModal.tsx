@@ -9,6 +9,7 @@ import { addToCart } from '@/store/cartSlice';
 import { closeModal } from '@/store/modalSlice';
 import { motion, AnimatePresence } from 'framer-motion';
 import { formatVND } from '@/lib/utils';
+import { addToFavoriteProducts } from '@/lib/favorites';
 
 interface ProductPreviewModalProps {
   isOpen: boolean;
@@ -63,6 +64,9 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
       setActiveImgIdx(0);
       setQuantity(1);
       setEditingQty(null);
+
+      // Add product ID to localStorage
+      addToFavoriteProducts(product._id as string);
     }
   }, [product, initialSpec, initialUnit]);
 
