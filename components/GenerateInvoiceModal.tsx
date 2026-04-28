@@ -442,23 +442,23 @@ export function GenerateInvoiceModal({
           /* ─── STEP 2: PREVIEW ─── */
           <div className="space-y-4">
             {/* Summary banner */}
-            <div className="p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl border border-emerald-100">
+            <div className="p-4 bg-gradient-to-r from-teal-50 to-teal-50 rounded-xl border border-teal-100">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">
+                <span className="text-[10px] font-black text-teal-600 uppercase tracking-widest">
                   Tổng giá trị
                 </span>
-                <span className="text-[10px] font-bold text-emerald-500">
+                <span className="text-[10px] font-bold text-teal-500">
                   {generatedItems.length} sản phẩm
                   {lockedItems.size > 0 && (
                     <> · <Lock size={9} className="inline -mt-0.5" /> {lockedItems.size} giữ lại</>
                   )}
                 </span>
               </div>
-              <p className="text-2xl font-black text-emerald-800 tabular-nums tracking-tight">
+              <p className="text-2xl font-black text-teal-800 tabular-nums tracking-tight">
                 {formatVND(totalAmount)}
               </p>
               <div className="flex items-center justify-between mt-1">
-                <p className="text-[10px] text-emerald-500">
+                <p className="text-[10px] text-teal-500">
                   Khoảng: {formatVND(Number(minTotal))} –{" "}
                   {formatVND(Number(maxTotal))}
                 </p>
@@ -517,21 +517,19 @@ export function GenerateInvoiceModal({
                   return (
                     <div
                       key={idx}
-                      className={`px-3 py-2.5 flex items-center gap-2 transition-colors ${
-                        isLocked
-                          ? "bg-amber-50/60 border-l-2 border-l-amber-400"
-                          : "hover:bg-slate-50/50"
-                      }`}
+                      className={`px-3 py-2.5 flex items-center gap-2 transition-colors ${isLocked
+                        ? "bg-amber-50/60 border-l-2 border-l-amber-400"
+                        : "hover:bg-slate-50/50"
+                        }`}
                     >
                       {/* Lock checkbox */}
                       <button
                         type="button"
                         onClick={() => toggleLock(idx)}
-                        className={`flex-shrink-0 p-1 rounded-md transition-all ${
-                          isLocked
-                            ? "text-amber-600 bg-amber-100 hover:bg-amber-200"
-                            : "text-slate-300 hover:text-slate-500 hover:bg-slate-100"
-                        }`}
+                        className={`flex-shrink-0 p-1 rounded-md transition-all ${isLocked
+                          ? "text-amber-600 bg-amber-100 hover:bg-amber-200"
+                          : "text-slate-300 hover:text-slate-500 hover:bg-slate-100"
+                          }`}
                         title={isLocked ? "Bỏ giữ" : "Giữ lại"}
                       >
                         {isLocked ? <Lock size={14} /> : <Unlock size={14} />}
@@ -651,7 +649,7 @@ export function GenerateInvoiceModal({
               type="button"
               onClick={handleSave}
               disabled={isPending}
-              className="flex-1 px-4 py-3 bg-emerald-600 text-white font-bold text-sm rounded-xl hover:bg-emerald-700 shadow-lg shadow-emerald-200 transition-all flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
+              className="flex-1 px-4 py-3 bg-teal-600 text-white font-bold text-sm rounded-xl hover:bg-teal-700 shadow-lg shadow-teal-200 transition-all flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
             >
               {isSaving ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

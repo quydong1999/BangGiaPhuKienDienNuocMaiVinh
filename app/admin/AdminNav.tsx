@@ -66,15 +66,15 @@ export default function AdminNav({ user }: AdminNavProps) {
             href={item.href}
             onClick={() => setIsOpen(false)}
             className={`flex items-center justify-between group px-3 py-2.5 rounded-lg text-sm font-bold transition-all border ${isActive
-              ? 'bg-emerald-600 text-white border-emerald-500 shadow-md shadow-emerald-100'
-              : 'text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 border-transparent hover:border-emerald-100'
+              ? 'bg-teal-600 text-white border-teal-500 shadow-md shadow-teal-100'
+              : 'text-slate-600 hover:bg-teal-50 hover:text-teal-700 border-transparent hover:border-teal-100'
               }`}
           >
             <div className="flex items-center gap-3">
-              <Icon size={18} className={isActive ? 'text-white' : 'text-slate-400 group-hover:text-emerald-600 transition-colors'} />
+              <Icon size={18} className={isActive ? 'text-white' : 'text-slate-400 group-hover:text-teal-600 transition-colors'} />
               <span>{item.label}</span>
             </div>
-            <ChevronRight size={14} className={`transition-all ${isActive ? 'text-white' : 'opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 text-emerald-400'}`} />
+            <ChevronRight size={14} className={`transition-all ${isActive ? 'text-white' : 'opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 text-teal-400'}`} />
           </Link>
         );
       })}
@@ -95,7 +95,7 @@ export default function AdminNav({ user }: AdminNavProps) {
           {user.image ? (
             <img src={user.image} alt="User" className="w-7 h-7 rounded-full border border-white shadow-sm" />
           ) : (
-            <div className="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-xs uppercase">
+            <div className="w-7 h-7 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 font-bold text-xs uppercase">
               {user.name?.charAt(0) || 'A'}
             </div>
           )}
@@ -117,7 +117,7 @@ export default function AdminNav({ user }: AdminNavProps) {
       {/* Mobile Header */}
       <header className="fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 z-50 md:hidden">
         <Link href="/admin" className="flex items-center gap-2 focus:outline-none">
-          <span className="text-2xl font-black text-emerald-600 uppercase tracking-tight">MAI VINH</span>
+          <span className="text-2xl font-black text-teal-600 uppercase tracking-tight">MAI VINH</span>
         </Link>
         <button
           onClick={() => setIsOpen(!isOpen)}
@@ -147,7 +147,7 @@ export default function AdminNav({ user }: AdminNavProps) {
               className="fixed inset-y-0 left-0 w-72 bg-white shadow-2xl z-[60] flex flex-col md:hidden"
             >
               <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-                <span className="text-2xl font-black text-emerald-600 uppercase tracking-tight">ADMIN</span>
+                <span className="text-2xl font-black text-teal-600 uppercase tracking-tight">ADMIN</span>
                 <button onClick={() => setIsOpen(false)} className="p-2 text-slate-400">
                   <X size={20} />
                 </button>
@@ -165,7 +165,7 @@ export default function AdminNav({ user }: AdminNavProps) {
       <aside className="fixed inset-y-0 left-0 w-64 bg-white border-r border-slate-200 hidden md:flex flex-col z-40">
         <div className="p-8 border-b border-slate-100">
           <Link href="/admin" className="flex items-center gap-2 group focus:outline-none">
-            <span className="text-3xl font-black text-emerald-600 uppercase tracking-tight">MAI VINH</span>
+            <span className="text-3xl font-black text-teal-600 uppercase tracking-tight">MAI VINH</span>
           </Link>
         </div>
 

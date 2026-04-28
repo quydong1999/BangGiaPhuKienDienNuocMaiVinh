@@ -5,7 +5,7 @@ export function SiteFooter() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 text-emerald-50 mt-auto border-t border-emerald-700/50">
+    <footer className="w-full bg-gradient-to-r from-teal-600 to-teal-500 text-teal-50 mt-auto border-t border-teal-700/50">
       <div className="max-w-6xl mx-auto px-4 py-8 sm:py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
           {/* Brand & Description */}
@@ -13,7 +13,7 @@ export function SiteFooter() {
             <h2 className="text-xl font-bold text-white tracking-tight">
               Báo giá điện nước Mai Vinh - Bình Định
             </h2>
-            <p className="text-sm text-emerald-100/90 leading-relaxed max-w-md">
+            <p className="text-sm text-teal-100/90 leading-relaxed max-w-md">
               Chuyên cung cấp sỉ, lẻ tất cả các loại thiết bị, phụ kiện, sản phẩm điện nước gia dụng tại nhà chuyên nghiệp, uy tín, chất lượng.
             </p>
           </div>
@@ -25,12 +25,12 @@ export function SiteFooter() {
               <li className="flex items-start gap-3 text-sm">
                 <Phone size={18} className="text-white mt-0.5 shrink-0" />
                 <div className="flex flex-col sm:flex-row sm:gap-4 gap-1">
-                  <a href="tel:0982390943" className="hover:text-white text-emerald-50 transition-colors font-medium">0982 390 943</a>
-                  <span className="hidden sm:inline text-emerald-300/60">|</span>
-                  <a href="tel:0976576443" className="hover:text-white text-emerald-50 transition-colors font-medium">0976 576 443</a>
+                  <a href="tel:0982390943" className="hover:text-white text-teal-50 transition-colors font-medium">0982 390 943</a>
+                  <span className="hidden sm:inline text-teal-300/60">|</span>
+                  <a href="tel:0976576443" className="hover:text-white text-teal-50 transition-colors font-medium">0976 576 443</a>
                 </div>
               </li>
-              <li className="flex items-start gap-3 text-sm text-emerald-50">
+              <li className="flex items-start gap-3 text-sm text-teal-50">
                 <MapPin size={18} className="text-white mt-0.5 shrink-0" />
                 <a
                   href="https://maps.app.goo.gl/pHLNv3rDBr16PTrt5"
@@ -49,8 +49,8 @@ export function SiteFooter() {
         </div>
       </div>
 
-      <div className="border-t border-emerald-700/30 bg-black/10">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-emerald-100/80">
+      <div className="border-t border-teal-700/30 bg-black/10">
+        <div className="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-teal-100/80">
           <p>&copy; {currentYear} Báo giá điện nước Mai Vinh. Tất cả các quyền được bảo lưu.</p>
         </div>
       </div>

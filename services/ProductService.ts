@@ -77,6 +77,35 @@ export class ProductService {
     };
   }
 
+  /**
+   * Lấy danh sách Products theo mảng ID.
+   * Dùng cho việc hiển thị các sản phẩm yêu thích (Favorite).
+   */
+  async findByIds(ids: string[]): Promise<IListResponse<IProduct>> {
+    if (!ids || ids.length === 0) {
+      return { success: true, count: 0, data: [], source: 'cache' };
+    }
+
+    await connectDB();
+    const products = await Product.find({ _id: { $in: ids } })
+      .lean();
+
+    // Giữ nguyên thứ tự của mảng ids truyền vào
+    const idMap = new Map();
+    products.forEach((p: any) => idMap.set(p._id.toString(), p));
+    
+    const sortedProducts = ids
+      .map(id => idMap.get(id))
+      .filter(Boolean);
+
+    return {
+      success: true,
+      count: sortedProducts.length,
+      data: sortedProducts as IProduct[],
+      source: 'database',
+    };
+  }
+
   // ─── SEARCH (Atlas Search + Redis Cache) ─────────────────────────────────
 
   /**

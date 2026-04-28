@@ -67,7 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://res.cloudinary.com" />
       </head>
       <body className={`bg-light-grey text-slate-900 antialiased font-sans`} suppressHydrationWarning>
-        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-white focus:text-emerald-600">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-white focus:text-teal-600">
           Chuyển đến nội dung chính
         </a>
         <BusinessSchema />
@@ -75,13 +75,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <QueryProvider>
             <SessionProvider>
               <SkeletonProvider>
-                  <OneTapProvider />
-                  <div className="flex flex-col min-h-screen">
-                    {children}
-                  </div>
-                  <ModalProvider />
-                  <CartHydration />
-                  <TransactionNotifier />
+                <OneTapProvider />
+                {children}
+                <ModalProvider />
+                <CartHydration />
+                <TransactionNotifier />
               </SkeletonProvider>
             </SessionProvider>
           </QueryProvider>

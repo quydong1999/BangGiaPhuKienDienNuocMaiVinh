@@ -17,13 +17,13 @@ export function Breadcrumbs({ items, className = '' }: BreadcrumbsProps) {
       <ol className="flex flex-wrap items-center gap-1.5 sm:gap-2 w-full">
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
-          
+
           return (
             <li key={index} className="flex items-center">
               {item.href && !isLast ? (
                 <Link
                   href={item.href}
-                  className="hover:text-emerald-600 transition-colors flex items-center gap-1.5"
+                  className="hover:text-teal-600 transition-colors flex items-center gap-1.5"
                 >
                   {index === 0 && item.label === 'Trang chủ' ? <Home size={16} className="mb-[2px]" /> : null}
                   <span className={index === 0 && item.label === 'Trang chủ' ? 'hidden sm:inline-block' : ''}>
@@ -38,7 +38,7 @@ export function Breadcrumbs({ items, className = '' }: BreadcrumbsProps) {
                   </span>
                 </span>
               )}
-              
+
               {!isLast && (
                 <ChevronRight size={16} className="mx-1 sm:mx-2 text-slate-400 flex-shrink-0 mb-[2px]" />
               )}

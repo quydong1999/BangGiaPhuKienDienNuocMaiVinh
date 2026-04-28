@@ -31,11 +31,11 @@ export default function ProductList({ data = [], filterField, visibleFields, cat
     // Single click → open ProductPreview
     dispatch(openModal({
       type: 'productPreview',
-      props: { 
-        product: item, 
-        categoryImageUrl, 
-        initialSpec: flattened.spec, 
-        initialUnit: flattened.unit 
+      props: {
+        product: item,
+        categoryImageUrl,
+        initialSpec: flattened.spec,
+        initialUnit: flattened.unit
       }
     }));
   }, [dispatch, categoryImageUrl]);
@@ -116,9 +116,9 @@ export default function ProductList({ data = [], filterField, visibleFields, cat
           const element = document.getElementById(`product-${productId}`);
           if (element) {
             element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            element.classList.add('bg-emerald-50');
+            element.classList.add('bg-teal-50');
             setTimeout(() => {
-              element.classList.remove('bg-emerald-50');
+              element.classList.remove('bg-teal-50');
             }, 3000);
           }
         }, 100);
@@ -149,7 +149,7 @@ export default function ProductList({ data = [], filterField, visibleFields, cat
     <div className="space-y-6">
       {/* Filter */}
       <nav aria-label="Bộ lọc sản phẩm" className="sticky top-[102px] sm:top-16 z-10 bg-light-grey pt-2 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
-        {filterField && (
+        {/* {filterField && (
           <>
             <label
               htmlFor="product-filter"
@@ -162,7 +162,7 @@ export default function ProductList({ data = [], filterField, visibleFields, cat
                 id="product-filter"
                 value={selectedField}
                 onChange={(e) => setSelectedField(e.target.value)}
-                className={`block w-full border border-slate-300 shadow-sm py-3 px-4 text-base focus:ring-emerald-500 focus:border-emerald-500 transition-shadow bg-white`}
+                className={`block w-full border border-slate-300 shadow-sm py-3 px-4 text-base focus:ring-teal-500 focus:border-teal-500 transition-shadow bg-white`}
               >
                 {uniqueData.map(item => (
                   <option key={item} value={item ?? ""}>{item}</option>
@@ -170,13 +170,7 @@ export default function ProductList({ data = [], filterField, visibleFields, cat
               </select>
             </div>
           </>
-        )}
-
-        <div className="mt-2 flex justify-between items-center text-sm">
-          <span className="text-slate-500">
-            Hiển thị {filteredData.length} sản phẩm
-          </span>
-        </div>
+        )} */}
       </nav>
 
       {/* List */}
@@ -219,7 +213,7 @@ export default function ProductList({ data = [], filterField, visibleFields, cat
                           className="px-4 py-3"
                         >
                           <span
-                            className={`text-xs font-medium px-2 py-1 bg-emerald-100 text-emerald-800`}
+                            className={`text-xs font-medium px-2 py-1 bg-teal-100 text-teal-800`}
                           >
                             {value}
                           </span>
@@ -275,7 +269,7 @@ export default function ProductList({ data = [], filterField, visibleFields, cat
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               disabled={currentPage === 1}
-              className="p-2 sm:px-3 sm:py-2 border border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-emerald-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
+              className="p-2 sm:px-3 sm:py-2 border border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-teal-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
               aria-label="Trang đầu"
               title="Trang đầu"
             >
@@ -289,7 +283,7 @@ export default function ProductList({ data = [], filterField, visibleFields, cat
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               disabled={currentPage === 1}
-              className="p-2 sm:px-3 sm:py-2 border border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-emerald-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
+              className="p-2 sm:px-3 sm:py-2 border border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-teal-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
               aria-label="Trang trước"
               title="Trang trước"
             >
@@ -308,7 +302,7 @@ export default function ProductList({ data = [], filterField, visibleFields, cat
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               disabled={currentPage === totalPages}
-              className="p-2 sm:px-3 sm:py-2 border border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-emerald-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
+              className="p-2 sm:px-3 sm:py-2 border border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-teal-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
               aria-label="Trang sau"
               title="Trang sau"
             >
@@ -322,7 +316,7 @@ export default function ProductList({ data = [], filterField, visibleFields, cat
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               disabled={currentPage === totalPages}
-              className="p-2 sm:px-3 sm:py-2 border border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-emerald-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
+              className="p-2 sm:px-3 sm:py-2 border border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-teal-600 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
               aria-label="Trang cuối"
               title="Trang cuối"
             >

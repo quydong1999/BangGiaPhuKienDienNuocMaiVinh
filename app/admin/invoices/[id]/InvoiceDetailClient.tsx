@@ -215,7 +215,7 @@ export default function InvoiceDetailClient({ initialInvoice }: InvoiceDetailCli
         <div className="grid grid-cols-1 lg:grid-cols-2 border-b border-slate-200">
           <div className="p-4 border-r border-slate-100 space-y-4">
             <div className="flex items-center gap-2 pb-1 border-b border-slate-100 mb-2">
-              <User size={14} className="text-emerald-600" />
+              <User size={14} className="text-teal-600" />
               <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Khách hàng</h2>
             </div>
 
@@ -249,7 +249,7 @@ export default function InvoiceDetailClient({ initialInvoice }: InvoiceDetailCli
 
           <div className="p-4 space-y-4">
             <div className="flex items-center gap-2 pb-1 border-b border-slate-100 mb-2">
-              <Calendar size={14} className="text-emerald-600" />
+              <Calendar size={14} className="text-teal-600" />
               <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Giao dịch</h2>
             </div>
 
@@ -258,7 +258,7 @@ export default function InvoiceDetailClient({ initialInvoice }: InvoiceDetailCli
                 <label className="text-[9px] font-bold text-slate-400 uppercase">Ngày lập</label>
                 <input
                   type="date"
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 focus:ring-1 focus:ring-emerald-500 outline-none text-sm font-bold"
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 focus:ring-1 focus:ring-teal-500 outline-none text-sm font-bold"
                   value={formData.invoiceDate}
                   onChange={(e) => setFormData({ ...formData, invoiceDate: e.target.value })}
                 />
@@ -267,7 +267,7 @@ export default function InvoiceDetailClient({ initialInvoice }: InvoiceDetailCli
               <div className="space-y-1">
                 <label className="text-[9px] font-bold text-slate-400 uppercase">Trạng thái</label>
                 <select
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 focus:ring-1 focus:ring-emerald-500 outline-none text-sm font-bold appearance-none"
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 focus:ring-1 focus:ring-teal-500 outline-none text-sm font-bold appearance-none"
                   value={formData.status}
                   onChange={(e) => setFormData({ ...formData, status: e.target.value })}
                 >
@@ -278,12 +278,12 @@ export default function InvoiceDetailClient({ initialInvoice }: InvoiceDetailCli
               </div>
 
               <div className={`space-y-1 transition-all duration-300 ${formData.status === 'paid' ? 'opacity-100' : 'opacity-30 pointer-events-none'}`}>
-                <label className="text-[9px] font-bold text-emerald-600 uppercase flex items-center gap-1">
+                <label className="text-[9px] font-bold text-teal-600 uppercase flex items-center gap-1">
                   <DollarSign size={10} /> Thanh toán
                 </label>
                 <input
                   type="date"
-                  className="w-full px-3 py-2 bg-emerald-50 border border-emerald-100 focus:ring-1 focus:ring-emerald-500 outline-none text-sm font-bold text-emerald-700"
+                  className="w-full px-3 py-2 bg-teal-50 border border-teal-100 focus:ring-1 focus:ring-teal-500 outline-none text-sm font-bold text-teal-700"
                   value={formData.paidAt}
                   onChange={(e) => setFormData({ ...formData, paidAt: e.target.value })}
                   disabled={formData.status !== 'paid'}
@@ -296,7 +296,7 @@ export default function InvoiceDetailClient({ initialInvoice }: InvoiceDetailCli
         {/* Items Table Section */}
         <div className="w-full overflow-x-auto">
           <div className="p-4 border-b border-slate-200 bg-slate-50 flex items-center gap-2">
-            <ShoppingBag size={14} className="text-emerald-600" />
+            <ShoppingBag size={14} className="text-teal-600" />
             <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Danh sách sản phẩm</h2>
           </div>
           <table className="w-full border-collapse">
@@ -320,7 +320,7 @@ export default function InvoiceDetailClient({ initialInvoice }: InvoiceDetailCli
                   </td>
                   <td className="px-4 py-2">
                     {item.specName && item.specName !== 'Mặc định' && (
-                      <div className="text-[9px] font-bold text-emerald-600 uppercase tracking-tighter mt-0.5">{item.specName}</div>
+                      <div className="text-[9px] font-bold text-teal-600 uppercase tracking-tighter mt-0.5">{item.specName}</div>
                     )}
                   </td>
                   <td className="px-4 py-2 text-center">
@@ -328,7 +328,7 @@ export default function InvoiceDetailClient({ initialInvoice }: InvoiceDetailCli
                   </td>
                   <td className="px-4 py-2 text-center text-xs font-bold text-slate-500">{item.unit}</td>
                   <td className="px-4 py-2 text-right text-xs text-slate-500 tabular-nums">{formatVND(item.price)}</td>
-                  <td className="px-4 py-2 text-right text-xs font-black text-slate-900 tabular-nums group-hover:text-emerald-700 transition-colors">
+                  <td className="px-4 py-2 text-right text-xs font-black text-slate-900 tabular-nums group-hover:text-teal-700 transition-colors">
                     {formatVND(item.total)}
                   </td>
                 </tr>
@@ -349,7 +349,7 @@ export default function InvoiceDetailClient({ initialInvoice }: InvoiceDetailCli
             <div className="w-px h-8 bg-slate-200" />
             <div className="flex flex-col">
               <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Số tiền</span>
-              <span className="text-sm font-black text-emerald-700">{formatVND(invoice.totalAmount)}</span>
+              <span className="text-sm font-black text-teal-700">{formatVND(invoice.totalAmount)}</span>
             </div>
           </div>
 
@@ -363,7 +363,7 @@ export default function InvoiceDetailClient({ initialInvoice }: InvoiceDetailCli
             </button>
             <button
               onClick={handleExportExcel}
-              className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-slate-200 text-emerald-700 font-bold text-xs hover:bg-emerald-50 transition-all active:scale-95 rounded-lg shadow-sm"
+              className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-slate-200 text-teal-700 font-bold text-xs hover:bg-teal-50 transition-all active:scale-95 rounded-lg shadow-sm"
             >
               <FileSpreadsheet size={16} />
               Xuất Excel
@@ -373,7 +373,7 @@ export default function InvoiceDetailClient({ initialInvoice }: InvoiceDetailCli
               disabled={!isDirty || isUpdating}
               className={`flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-8 py-2.5 font-bold text-xs transition-all rounded-lg shadow-sm active:scale-95 
                 ${isDirty && !isUpdating
-                  ? 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-emerald-100'
+                  ? 'bg-teal-600 text-white hover:bg-teal-700 shadow-teal-100'
                   : 'bg-slate-100 text-slate-300 cursor-not-allowed shadow-none'}
               `}
             >

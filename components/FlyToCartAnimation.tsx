@@ -81,7 +81,7 @@ export function FlyToCartAnimation() {
             onAnimationComplete={() => handleComplete(item.id)}
             className="pointer-events-none"
           >
-            <div className="w-9 h-9 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/40 flex items-center justify-center text-white">
+            <div className="w-9 h-9 rounded-full bg-teal-500 shadow-lg shadow-teal-500/40 flex items-center justify-center text-white">
               <ShoppingCart size={16} />
             </div>
           </motion.div>

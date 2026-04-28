@@ -138,7 +138,7 @@ export function SaveInvoiceModal({ isOpen, onClose, items, grandTotal }: SaveInv
               </label>
               <input
                 type="date"
-                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all font-medium"
+                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all font-medium"
                 value={formData.invoiceDate}
                 onChange={(e) => setFormData({ ...formData, invoiceDate: e.target.value })}
                 required
@@ -152,7 +152,7 @@ export function SaveInvoiceModal({ isOpen, onClose, items, grandTotal }: SaveInv
                 Trạng thái
               </label>
               <select
-                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 appearance-none transition-all font-medium"
+                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 appearance-none transition-all font-medium"
                 value={formData.status}
                 onChange={(e) => setFormData({ ...formData, status: e.target.value })}
               >
@@ -162,10 +162,10 @@ export function SaveInvoiceModal({ isOpen, onClose, items, grandTotal }: SaveInv
             </div>
           </div>
 
-          <div className="mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+          <div className="mt-4 p-4 bg-teal-50 rounded-xl border border-teal-100">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-emerald-800 uppercase tracking-tight">Tổng số tiền</span>
-              <span className="text-lg font-black text-emerald-700">
+              <span className="text-xs font-bold text-teal-800 uppercase tracking-tight">Tổng số tiền</span>
+              <span className="text-lg font-black text-teal-700">
                 {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(grandTotal)}
               </span>
             </div>
@@ -184,7 +184,7 @@ export function SaveInvoiceModal({ isOpen, onClose, items, grandTotal }: SaveInv
           <button
             type="submit"
             disabled={isSubmitting}
-            className="flex-1 px-4 py-3 bg-emerald-600 text-white font-bold text-sm rounded-xl hover:bg-emerald-700 shadow-lg shadow-emerald-200 transition-all flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
+            className="flex-1 px-4 py-3 bg-teal-600 text-white font-bold text-sm rounded-xl hover:bg-teal-700 shadow-lg shadow-teal-200 transition-all flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
           >
             {isSubmitting ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

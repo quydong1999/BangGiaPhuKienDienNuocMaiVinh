@@ -21,7 +21,7 @@ export function EditInvoiceModal({ isOpen, onClose, invoice, onSuccess, onOptimi
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [customers, setCustomers] = useState<any[]>([]);
   const [isRecipientManual, setIsRecipientManual] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     customerName: "",
     recipientName: "",
@@ -75,7 +75,7 @@ export function EditInvoiceModal({ isOpen, onClose, invoice, onSuccess, onOptimi
       if (response.ok) {
         const updatedInvoice = await response.json();
         if (onSuccess) onSuccess(updatedInvoice);
-        
+
         Swal.fire({
           icon: 'success',
           title: 'Đã cập nhật!',
@@ -98,12 +98,12 @@ export function EditInvoiceModal({ isOpen, onClose, invoice, onSuccess, onOptimi
 
   return (
     <FormModal isOpen={isOpen} onClose={onClose} isPending={isSubmitting}>
-      <FormModal.Header 
-        title={`Sửa Hóa Đơn: ${invoice?.invoiceNumber}`} 
-        onClose={onClose} 
-        disabled={isSubmitting} 
+      <FormModal.Header
+        title={`Sửa Hóa Đơn: ${invoice?.invoiceNumber}`}
+        onClose={onClose}
+        disabled={isSubmitting}
       />
-      
+
       <FormModal.Body onSubmit={handleSubmit}>
         <div className="space-y-4 py-2">
           {/* Customer Name */}
@@ -144,7 +144,7 @@ export function EditInvoiceModal({ isOpen, onClose, invoice, onSuccess, onOptimi
               </label>
               <input
                 type="date"
-                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all font-medium"
+                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all font-medium"
                 value={formData.invoiceDate}
                 onChange={(e) => setFormData({ ...formData, invoiceDate: e.target.value })}
                 required
@@ -158,7 +158,7 @@ export function EditInvoiceModal({ isOpen, onClose, invoice, onSuccess, onOptimi
                 Trạng thái
               </label>
               <select
-                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 appearance-none transition-all font-medium"
+                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 appearance-none transition-all font-medium"
                 value={formData.status}
                 onChange={(e) => setFormData({ ...formData, status: e.target.value })}
               >
@@ -172,13 +172,13 @@ export function EditInvoiceModal({ isOpen, onClose, invoice, onSuccess, onOptimi
           {/* Paid At - Conditional */}
           {formData.status === 'paid' && (
             <div className="space-y-1.5 animate-in slide-in-from-top-2 duration-300">
-              <label className="text-[10px] font-black text-emerald-600 uppercase tracking-widest px-1 flex items-center gap-1.5">
+              <label className="text-[10px] font-black text-teal-600 uppercase tracking-widest px-1 flex items-center gap-1.5">
                 <DollarSign size={12} />
                 Ngày thanh toán
               </label>
               <input
                 type="date"
-                className="w-full px-4 py-2.5 bg-emerald-50 border border-emerald-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all font-bold text-emerald-700"
+                className="w-full px-4 py-2.5 bg-teal-50 border border-teal-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all font-bold text-teal-700"
                 value={formData.paidAt}
                 onChange={(e) => setFormData({ ...formData, paidAt: e.target.value })}
                 required
@@ -208,7 +208,7 @@ export function EditInvoiceModal({ isOpen, onClose, invoice, onSuccess, onOptimi
           <button
             type="submit"
             disabled={isSubmitting}
-            className="flex-1 px-4 py-3 bg-emerald-600 text-white font-bold text-sm rounded-xl hover:bg-emerald-700 shadow-lg shadow-emerald-200 transition-all flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
+            className="flex-1 px-4 py-3 bg-teal-600 text-white font-bold text-sm rounded-xl hover:bg-teal-700 shadow-lg shadow-teal-200 transition-all flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
           >
             {isSubmitting ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

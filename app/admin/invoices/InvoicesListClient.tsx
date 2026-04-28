@@ -19,7 +19,7 @@ interface InvoicesListClientProps {
 
 const statusMap: any = {
   'pending': { label: 'Chưa thanh toán', color: 'bg-amber-100 text-amber-700' },
-  'paid': { label: 'Đã thanh toán', color: 'bg-emerald-100 text-emerald-700' },
+  'paid': { label: 'Đã thanh toán', color: 'bg-teal-100 text-teal-700' },
   'cancelled': { label: 'Đã hủy', color: 'bg-slate-100 text-slate-700' },
 };
 
@@ -145,7 +145,7 @@ export default function InvoicesListClient({ }: InvoicesListClientProps) {
 
   const getSortIcon = (field: string) => {
     if (sortBy !== field) return <ArrowUpDown size={14} className="text-slate-300" />;
-    return sortOrder === 'asc' ? <ChevronUp size={14} className="text-emerald-500" /> : <ChevronDown size={14} className="text-emerald-500" />;
+    return sortOrder === 'asc' ? <ChevronUp size={14} className="text-teal-500" /> : <ChevronDown size={14} className="text-teal-500" />;
   };
 
   const handleFilter = () => {
@@ -254,14 +254,14 @@ export default function InvoicesListClient({ }: InvoicesListClientProps) {
             onClick={() => setIsFilterOpen(!isFilterOpen)}
             className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-700 hover:bg-slate-50 transition-all shadow-sm active:scale-95"
           >
-            <Filter size={16} className={isFilterOpen ? 'text-emerald-600' : 'text-slate-400'} />
+            <Filter size={16} className={isFilterOpen ? 'text-teal-600' : 'text-slate-400'} />
             <span>Lọc & Tìm kiếm</span>
             {activeFilterCount > 0 && (
-              <span className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-600 text-white text-[10px] font-black">
+              <span className="flex items-center justify-center w-5 h-5 rounded-full bg-teal-600 text-white text-[10px] font-black">
                 {activeFilterCount}
               </span>
             )}
-            <ChevronDown size={16} className={`transition-transform duration-300 ${isFilterOpen ? 'rotate-180 text-emerald-600' : 'text-slate-400'}`} />
+            <ChevronDown size={16} className={`transition-transform duration-300 ${isFilterOpen ? 'rotate-180 text-teal-600' : 'text-slate-400'}`} />
           </button>
 
           {/* Quick reset button when filters are active */}
@@ -295,7 +295,7 @@ export default function InvoicesListClient({ }: InvoicesListClientProps) {
                       <input
                         type="text"
                         placeholder="Mã HĐ, tên khách hàng..."
-                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all shadow-sm shadow-slate-100 placeholder:text-slate-300"
+                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all shadow-sm shadow-slate-100 placeholder:text-slate-300"
                         value={localSearch}
                         onChange={(e) => setLocalSearch(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleFilter()}
@@ -309,7 +309,7 @@ export default function InvoicesListClient({ }: InvoicesListClientProps) {
                     <div className="relative">
                       <Filter className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                       <select
-                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 appearance-none transition-all shadow-sm shadow-slate-100 cursor-pointer"
+                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 appearance-none transition-all shadow-sm shadow-slate-100 cursor-pointer"
                         value={localStatus}
                         onChange={(e) => setLocalStatus(e.target.value)}
                       >
@@ -329,7 +329,7 @@ export default function InvoicesListClient({ }: InvoicesListClientProps) {
                       <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
                       <input
                         type="date"
-                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all shadow-sm shadow-slate-100"
+                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all shadow-sm shadow-slate-100"
                         value={localStart}
                         onChange={(e) => setLocalStart(e.target.value)}
                       />
@@ -343,7 +343,7 @@ export default function InvoicesListClient({ }: InvoicesListClientProps) {
                       <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
                       <input
                         type="date"
-                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all shadow-sm shadow-slate-100"
+                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all shadow-sm shadow-slate-100"
                         value={localEnd}
                         onChange={(e) => setLocalEnd(e.target.value)}
                       />
@@ -355,14 +355,14 @@ export default function InvoicesListClient({ }: InvoicesListClientProps) {
                 <div className="flex items-center gap-2 pt-2 xl:pt-0">
                   <button
                     onClick={handleFilter}
-                    className="flex-1 xl:flex-initial flex items-center justify-center gap-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition-all uppercase tracking-widest rounded-lg px-6 py-2.5 h-[42px] shadow-sm active:scale-95"
+                    className="flex-1 xl:flex-initial flex items-center justify-center gap-2 text-xs font-bold text-white bg-teal-600 hover:bg-teal-700 transition-all uppercase tracking-widest rounded-lg px-6 py-2.5 h-[42px] shadow-sm active:scale-95"
                   >
                     <Search size={14} />
                     Lọc
                   </button>
                   <button
                     onClick={handleReset}
-                    className="flex-1 xl:flex-initial flex items-center justify-center gap-2 text-xs font-bold text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 transition-all uppercase tracking-widest border border-slate-200 rounded-lg px-4 py-2.5 h-[42px] bg-white shadow-sm active:scale-95"
+                    className="flex-1 xl:flex-initial flex items-center justify-center gap-2 text-xs font-bold text-slate-500 hover:text-teal-700 hover:bg-teal-50 transition-all uppercase tracking-widest border border-slate-200 rounded-lg px-4 py-2.5 h-[42px] bg-white shadow-sm active:scale-95"
                   >
                     <RotateCcw size={14} />
                     Đặt lại
@@ -378,7 +378,7 @@ export default function InvoicesListClient({ }: InvoicesListClientProps) {
       <div className="bg-white border border-slate-200 shadow-sm min-h-[400px]">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20 gap-4">
-            <div className="w-10 h-10 border-4 border-emerald-500/20 border-t-emerald-600 rounded-full animate-spin"></div>
+            <div className="w-10 h-10 border-4 border-teal-500/20 border-t-teal-600 rounded-full animate-spin"></div>
             <p className="text-sm font-medium text-slate-500 uppercase tracking-widest">Đang tải dữ liệu...</p>
           </div>
         ) : (
@@ -417,7 +417,7 @@ export default function InvoicesListClient({ }: InvoicesListClientProps) {
                       <td className="px-4 py-3 text-sm text-slate-600 whitespace-nowrap">
                         {format(new Date(inv.invoiceDate), 'dd/MM/yyyy', { locale: vi })}
                       </td>
-                      <td className="px-4 py-3 text-sm font-mono font-bold text-emerald-700 whitespace-nowrap hidden md:table-cell">
+                      <td className="px-4 py-3 text-sm font-mono font-bold text-teal-700 whitespace-nowrap hidden md:table-cell">
                         {inv.invoiceNumber}
                       </td>
                       <td className="px-4 py-3 text-sm">
@@ -440,7 +440,7 @@ export default function InvoicesListClient({ }: InvoicesListClientProps) {
                         <div className="flex items-center gap-3">
                           <Link
                             href={`/admin/invoices/${inv._id}`}
-                            className="inline-flex items-center gap-1 text-emerald-600 hover:text-emerald-700 font-semibold"
+                            className="inline-flex items-center gap-1 text-teal-600 hover:text-teal-700 font-semibold"
                             title="Xem chi tiết"
                           >
                             Chi tiết

@@ -159,7 +159,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
     const parts = name.split(regex);
     return parts.map((part, i) =>
       regex.test(part)
-        ? <span key={i} className="font-bold text-emerald-600">{part}</span>
+        ? <span key={i} className="font-bold text-teal-600">{part}</span>
         : <span key={i}>{part}</span>
     );
   };
@@ -203,7 +203,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
           ) : query.trim().length >= 2 ? (
             <button
               type="submit"
-              className="flex-shrink-0 p-1.5 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white transition-colors"
+              className="flex-shrink-0 p-1.5 rounded-full bg-teal-500 hover:bg-teal-600 text-white transition-colors"
               aria-label="Tìm kiếm"
             >
               <ArrowRight size={16} />
@@ -238,8 +238,8 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                       onClick={() => navigateToProduct(item)}
                       onMouseEnter={() => setSelectedIndex(index)}
                       className={`w-full flex items-center gap-2.5 px-3 sm:px-4 py-1.5 text-left transition-colors cursor-pointer ${selectedIndex === index
-                          ? 'bg-emerald-50'
-                          : 'hover:bg-slate-50'
+                        ? 'bg-teal-50'
+                        : 'hover:bg-slate-50'
                         }`}
                     >
                       {/* Product Image */}
@@ -261,7 +261,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
                       {/* Price */}
                       {getPriceText(item) && (
-                        <span className="flex-shrink-0 text-[12px] sm:text-[13px] font-semibold text-emerald-600 whitespace-nowrap">
+                        <span className="flex-shrink-0 text-[12px] sm:text-[13px] font-semibold text-teal-600 whitespace-nowrap">
                           {getPriceText(item)}
                         </span>
                       )}
@@ -272,7 +272,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   <button
                     type="button"
                     onClick={() => navigateToSearch(query)}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-emerald-600 hover:bg-emerald-50 border-t border-slate-100 transition-colors cursor-pointer"
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-teal-600 hover:bg-teal-50 border-t border-slate-100 transition-colors cursor-pointer"
                   >
                     <TrendingUp size={14} />
                     Xem tất cả kết quả cho &ldquo;{query.trim()}&rdquo;

@@ -1,10 +1,6 @@
 import { Suspense } from 'react';
-import { connectDB } from '@/lib/mongodb';
-import Category from '@/models/Category';
 import { MainLayout } from '@/components/MainLayout';
-import { FavoriteProductsGrid } from '@/components/FavoriteProductsGrid';
-
-
+import { RecentViewedProductsGrid } from '@/components/RecentViewedProductsGrid';
 
 function GridSkeleton() {
   return (
@@ -21,14 +17,14 @@ function GridSkeleton() {
   );
 }
 
-export default function HomePage() {
+export default function RecentViewedPage() {
   return (
     <MainLayout compactHeader showAddCategory>
       <div className="w-full max-w-5xl mx-auto space-y-6 p-4 mt-2 pb-24">
-        <section aria-label="Sản phẩm yêu thích">
-          <h2 className="text-lg font-bold text-slate-800 mb-4 px-2 sm:px-0">Sản phẩm yêu thích</h2>
+        <section aria-label="Sản phẩm vừa xem">
+          <h2 className="text-lg font-bold text-slate-800 mb-4 px-2 sm:px-0">Sản phẩm vừa xem</h2>
           <Suspense fallback={<GridSkeleton />}>
-            <FavoriteProductsGrid />
+            <RecentViewedProductsGrid />
           </Suspense>
         </section>
       </div>

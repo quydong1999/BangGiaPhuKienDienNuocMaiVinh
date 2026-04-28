@@ -61,16 +61,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         updateAge: 24 * 60 * 60,
     },
 
-    cookies: {
-        sessionToken: {
-            options: {
-                maxAge: 7 * 24 * 60 * 60,
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "lax",
-            },
-        },
-    },
 
     callbacks: {
         async signIn({ user, account }) {

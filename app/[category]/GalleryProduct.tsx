@@ -8,6 +8,8 @@ import type { Product, FilterField } from '@/types/types';
 import { PendingProductSkeleton } from '@/components/PendingSkeletons';
 import { useAppDispatch } from '@/store/hooks';
 import { openModal } from '@/store/modalSlice';
+import { FavoriteButton } from '@/components/FavoriteButton';
+import { getFavoriteProducts, FAVORITES_UPDATED_EVENT } from '@/lib/favorites';
 
 interface GalleryProductProps {
   data: Product[];
@@ -24,6 +26,15 @@ export default function GalleryProduct({ data, categoryId, filterField }: Galler
   const dispatch = useAppDispatch();
   const clickTimer = useRef<NodeJS.Timeout | null>(null);
   const searchParams = useSearchParams();
+  const [favoriteIds, setFavoriteIds] = useState<string[]>(getFavoriteProducts);
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      setFavoriteIds(getFavoriteProducts());
+    };
+    window.addEventListener(FAVORITES_UPDATED_EVENT, handleUpdate);
+    return () => window.removeEventListener(FAVORITES_UPDATED_EVENT, handleUpdate);
+  }, []);
 
   useEffect(() => {
     const productId = searchParams.get('productId');
@@ -65,52 +76,53 @@ export default function GalleryProduct({ data, categoryId, filterField }: Galler
 
   // Filter the original data
   const filteredData = useMemo(() => {
-    if (!filterField || selectedField === 'Tất cả') return data;
-    if (filterField === 'spec' as any) {
-      return data.filter(item => item.specs?.some(s => s.name === selectedField));
+    let result = data;
+    if (filterField && selectedField !== 'Tất cả') {
+      if (filterField === 'spec' as any) {
+        result = data.filter(item => item.specs?.some(s => s.name === selectedField));
+      } else {
+        result = data.filter(item => String((item as any)[filterField]) === selectedField);
+      }
     }
-    const res = data.filter(item => String((item as any)[filterField]) === selectedField);
-    // return data.filter(item => String((item as any)[filterField]) === selectedField);
-    console.log(res)
-    return res;
-  }, [data, selectedField, filterField]);
+
+    // Sort by favorites first
+    return [...result].sort((a, b) => {
+      const aIsFav = favoriteIds.includes(a._id!);
+      const bIsFav = favoriteIds.includes(b._id!);
+      if (aIsFav && !bIsFav) return -1;
+      if (!aIsFav && bIsFav) return 1;
+      return 0;
+    });
+  }, [data, selectedField, filterField, favoriteIds]);
 
   return (
     <div className="space-y-6">
-      {/* Filter */}
-      <nav aria-label="Bộ lọc sản phẩm" className="sticky top-[102px] sm:top-16 z-10 bg-light-grey pt-2 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
-        {filterField && (
-          <>
-            <label
-              htmlFor="product-filter"
-              className="block text-sm font-medium text-slate-700 mb-1 mt-2"
+      {/* Filter — chỉ hiển thị khi category có bật lọc */}
+      {/* {filterField && (
+        <div className="pt-2 pb-4">
+          <label
+            htmlFor="product-filter"
+            className="block text-sm font-medium text-slate-700 mb-1 mt-2"
+          >
+            Lọc theo tên sản phẩm
+          </label>
+          <div className="flex gap-2">
+            <select
+              id="product-filter"
+              value={selectedField}
+              onChange={(e) => setSelectedField(e.target.value)}
+              className="block w-full border border-slate-300 shadow-sm py-3 px-4 text-base focus:ring-teal-500 focus:border-teal-500 transition-shadow bg-white"
             >
-              Lọc theo tên sản phẩm
-            </label>
-            <div className="flex gap-2">
-              <select
-                id="product-filter"
-                value={selectedField}
-                onChange={(e) => setSelectedField(e.target.value)}
-                className="block w-full border border-slate-300 shadow-sm py-3 px-4 text-base focus:ring-emerald-500 focus:border-emerald-500 transition-shadow bg-white"
-              >
-                {uniqueData.map(item => (
-                  <option key={item} value={item ?? ""}>{item}</option>
-                ))}
-              </select>
-            </div>
-          </>
-        )}
-
-        <div className="mt-2 flex justify-between items-center text-sm">
-          <span className="text-slate-500">
-            Hiển thị {filteredData.length} sản phẩm
-          </span>
+              {uniqueData.map(item => (
+                <option key={item} value={item ?? ""}>{item}</option>
+              ))}
+            </select>
+          </div>
         </div>
-      </nav>
+      )} */}
 
       {/* Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" suppressHydrationWarning>
         {filteredData.map((item, index) => {
           const allPrices = item.specs?.flatMap(s => s.prices.map(p => p.price)) || [];
           const minPrice = allPrices.length > 0 ? Math.min(...allPrices) : 0;
@@ -120,11 +132,13 @@ export default function GalleryProduct({ data, categoryId, filterField }: Galler
           const singleUnit = isSingleVariant ? item.specs[0].prices[0].unit : "";
 
           return (
-            <button
+            <div
               key={item._id}
-              type="button"
+              role="button"
+              tabIndex={0}
               onClick={() => handleProductClick(item)}
-              className={`group relative flex flex-col h-full bg-white shadow-sm hover:shadow-md hover:-translate-y-1 transition-all overflow-hidden active:scale-95`}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleProductClick(item); } }}
+              className={`group relative flex flex-col h-full bg-white shadow-sm hover:shadow-md hover:-translate-y-1 transition-all overflow-hidden active:scale-95 cursor-pointer`}
             >
               <div className="relative w-full aspect-[4/3] bg-slate-100 flex-shrink-0">
                 <Image
@@ -137,13 +151,14 @@ export default function GalleryProduct({ data, categoryId, filterField }: Galler
                   quality={60}
                   {...getBlurPlaceholder(item.images?.[0]?.secure_url)}
                 />
+                <FavoriteButton productId={item._id} />
               </div>
               <div className="p-2 sm:p-3 flex-1 flex flex-col text-left w-full">
                 <div className="text-xs sm:text-sm font-semibold text-slate-900 line-clamp-2">
                   {item.name}
                 </div>
                 <div className="mt-auto pt-2 flex flex-col">
-                  <span className="text-xs sm:text-sm font-bold text-emerald-600">
+                  <span className="text-xs sm:text-sm font-bold text-teal-600">
                     {minPrice === maxPrice ? (
                       <>
                         {formatVND(minPrice)}
@@ -155,7 +170,7 @@ export default function GalleryProduct({ data, categoryId, filterField }: Galler
                   </span>
                 </div>
               </div>
-            </button>
+            </div>
           );
         })}
         <PendingProductSkeleton categoryId={categoryId} layout="gallery" />

@@ -73,7 +73,7 @@ function SearchResults() {
     <section aria-label="Kết quả tìm kiếm" className="space-y-6">
       <div>
         <h2 className="text-lg font-medium text-slate-800">
-          Kết quả cho: <span className="font-bold text-emerald-600">"{query}"</span>
+          Kết quả cho: <span className="font-bold text-teal-600">"{query}"</span>
         </h2>
         <span className="text-sm text-slate-500">
           Tìm thấy {results.length} sản phẩm
@@ -119,7 +119,7 @@ function SearchResults() {
                     </span>
                   )}
                   <div className="mt-auto pt-2 flex flex-col">
-                    <span className="text-xs sm:text-sm font-bold text-emerald-600">
+                    <span className="text-xs sm:text-sm font-bold text-teal-600">
                       {minPrice === maxPrice ? (
                         <>
                           {formatVND(minPrice)}
@@ -151,11 +151,11 @@ export default function SearchContent() {
       {/* Header & Breadcrumb */}
       <HomeHeader compact />
       <div className="w-full max-w-6xl mx-auto px-4 mt-1">
-        <Breadcrumbs 
+        <Breadcrumbs
           items={[
             { label: 'Trang chủ', href: '/' },
             { label: 'Kết quả tìm kiếm' }
-          ]} 
+          ]}
         />
       </div>
 

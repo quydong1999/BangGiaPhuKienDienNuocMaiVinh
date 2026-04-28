@@ -9,7 +9,7 @@ import { addToCart } from '@/store/cartSlice';
 import { closeModal } from '@/store/modalSlice';
 import { motion, AnimatePresence } from 'framer-motion';
 import { formatVND } from '@/lib/utils';
-import { addToFavoriteProducts } from '@/lib/favorites';
+import { addToRecentViewedProducts } from '@/lib/favorites';
 
 interface ProductPreviewModalProps {
   isOpen: boolean;
@@ -66,7 +66,7 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
       setEditingQty(null);
 
       // Add product ID to localStorage
-      addToFavoriteProducts(product._id as string);
+      addToRecentViewedProducts(product._id as string);
     }
   }, [product, initialSpec, initialUnit]);
 
@@ -205,7 +205,7 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
                     const el = document.getElementById('product-preview-carousel');
                     if (el) el.scrollTo({ left: idx * el.clientWidth, behavior: 'smooth' });
                   }}
-                  className={`rounded-full transition-all duration-300 ${activeImgIdx === idx ? "w-4 h-2 bg-emerald-500" : "w-2 h-2 bg-slate-300 hover:bg-slate-400"}`}
+                  className={`rounded-full transition-all duration-300 ${activeImgIdx === idx ? "w-4 h-2 bg-teal-500" : "w-2 h-2 bg-slate-300 hover:bg-slate-400"}`}
                 />
               ))}
             </div>
@@ -223,7 +223,7 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
               {isAdmin && (
                 <button
                   onClick={() => setShowBasePrice(!showBasePrice)}
-                  className="text-[10px] md:text-xs font-bold text-emerald-600 hover:text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100 transition-colors uppercase select-none active:scale-95 duration-200"
+                  className="text-[10px] md:text-xs font-bold text-teal-600 hover:text-teal-700 bg-teal-50 px-2 py-0.5 rounded border border-teal-100 transition-colors uppercase select-none active:scale-95 duration-200"
                 >
                   {showBasePrice ? "Ẩn giá nhập" : "Xem giá nhập"}
                 </button>
@@ -231,7 +231,7 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
             </div>
             <div className="mt-2 md:mt-3 flex items-center flex-wrap gap-x-4 gap-y-2">
               <div className="flex items-baseline gap-1.5 md:gap-2">
-                <span className="text-xl md:text-2xl font-black text-emerald-600">
+                <span className="text-xl md:text-2xl font-black text-teal-600">
                   {currentPrice ? formatVND(currentPrice.price) : 'Liên hệ'}
                 </span>
                 {currentPrice && (
@@ -264,7 +264,7 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
                       key={idx}
                       onClick={() => handleSpecSelect(idx)}
                       className={`px-2 py-1 text-xs md:text-sm transition-all border-2 ${selectedSpecIdx === idx
-                        ? 'bg-emerald-50 border-emerald-500 text-emerald-700 shadow-sm'
+                        ? 'bg-teal-50 border-teal-500 text-teal-700 shadow-sm'
                         : 'bg-white border-slate-100 text-slate-600 hover:border-slate-300'
                         }`}
                     >
@@ -291,7 +291,7 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
                     key={idx}
                     onClick={() => setSelectedPriceIdx(idx)}
                     className={`px-2 py-1 text-xs md:text-sm transition-all border-2 ${selectedPriceIdx === idx
-                      ? 'bg-emerald-50 border-emerald-500 text-emerald-700 shadow-sm'
+                      ? 'bg-teal-50 border-teal-500 text-teal-700 shadow-sm'
                       : 'bg-white border-slate-100 text-slate-600 hover:border-slate-300'
                       }`}
                   >
@@ -361,8 +361,8 @@ export function ProductPreviewModal({ isOpen, onClose, product, categoryImageUrl
               onClick={handleAddToCart}
               disabled={!currentPrice || (editingQty !== null && (isNaN(parseFloat(editingQty.replace(',', '.'))) || parseFloat(editingQty.replace(',', '.')) < 0.01))}
               className={`w-full h-11 md:h-14 relative flex items-center justify-center gap-2 md:gap-3 text-xs md:text-sm font-black transition-all shadow-lg active:scale-[0.98] ${isJustAdded
-                ? 'bg-emerald-500 text-white shadow-emerald-200'
-                : 'bg-slate-900 text-white hover:bg-emerald-600 shadow-slate-200'
+                ? 'bg-teal-500 text-white shadow-teal-200'
+                : 'bg-slate-900 text-white hover:bg-teal-600 shadow-slate-200'
                 } disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed`}
             >
               <AnimatePresence mode="wait">

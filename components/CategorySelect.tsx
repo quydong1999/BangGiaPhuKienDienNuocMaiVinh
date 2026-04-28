@@ -35,7 +35,7 @@ export function CategorySelect({ value, onChange, disabled, className }: Categor
       value={value}
       onChange={(e) => onChange(e.target.value)}
       disabled={disabled}
-      className={`w-full p-2.5 border border-gray-400 focus:ring-2 focus:ring-emerald-500 outline-none transition-shadow disabled:bg-slate-100 disabled:text-slate-500 ${className}`}
+      className={`w-full p-2.5 border border-gray-400 focus:ring-2 focus:ring-teal-500 outline-none transition-shadow disabled:bg-slate-100 disabled:text-slate-500 ${className}`}
     >
       <option value="" disabled>-- Chọn danh mục --</option>
       {categories?.map((category) => (

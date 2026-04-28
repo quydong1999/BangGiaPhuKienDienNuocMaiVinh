@@ -42,7 +42,7 @@ export default function TransactionNotifier() {
 
     function connect() {
       if (!mounted) return;
-      
+
       // Cleanup previous connection
       if (eventSourceRef.current) {
         eventSourceRef.current.close();
@@ -67,11 +67,10 @@ export default function TransactionNotifier() {
               <div className="bg-white rounded-xl shadow-2xl border border-slate-200 p-4 w-[360px] max-w-[90vw]">
                 <div className="flex items-start gap-3">
                   {/* Icon */}
-                  <div className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
-                    isIncoming 
-                      ? 'bg-emerald-100 text-emerald-600' 
-                      : 'bg-red-100 text-red-600'
-                  }`}>
+                  <div className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${isIncoming
+                    ? 'bg-teal-100 text-teal-600'
+                    : 'bg-red-100 text-red-600'
+                    }`}>
                     {isIncoming ? <ArrowDownLeft size={20} /> : <ArrowUpRight size={20} />}
                   </div>
 
@@ -80,9 +79,8 @@ export default function TransactionNotifier() {
                     <p className="text-sm font-black text-slate-800">
                       {isIncoming ? 'Nhận tiền' : 'Chuyển tiền'} — {data.gateway}
                     </p>
-                    <p className={`text-lg font-black mt-0.5 ${
-                      isIncoming ? 'text-emerald-600' : 'text-red-600'
-                    }`}>
+                    <p className={`text-lg font-black mt-0.5 ${isIncoming ? 'text-teal-600' : 'text-red-600'
+                      }`}>
                       {isIncoming ? '+' : '-'}{formatVND(amount)}
                     </p>
                     {data.transactionContent && (
@@ -149,7 +147,7 @@ export default function TransactionNotifier() {
   }, [status, session]);
 
   return (
-    <Toaster 
+    <Toaster
       position="top-right"
       toastOptions={{
         style: {

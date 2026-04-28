@@ -280,7 +280,7 @@ export default function CartContent() {
         <p className="text-sm text-slate-500 mb-6">Bạn chưa thêm sản phẩm nào vào giỏ hàng.</p>
         <Link
           href="/"
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 transition-colors"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-teal-600 text-white text-sm font-semibold hover:bg-teal-700 transition-colors"
         >
           Tiếp tục mua hàng
         </Link>
@@ -323,7 +323,7 @@ export default function CartContent() {
                     </h3>
                     <div className="flex flex-wrap gap-2 mt-1">
                       {item.specName && item.specName !== '-' && cleanSpecName(item.specName) !== 'Mặc định' && (
-                        <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                        <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-bold bg-teal-100 text-teal-800">
                           {cleanSpecName(item.specName)}
                         </span>
                       )}
@@ -370,7 +370,7 @@ export default function CartContent() {
                       }}
                       className={`w-12 text-center text-sm font-semibold tabular-nums border py-1 focus:outline-none focus:ring-1 ${editingQty[item.cartId] !== undefined && (isNaN(parseFloat(editingQty[item.cartId].replace(',', '.'))) || parseFloat(editingQty[item.cartId].replace(',', '.')) < 0.01)
                         ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                        : 'border-slate-200 focus:border-emerald-500 focus:ring-emerald-500'
+                        : 'border-slate-200 focus:border-teal-500 focus:ring-teal-500'
                         }`}
                     />
                     <button
@@ -384,7 +384,7 @@ export default function CartContent() {
                   </div>
                   <div className="text-right">
                     <span className="text-[10px] text-slate-500">{formatVND(item.price)} × {item.quantity}</span>
-                    <div className="text-sm font-bold text-emerald-700">{formatVND(lineTotal)}</div>
+                    <div className="text-sm font-bold text-teal-700">{formatVND(lineTotal)}</div>
                   </div>
                 </div>
               </div>
@@ -397,14 +397,14 @@ export default function CartContent() {
       <div className="bg-white border border-slate-200 shadow-sm p-4 space-y-4">
         <div className="flex items-center justify-between">
           <span className="text-sm text-slate-600">Tổng ({items.length} mặt hàng)</span>
-          <span className="text-lg font-bold text-emerald-700">{formatVND(grandTotal)}</span>
+          <span className="text-lg font-bold text-teal-700">{formatVND(grandTotal)}</span>
         </div>
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
               onClick={handleExportExcel}
-              className="w-full flex items-center justify-center gap-2 py-3 border border-emerald-600 text-emerald-600 font-semibold hover:bg-emerald-50 active:scale-[0.98] transition-all"
+              className="w-full flex items-center justify-center gap-2 py-3 border border-teal-600 text-teal-600 font-semibold hover:bg-teal-50 active:scale-[0.98] transition-all"
             >
               <FileSpreadsheet size={18} />
               <span className="hidden sm:inline">Xuất Excel</span>
@@ -413,7 +413,7 @@ export default function CartContent() {
             <button
               type="button"
               onClick={handlePrint}
-              className="w-full flex items-center justify-center gap-2 py-3 border border-emerald-600 text-emerald-600 font-semibold hover:bg-emerald-50 active:scale-[0.98] transition-all"
+              className="w-full flex items-center justify-center gap-2 py-3 border border-teal-600 text-teal-600 font-semibold hover:bg-teal-50 active:scale-[0.98] transition-all"
             >
               <Printer size={18} />
               <span className="hidden sm:inline">In hóa đơn</span>
@@ -425,7 +425,7 @@ export default function CartContent() {
               type="button"
               onClick={handleSaveInvoice}
               disabled={hasInvalidQty}
-              className="w-full flex items-center justify-center gap-2 py-3 bg-emerald-600 text-white font-black uppercase tracking-widest hover:bg-emerald-700 shadow-lg shadow-emerald-100 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] transition-all"
+              className="w-full flex items-center justify-center gap-2 py-3 bg-teal-600 text-white font-black uppercase tracking-widest hover:bg-teal-700 shadow-lg shadow-teal-100 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] transition-all"
             >
               <Save size={18} />
               Lưu Hóa Đơn

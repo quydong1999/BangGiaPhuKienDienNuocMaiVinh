@@ -35,7 +35,7 @@ export function FormModalActions({
             <button
                 type="submit"
                 disabled={isBusy || !isValid}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-teal-600 text-white font-medium hover:bg-teal-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
             >
                 {isBusy ? (
                     <Spinner />

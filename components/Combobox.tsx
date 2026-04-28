@@ -13,11 +13,11 @@ interface ComboboxProps {
   required?: boolean;
 }
 
-export function Combobox({ 
-  options, 
-  value, 
-  onChange, 
-  placeholder = "Chọn hoặc nhập mới...", 
+export function Combobox({
+  options,
+  value,
+  onChange,
+  placeholder = "Chọn hoặc nhập mới...",
   label,
   className = "",
   required = false
@@ -44,7 +44,7 @@ export function Combobox({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const filteredOptions = options.filter(opt => 
+  const filteredOptions = options.filter(opt =>
     opt.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -72,18 +72,18 @@ export function Combobox({
           {label}
         </label>
       )}
-      
+
       <div className="relative group">
         <input
           type="text"
-          className="w-full pl-4 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all font-medium placeholder:text-slate-300"
+          className="w-full pl-4 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all font-medium placeholder:text-slate-300"
           placeholder={placeholder}
           value={searchTerm}
           onChange={handleInputChange}
           onFocus={() => setIsOpen(true)}
           required={required}
         />
-        
+
         <div className="absolute right-0 top-0 h-full flex items-center pr-2 gap-1">
           {searchTerm && (
             <button
@@ -97,7 +97,7 @@ export function Combobox({
           <button
             type="button"
             onClick={toggleDropdown}
-            className={`p-1 text-slate-400 hover:text-emerald-600 transition-all ${isOpen ? 'rotate-180 text-emerald-600' : ''}`}
+            className={`p-1 text-slate-400 hover:text-teal-600 transition-all ${isOpen ? 'rotate-180 text-teal-600' : ''}`}
           >
             <ChevronDown size={18} />
           </button>
@@ -112,13 +112,13 @@ export function Combobox({
                 <button
                   key={idx}
                   type="button"
-                  className={`w-full text-left px-4 py-2.5 text-sm hover:bg-emerald-50 hover:text-emerald-700 transition-colors flex items-center justify-between group
-                    ${opt === value ? 'bg-emerald-50 text-emerald-700 font-bold' : 'text-slate-600'}
+                  className={`w-full text-left px-4 py-2.5 text-sm hover:bg-teal-50 hover:text-teal-700 transition-colors flex items-center justify-between group
+                    ${opt === value ? 'bg-teal-50 text-teal-700 font-bold' : 'text-slate-600'}
                   `}
                   onClick={() => handleSelect(opt)}
                 >
                   {opt}
-                  {opt === value && <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />}
+                  {opt === value && <div className="w-1.5 h-1.5 rounded-full bg-teal-500" />}
                 </button>
               ))}
             </div>

@@ -75,7 +75,7 @@ function splitCsvLine(line: string) {
   const result: string[] = [];
   let curValue = "";
   let inQuotes = false;
-  
+
   for (let i = 0; i < line.length; i++) {
     const char = line[i];
     if (char === '"') {
@@ -197,9 +197,9 @@ function analyzeImport(csvRows: CsvRow[], existingProducts: Product[]): Analyzed
     const basePriceChanged = existingBasePrice !== row.basePrice;
 
     if (priceChanged || basePriceChanged) {
-      return { 
-        ...row, 
-        action: "update_price" as const, 
+      return {
+        ...row,
+        action: "update_price" as const,
         currentPrice: existingPrice,
         currentBasePrice: existingBasePrice
       };
@@ -212,7 +212,7 @@ function analyzeImport(csvRows: CsvRow[], existingProducts: Product[]): Analyzed
 // ─── Action Config ──────────────────────────────────────────────────────────
 
 const ACTION_CONFIG: Record<BulkImportAction, { label: string; icon: React.ReactNode; color: string; bgColor: string }> = {
-  new_product: { label: "Sản phẩm mới", icon: <PackagePlus size={14} />, color: "text-emerald-700", bgColor: "bg-emerald-50 border-emerald-200" },
+  new_product: { label: "Sản phẩm mới", icon: <PackagePlus size={14} />, color: "text-teal-700", bgColor: "bg-teal-50 border-teal-200" },
   new_spec: { label: "Quy cách mới", icon: <ListPlus size={14} />, color: "text-blue-700", bgColor: "bg-blue-50 border-blue-200" },
   new_price: { label: "Đơn giá mới", icon: <DollarSign size={14} />, color: "text-violet-700", bgColor: "bg-violet-50 border-violet-200" },
   update_price: { label: "Cập nhật giá", icon: <Pencil size={14} />, color: "text-amber-700", bgColor: "bg-amber-50 border-amber-200" },
@@ -277,7 +277,7 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
     reader.onload = (e) => {
       const text = e.target?.result as string;
       const { rows, errors, totalLines } = parseCSV(text);
-      
+
       if (errors.length > 0) {
         console.group("❌ Lỗi phân tích file CSV:");
         errors.forEach(err => console.error(err));
@@ -421,8 +421,8 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
         {/* Header */}
         <div className="flex justify-between items-center p-5 border-b border-slate-100 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-emerald-100 flex items-center justify-center">
-              <FileSpreadsheet size={18} className="text-emerald-600" />
+            <div className="w-9 h-9 rounded-lg bg-teal-100 flex items-center justify-center">
+              <FileSpreadsheet size={18} className="text-teal-600" />
             </div>
             <div>
               <h2 className="text-lg font-bold text-slate-800">Nhập hàng loạt</h2>
@@ -444,7 +444,7 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
         {/* Progress Bar */}
         <div className="flex h-1 bg-slate-100 shrink-0">
           <div
-            className="bg-emerald-500 transition-all duration-500 ease-out"
+            className="bg-teal-500 transition-all duration-500 ease-out"
             style={{ width: stage === "upload" ? "33%" : stage === "analyze" ? "66%" : "100%" }}
           />
         </div>
@@ -463,9 +463,9 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
                 className={`
                   relative border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all
                   ${isDragging
-                    ? "border-emerald-400 bg-emerald-50"
+                    ? "border-teal-400 bg-teal-50"
                     : fileName
-                      ? "border-emerald-300 bg-emerald-50/50"
+                      ? "border-teal-300 bg-teal-50/50"
                       : "border-slate-200 hover:border-slate-300 hover:bg-slate-50"
                   }
                 `}
@@ -480,8 +480,8 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
 
                 {fileName ? (
                   <div className="flex flex-col items-center gap-2">
-                    <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center">
-                      <Check size={24} className="text-emerald-600" />
+                    <div className="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center">
+                      <Check size={24} className="text-teal-600" />
                     </div>
                     <p className="text-sm font-medium text-slate-700">{fileName}</p>
                     <p className="text-xs text-slate-400">
@@ -617,10 +617,10 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
               )}
 
               {!hasChanges && (
-                <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-6 text-center">
-                  <CheckCircle2 size={32} className="text-emerald-500 mx-auto mb-2" />
-                  <p className="text-sm font-medium text-emerald-700">Tất cả dữ liệu đã cập nhật</p>
-                  <p className="text-xs text-emerald-500 mt-1">Không có thay đổi nào cần thực hiện</p>
+                <div className="rounded-xl border border-teal-200 bg-teal-50 p-6 text-center">
+                  <CheckCircle2 size={32} className="text-teal-500 mx-auto mb-2" />
+                  <p className="text-sm font-medium text-teal-700">Tất cả dữ liệu đã cập nhật</p>
+                  <p className="text-xs text-teal-500 mt-1">Không có thay đổi nào cần thực hiện</p>
                 </div>
               )}
 
@@ -640,7 +640,7 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
                               checked={allVisibleChecked}
                               ref={(el) => { if (el) el.indeterminate = someVisibleChecked && !allVisibleChecked; }}
                               onChange={toggleAll}
-                              className="w-3.5 h-3.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer accent-emerald-600"
+                              className="w-3.5 h-3.5 rounded border-slate-300 text-teal-600 focus:ring-teal-500 cursor-pointer accent-teal-600"
                             />
                           </th>
                           <th className="text-left px-3 py-2 text-xs font-medium text-slate-500">Trạng thái</th>
@@ -653,64 +653,64 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
                       </thead>
                       <tbody>
                         {visibleRows.map(({ row, originalIndex }) => {
-                            const config = ACTION_CONFIG[row.action];
-                            const isChecked = !excludedIndices.has(originalIndex);
-                            return (
-                              <tr key={originalIndex} className={`border-t border-slate-100 hover:bg-slate-50/50 ${!isChecked ? 'opacity-40' : ''}`}>
-                                <td className="px-3 py-2">
-                                  <input
-                                    type="checkbox"
-                                    checked={isChecked}
-                                    onChange={() => toggleRow(originalIndex)}
-                                    className="w-3.5 h-3.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer accent-emerald-600"
-                                  />
-                                </td>
-                                <td className="px-3 py-2">
-                                  <span className={`inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full border ${config.bgColor} ${config.color}`}>
-                                    {config.icon}
-                                    {config.label}
-                                  </span>
-                                </td>
-                                <td className="px-3 py-2 text-slate-700 max-w-[150px] truncate">{row.name}</td>
-                                <td className="px-3 py-2 text-slate-600">{row.spec}</td>
-                                <td className="px-3 py-2 text-slate-600">{row.unit}</td>
-                                <td className="px-3 py-2 text-right">
-                                  {row.action === "update_price" && row.currentPrice !== undefined && row.currentPrice !== row.price ? (
-                                    <span className="flex items-center justify-end gap-1">
-                                      <span className="text-slate-400 line-through text-[10px]">
-                                        {row.currentPrice.toLocaleString("vi-VN")}
-                                      </span>
-                                      <ArrowRight size={10} className="text-slate-400" />
-                                      <span className="text-amber-700 font-medium">
-                                        {row.price.toLocaleString("vi-VN")}
-                                      </span>
+                          const config = ACTION_CONFIG[row.action];
+                          const isChecked = !excludedIndices.has(originalIndex);
+                          return (
+                            <tr key={originalIndex} className={`border-t border-slate-100 hover:bg-slate-50/50 ${!isChecked ? 'opacity-40' : ''}`}>
+                              <td className="px-3 py-2">
+                                <input
+                                  type="checkbox"
+                                  checked={isChecked}
+                                  onChange={() => toggleRow(originalIndex)}
+                                  className="w-3.5 h-3.5 rounded border-slate-300 text-teal-600 focus:ring-teal-500 cursor-pointer accent-teal-600"
+                                />
+                              </td>
+                              <td className="px-3 py-2">
+                                <span className={`inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full border ${config.bgColor} ${config.color}`}>
+                                  {config.icon}
+                                  {config.label}
+                                </span>
+                              </td>
+                              <td className="px-3 py-2 text-slate-700 max-w-[150px] truncate">{row.name}</td>
+                              <td className="px-3 py-2 text-slate-600">{row.spec}</td>
+                              <td className="px-3 py-2 text-slate-600">{row.unit}</td>
+                              <td className="px-3 py-2 text-right">
+                                {row.action === "update_price" && row.currentPrice !== undefined && row.currentPrice !== row.price ? (
+                                  <span className="flex items-center justify-end gap-1">
+                                    <span className="text-slate-400 line-through text-[10px]">
+                                      {row.currentPrice.toLocaleString("vi-VN")}
                                     </span>
-                                  ) : (
-                                    <span className="text-slate-700 font-medium">
+                                    <ArrowRight size={10} className="text-slate-400" />
+                                    <span className="text-amber-700 font-medium">
                                       {row.price.toLocaleString("vi-VN")}
                                     </span>
-                                  )}
-                                </td>
-                                <td className="px-3 py-2 text-right">
-                                  {row.action === "update_price" && row.currentBasePrice !== undefined && row.currentBasePrice !== row.basePrice ? (
-                                    <span className="flex items-center justify-end gap-1">
-                                      <span className="text-slate-400 line-through text-[10px]">
-                                        {row.currentBasePrice.toLocaleString("vi-VN")}
-                                      </span>
-                                      <ArrowRight size={10} className="text-slate-400" />
-                                      <span className="text-red-700 font-medium whitespace-nowrap">
-                                        {row.basePrice.toLocaleString("vi-VN")}
-                                      </span>
+                                  </span>
+                                ) : (
+                                  <span className="text-slate-700 font-medium">
+                                    {row.price.toLocaleString("vi-VN")}
+                                  </span>
+                                )}
+                              </td>
+                              <td className="px-3 py-2 text-right">
+                                {row.action === "update_price" && row.currentBasePrice !== undefined && row.currentBasePrice !== row.basePrice ? (
+                                  <span className="flex items-center justify-end gap-1">
+                                    <span className="text-slate-400 line-through text-[10px]">
+                                      {row.currentBasePrice.toLocaleString("vi-VN")}
                                     </span>
-                                  ) : (
-                                    <span className="text-slate-500 font-medium whitespace-nowrap">
+                                    <ArrowRight size={10} className="text-slate-400" />
+                                    <span className="text-red-700 font-medium whitespace-nowrap">
                                       {row.basePrice.toLocaleString("vi-VN")}
                                     </span>
-                                  )}
-                                </td>
-                              </tr>
-                            );
-                          })}
+                                  </span>
+                                ) : (
+                                  <span className="text-slate-500 font-medium whitespace-nowrap">
+                                    {row.basePrice.toLocaleString("vi-VN")}
+                                  </span>
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>
@@ -733,9 +733,9 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", bounce: 0.4, duration: 0.6 }}
-                className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center"
+                className="w-16 h-16 rounded-full bg-teal-100 flex items-center justify-center"
               >
-                <Check size={32} className="text-emerald-600" />
+                <Check size={32} className="text-teal-600" />
               </motion.div>
 
               <div className="text-center">
@@ -745,11 +745,11 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
 
               <div className="w-full grid grid-cols-2 gap-3">
                 {importResult.productsCreated > 0 && (
-                  <div className="flex items-center gap-3 p-3 rounded-xl bg-emerald-50 border border-emerald-200">
-                    <PackagePlus size={18} className="text-emerald-600" />
+                  <div className="flex items-center gap-3 p-3 rounded-xl bg-teal-50 border border-teal-200">
+                    <PackagePlus size={18} className="text-teal-600" />
                     <div>
-                      <p className="text-lg font-bold text-emerald-700">{importResult.productsCreated}</p>
-                      <p className="text-[11px] text-emerald-600">Sản phẩm mới</p>
+                      <p className="text-lg font-bold text-teal-700">{importResult.productsCreated}</p>
+                      <p className="text-[11px] text-teal-600">Sản phẩm mới</p>
                     </div>
                   </div>
                 )}
@@ -807,7 +807,7 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
               <button
                 onClick={handleAnalyze}
                 disabled={csvRows.length === 0 || parseErrors.length > 0 || isAnalyzing}
-                className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 px-5 py-2.5 bg-teal-600 text-white text-sm font-medium rounded-lg hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isAnalyzing ? (
                   <>
@@ -831,7 +831,7 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
                   setConfirmInput("");
                 }}
                 disabled={!hasChanges || selectedCount === 0}
-                className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 px-5 py-2.5 bg-teal-600 text-white text-sm font-medium rounded-lg hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Check size={16} />
                 Xác nhận nhập
@@ -851,12 +851,12 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
                   onChange={(e) => setConfirmInput(e.target.value.replace(/\D/g, ''))}
                   placeholder="000000"
                   autoFocus
-                  className="w-24 text-center font-mono text-base tracking-[0.25em] border border-slate-300 rounded-lg px-2 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  className="w-24 text-center font-mono text-base tracking-[0.25em] border border-slate-300 rounded-lg px-2 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
                 />
                 <button
                   onClick={handleImport}
                   disabled={confirmInput !== confirmCode || isImporting}
-                  className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                  className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white text-sm font-medium rounded-lg hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
                 >
                   {isImporting ? (
                     <>
@@ -880,7 +880,7 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
                   // Reload page to reflect changes
                   window.location.reload();
                 }}
-                className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors"
+                className="flex items-center gap-2 px-5 py-2.5 bg-teal-600 text-white text-sm font-medium rounded-lg hover:bg-teal-700 transition-colors"
               >
                 <Check size={16} />
                 Hoàn tất

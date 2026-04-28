@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { Search, LogOut, LogIn, UserRound, FolderPlus, PackagePlus, FileSpreadsheet, ShoppingCart, FileText, Bell, ArrowDownLeft, ArrowUpRight, X, Volume2 } from 'lucide-react';
+import { Search, LogOut, LogIn, UserRound, FolderPlus, PackagePlus, FileSpreadsheet, ShoppingCart, FileText, Bell, ArrowDownLeft, ArrowUpRight, X, Volume2, Menu } from 'lucide-react';
 import { signOut } from "next-auth/react"
 import { useAdmin } from "@/hooks/useAdmin"
 import Link from 'next/link';
@@ -16,13 +16,15 @@ interface HomeHeaderProps {
   showAddCategory?: boolean;
   categoryId?: string;
   categoryLayout?: string;
+  onToggleSidebar?: () => void;
 }
 
 export function HomeHeader({
   compact = false,
   showAddCategory = false,
   categoryId,
-  categoryLayout
+  categoryLayout,
+  onToggleSidebar
 }: HomeHeaderProps = {}) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { isAdmin, isLoading, user } = useAdmin()
@@ -58,13 +60,22 @@ export function HomeHeader({
 
   return (
     <>
-      <header className={`sticky top-0 z-30 w-full ${compact ? 'bg-emerald-600 shadow-md text-white' : ''}`}>
+      <header className={`w-full ${compact ? 'bg-teal-600 shadow-md text-white' : 'bg-[#f4f7f6]'}`}>
         <div className={`mx-auto w-full max-w-6xl flex flex-wrap sm:flex-nowrap items-center justify-between ${compact ? 'px-3 sm:px-4 py-2 sm:h-16 gap-y-2 sm:gap-4' : 'px-4 pt-6 pb-10'}`}>
 
           {/* Trái: Menu & Logo */}
           <div className="flex items-center gap-2 sm:gap-3 order-1 flex-shrink-0">
+            {onToggleSidebar && (
+              <button
+                onClick={onToggleSidebar}
+                className={`lg:hidden p-1 -ml-1 rounded-md focus:outline-none transition-colors ${compact ? 'text-white hover:bg-white/20' : 'text-slate-600 hover:bg-slate-100'}`}
+                aria-label="Toggle menu"
+              >
+                <Menu size={24} />
+              </button>
+            )}
             <Link href="/" className="block focus:outline-none">
-              <h1 className={`text-xl sm:text-2xl font-bold tracking-tight ${compact ? 'text-white' : 'text-emerald-600'}`}>
+              <h1 className={`text-xl sm:text-2xl font-bold tracking-tight ${compact ? 'text-white' : 'text-teal-600'}`}>
                 MAI VINH
               </h1>
             </Link>
@@ -91,7 +102,7 @@ export function HomeHeader({
             <Link
               id="header-cart-icon"
               href="/cart"
-              className={`relative w-8 h-8 flex items-center justify-center rounded-full transition-colors ${compact ? 'text-white/80 hover:text-white hover:bg-white/20' : 'text-slate-500 hover:text-emerald-600 hover:bg-slate-100'}`}
+              className={`relative w-8 h-8 flex items-center justify-center rounded-full transition-colors ${compact ? 'text-white/80 hover:text-white hover:bg-white/20' : 'text-slate-500 hover:text-teal-600 hover:bg-slate-100'}`}
               aria-label="Giỏ hàng"
             >
               <ShoppingCart size={18} />
@@ -118,7 +129,7 @@ export function HomeHeader({
                       setHasUnreadTx(false);
                     }
                   }}
-                  className={`relative w-8 h-8 flex items-center justify-center rounded-full transition-colors ${compact ? 'text-white/80 hover:text-white hover:bg-white/20' : 'text-slate-500 hover:text-emerald-600 hover:bg-slate-100'} ${!latestTx ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  className={`relative w-8 h-8 flex items-center justify-center rounded-full transition-colors ${compact ? 'text-white/80 hover:text-white hover:bg-white/20' : 'text-slate-500 hover:text-teal-600 hover:bg-slate-100'} ${!latestTx ? 'opacity-50 cursor-not-allowed' : ''}`}
                   disabled={!latestTx}
                   title={latestTx ? "Xem giao dịch mới" : "Chưa có thông báo"}
                 >
@@ -134,7 +145,7 @@ export function HomeHeader({
                     <div className="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">
                       <div className="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50">
                         <h3 className="font-bold text-slate-800 flex items-center gap-2">
-                          <Bell size={16} className="text-emerald-600" />
+                          <Bell size={16} className="text-teal-600" />
                           Giao dịch mới nhất
                         </h3>
                         <button onClick={() => setShowTxDialog(false)} className="text-slate-400 hover:text-slate-600 transition-colors">
@@ -143,7 +154,7 @@ export function HomeHeader({
                       </div>
                       <div className="p-5">
                         <div className="flex items-start gap-4">
-                          <div className={`shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${latestTx.amountIn > 0 ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'}`}>
+                          <div className={`shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${latestTx.amountIn > 0 ? 'bg-teal-100 text-teal-600' : 'bg-red-100 text-red-600'}`}>
                             {latestTx.amountIn > 0 ? <ArrowDownLeft size={24} /> : <ArrowUpRight size={24} />}
                           </div>
                           <div className="flex-1 min-w-0">
@@ -153,7 +164,7 @@ export function HomeHeader({
                             <p className="text-base font-black text-slate-800 truncate">
                               {latestTx.gateway}
                             </p>
-                            <p className={`text-2xl font-black mt-1 ${latestTx.amountIn > 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+                            <p className={`text-2xl font-black mt-1 ${latestTx.amountIn > 0 ? 'text-teal-600' : 'text-red-600'}`}>
                               {latestTx.amountIn > 0 ? '+' : '-'}{formatVND(latestTx.amountIn > 0 ? latestTx.amountIn : latestTx.amountOut)}
                             </p>
                           </div>
@@ -176,7 +187,7 @@ export function HomeHeader({
                         <button onClick={() => setShowTxDialog(false)} className="text-sm font-bold text-slate-500 hover:text-slate-700 px-3 py-1.5 transition-colors">
                           Đóng
                         </button>
-                        <Link href="/admin/transactions" onClick={() => setShowTxDialog(false)} className="text-sm font-bold text-emerald-600 hover:text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-lg transition-colors">
+                        <Link href="/admin/transactions" onClick={() => setShowTxDialog(false)} className="text-sm font-bold text-teal-600 hover:text-teal-700 bg-teal-50 hover:bg-teal-100 px-3 py-1.5 rounded-lg transition-colors">
                           Xem tất cả lịch sử
                         </Link>
                       </div>

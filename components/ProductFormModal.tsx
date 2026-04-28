@@ -251,7 +251,7 @@ export function ProductFormModal({
             {...register("name")}
             type="text"
             disabled={isPending || isCompressing}
-            className="w-full p-2.5 border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none text-base transition-all disabled:bg-slate-100"
+            className="w-full p-2.5 border border-slate-300 focus:ring-2 focus:ring-teal-500 outline-none text-base transition-all disabled:bg-slate-100"
             placeholder="VD: Co 90 uPVC"
           />
           {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
@@ -283,7 +283,7 @@ export function ProductFormModal({
                     <input
                       {...register(`specs.${sIdx}.name`)}
                       placeholder="VD: Ø21, Loại 1..."
-                      className="w-full p-2 bg-white border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none text-base transition-all"
+                      className="w-full p-2 bg-white border border-slate-200 focus:ring-2 focus:ring-teal-500 outline-none text-base transition-all"
                     />
                   </div>
 
@@ -303,7 +303,7 @@ export function ProductFormModal({
           <button
             type="button"
             onClick={() => appendSpec({ name: "", prices: [{ unit: "", price: 0, basePrice: 0 }] })}
-            className="w-full flex items-center justify-center gap-1.5 px-3 py-2.5 border-2 border-dashed border-emerald-300 bg-emerald-50/50 text-emerald-700 hover:bg-emerald-100 hover:border-emerald-400 font-bold text-xs transition-colors"
+            className="w-full flex items-center justify-center gap-1.5 px-3 py-2.5 border-2 border-dashed border-teal-300 bg-teal-50/50 text-teal-700 hover:bg-teal-100 hover:border-teal-400 font-bold text-xs transition-colors"
           >
             <Plus size={14} /> Thêm quy cách
           </button>
@@ -389,7 +389,7 @@ function PriceFieldArray({ nestIndex, control, register, errors, disabled }: any
         <button
           type="button"
           onClick={() => append({ unit: "", price: 0, basePrice: 0 })}
-          className="text-[10px] flex items-center gap-1 font-bold text-emerald-600 hover:text-emerald-700"
+          className="text-[10px] flex items-center gap-1 font-bold text-teal-600 hover:text-teal-700"
         >
           <Plus size={12} /> Thêm đơn vị
         </button>
@@ -402,7 +402,7 @@ function PriceFieldArray({ nestIndex, control, register, errors, disabled }: any
               <input
                 {...register(`specs.${nestIndex}.prices.${kIdx}.unit`)}
                 placeholder="Đơn vị (VD: Cái)"
-                className="w-full p-2 bg-white border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none text-base"
+                className="w-full p-2 bg-white border border-slate-200 focus:ring-2 focus:ring-teal-500 outline-none text-base"
               />
             </div>
             <div className="flex-1">
@@ -410,7 +410,7 @@ function PriceFieldArray({ nestIndex, control, register, errors, disabled }: any
                 {...register(`specs.${nestIndex}.prices.${kIdx}.price`, { valueAsNumber: true })}
                 type="number"
                 placeholder="Giá bán"
-                className="w-full p-2 bg-white border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none text-[13px] md:text-sm"
+                className="w-full p-2 bg-white border border-slate-200 focus:ring-2 focus:ring-teal-500 outline-none text-[13px] md:text-sm"
               />
             </div>
             <div className="flex-1">
@@ -418,7 +418,7 @@ function PriceFieldArray({ nestIndex, control, register, errors, disabled }: any
                 {...register(`specs.${nestIndex}.prices.${kIdx}.basePrice`, { valueAsNumber: true })}
                 type="number"
                 placeholder="Giá nhập"
-                className="w-full p-2 bg-white border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none text-[13px] md:text-sm"
+                className="w-full p-2 bg-white border border-slate-200 focus:ring-2 focus:ring-teal-500 outline-none text-[13px] md:text-sm"
               />
             </div>
             {fields.length > 1 && (

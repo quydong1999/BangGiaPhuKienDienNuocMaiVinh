@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { 
-  ArrowDownLeft, 
-  ArrowUpRight, 
-  RefreshCw, 
-  Search, 
+import {
+  ArrowDownLeft,
+  ArrowUpRight,
+  RefreshCw,
+  Search,
   Calendar,
   Banknote,
   ChevronLeft,
@@ -86,7 +86,7 @@ export default function TransactionsClient() {
 
       const res = await fetch(`/api/transactions?${params.toString()}`);
       if (!res.ok) throw new Error('Failed to fetch');
-      
+
       const data: TransactionsResponse = await res.json();
       setTransactions(data.transactions);
       setTotal(data.total);
@@ -139,7 +139,7 @@ export default function TransactionsClient() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-xl lg:text-2xl font-black text-slate-800 flex items-center gap-2">
-            <Banknote className="text-emerald-600" size={24} />
+            <Banknote className="text-teal-600" size={24} />
             Lịch sử giao dịch
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
@@ -157,7 +157,7 @@ export default function TransactionsClient() {
           <button
             onClick={fetchTransactions}
             disabled={loading}
-            className="flex items-center gap-1.5 px-3 py-2 text-sm font-bold rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition-colors disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-2 text-sm font-bold rounded-lg bg-teal-600 text-white hover:bg-teal-700 transition-colors disabled:opacity-50"
           >
             <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
             Làm mới
@@ -168,11 +168,11 @@ export default function TransactionsClient() {
       {/* Stats Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
         <div className="bg-white rounded-xl border border-slate-200 p-3 lg:p-4">
-          <div className="flex items-center gap-2 text-emerald-600 mb-1">
+          <div className="flex items-center gap-2 text-teal-600 mb-1">
             <ArrowDownLeft size={16} />
             <span className="text-xs font-bold uppercase tracking-wider">Tiền vào</span>
           </div>
-          <p className="text-lg lg:text-xl font-black text-emerald-700">{formatVND(stats.totalIn)}</p>
+          <p className="text-lg lg:text-xl font-black text-teal-700">{formatVND(stats.totalIn)}</p>
         </div>
         <div className="bg-white rounded-xl border border-slate-200 p-3 lg:p-4">
           <div className="flex items-center gap-2 text-red-500 mb-1">
@@ -201,7 +201,7 @@ export default function TransactionsClient() {
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+              className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
             />
           </div>
           <div className="flex-1 min-w-0">
@@ -212,13 +212,13 @@ export default function TransactionsClient() {
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+              className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
             />
           </div>
           <div className="flex gap-2">
             <button
               onClick={handleFilter}
-              className="flex-1 sm:flex-none px-4 py-2 text-sm font-bold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+              className="flex-1 sm:flex-none px-4 py-2 text-sm font-bold bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
             >
               Lọc
             </button>
@@ -278,9 +278,9 @@ export default function TransactionsClient() {
                 </tr>
               ) : (
                 transactions.map((tx) => (
-                  <tr 
-                    key={tx._id} 
-                    className="hover:bg-emerald-50/50 transition-colors group"
+                  <tr
+                    key={tx._id}
+                    className="hover:bg-teal-50/50 transition-colors group"
                   >
                     {/* Thời gian */}
                     <td className="px-3 lg:px-4 py-3 whitespace-nowrap">
@@ -305,8 +305,8 @@ export default function TransactionsClient() {
                     {/* Số tiền */}
                     <td className="px-3 lg:px-4 py-3 text-right whitespace-nowrap">
                       {tx.amountIn > 0 ? (
-                        <span className="inline-flex items-center gap-1 text-emerald-700 font-black text-xs lg:text-sm">
-                          <ArrowDownLeft size={12} className="text-emerald-500" />
+                        <span className="inline-flex items-center gap-1 text-teal-700 font-black text-xs lg:text-sm">
+                          <ArrowDownLeft size={12} className="text-teal-500" />
                           +{formatVND(tx.amountIn)}
                         </span>
                       ) : (
