@@ -46,6 +46,21 @@ export function HomeHeader({
     return () => window.removeEventListener('new-transaction', handleNewTx);
   }, []);
 
+  // Sync mobile status bar (theme-color) with header background
+  useEffect(() => {
+    const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+    const color = compact ? '#0d9488' : '#f4f7f6'; // #0d9488 is tailwind teal-600
+    
+    if (themeColorMeta) {
+      themeColorMeta.setAttribute('content', color);
+    } else {
+      const meta = document.createElement('meta');
+      meta.name = 'theme-color';
+      meta.content = color;
+      document.head.appendChild(meta);
+    }
+  }, [compact]);
+
   const formatVND = (amount: number) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 
   useEffect(() => {
