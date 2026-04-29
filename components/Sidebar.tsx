@@ -103,7 +103,9 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   : 'text-slate-600 hover:bg-slate-50'
                   }`}
               >
-                <Star size={18} className={pathname === '/' ? 'text-teal-600 fill-teal-600' : 'text-slate-400'} />
+                <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
+                  <Star size={20} className={pathname === '/' ? 'text-teal-600 fill-teal-600' : 'text-slate-400'} />
+                </div>
                 <span>Yêu thích</span>
               </Link>
             </li>
@@ -117,7 +119,9 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   : 'text-slate-600 hover:bg-slate-50'
                   }`}
               >
-                <History size={18} className={pathname === '/vua-xem' ? 'text-teal-600' : 'text-slate-400'} />
+                <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
+                  <History size={20} className={pathname === '/vua-xem' ? 'text-teal-600' : 'text-slate-400'} />
+                </div>
                 <span>Vừa xem</span>
               </Link>
             </li>
@@ -128,7 +132,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               <div className="px-3 py-4 space-y-3">
                 {[1, 2, 3, 4, 5].map((i) => (
                   <div key={i} className="flex items-center gap-3 animate-pulse">
-                    <div className="w-6 h-6 bg-slate-200 rounded-full" />
+                    <div className="w-7 h-7 bg-slate-200 rounded-full" />
                     <div className="h-4 bg-slate-200 rounded w-3/4" />
                   </div>
                 ))}
@@ -143,18 +147,18 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     <Link
                       href={`/${cat.slug}`}
                       onClick={(e) => handleCategoryClick(e, cat)}
-                      className={`group flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer select-none ${isActive
+                      className={`group flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-colors cursor-pointer select-none ${isActive
                         ? 'bg-teal-50 text-teal-700'
                         : 'text-slate-600 hover:bg-slate-50'
                         }`}
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className="relative w-6 h-6 flex-shrink-0 overflow-hidden rounded-full border border-slate-200">
+                        <div className="relative w-7 h-7 flex-shrink-0 overflow-hidden rounded-full border border-slate-200">
                           <Image
                             src={getOptimizedImageUrl(imageUrl, 50)}
                             alt={cat.title}
                             fill
-                            sizes="24px"
+                            sizes="28px"
                             className="object-cover"
                             {...getBlurPlaceholder(imageUrl)}
                           />
