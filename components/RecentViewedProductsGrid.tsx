@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { getOptimizedImageUrl, getBlurPlaceholder } from '@/lib/image-blur';
 import { Product } from '@/types/types';
@@ -16,6 +16,7 @@ export function RecentViewedProductsGrid() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useAppDispatch();
+  const clickTimer = useRef<NodeJS.Timeout | null>(null);
 
   const fetchRecentViewed = async () => {
     try {
@@ -57,7 +58,17 @@ export function RecentViewedProductsGrid() {
   }, []);
 
   const handleProductClick = (product: Product) => {
-    dispatch(openModal({ type: 'productPreview', props: { product } }));
+    if (clickTimer.current) {
+      clearTimeout(clickTimer.current);
+      clickTimer.current = null;
+      // Double click -> Edit
+      dispatch(openModal({ type: 'productForm', props: { categoryId: product.categoryId, initialData: product } }));
+    } else {
+      clickTimer.current = setTimeout(() => {
+        dispatch(openModal({ type: 'productPreview', props: { product } }));
+        clickTimer.current = null;
+      }, 300);
+    }
   };
 
   if (isLoading) {
@@ -86,7 +97,7 @@ export function RecentViewedProductsGrid() {
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+    <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
       {products.map((item, index) => {
         const allPrices = item.specs?.flatMap(s => s.prices.map(p => p.price)) || [];
         const minPrice = allPrices.length > 0 ? Math.min(...allPrices) : 0;

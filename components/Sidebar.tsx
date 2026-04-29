@@ -9,6 +9,7 @@ import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { openModal } from '@/store/modalSlice';
 import { getOptimizedImageUrl, getBlurPlaceholder } from '@/lib/image-blur';
 import Image from 'next/image';
+import { useState, useEffect } from 'react';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -22,6 +23,17 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const isModalOpen = useAppSelector(state => state.modal.isOpen);
+  const [isEffectivelyOpen, setIsEffectivelyOpen] = useState(isModalOpen);
+
+  useEffect(() => {
+    if (isModalOpen) {
+      setIsEffectivelyOpen(true);
+    } else {
+      const timer = setTimeout(() => setIsEffectivelyOpen(false), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isModalOpen]);
+
   const clickTimer = useRef<NodeJS.Timeout | null>(null);
   const { data: categories, isLoading } = useCategories();
 
@@ -60,7 +72,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       {/* Overlay cho mobile */}
       {isOpen && (
         <div
-          className={`fixed inset-0 bg-black/50 ${isModalOpen ? 'z-40' : 'z-[60]'} lg:hidden`}
+          className={`fixed inset-0 bg-black/50 ${isEffectivelyOpen ? 'z-40' : 'z-[60]'} lg:hidden`}
           onClick={onClose}
           aria-hidden="true"
         />
@@ -69,7 +81,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       {/* Sidebar — trên desktop: h-full, overflow-y-auto, scroll độc lập */}
       <aside
         className={`
-          fixed inset-y-0 left-0 ${isModalOpen ? 'z-40' : 'z-[60]'} w-64 bg-white border-r border-slate-200
+          fixed inset-y-0 left-0 ${isEffectivelyOpen ? 'z-40' : 'z-[60]'} w-64 bg-white border-r border-slate-200
           transform transition-transform duration-300 ease-in-out
           ${isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'}
 

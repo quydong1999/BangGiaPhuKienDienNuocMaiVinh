@@ -81,7 +81,7 @@ function SearchResults() {
       </div>
 
       {results.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {results.map((item, index) => {
             const allPrices = item.specs?.flatMap(s => s.prices.map(p => p.price)) || [];
             const minPrice = allPrices.length > 0 ? Math.min(...allPrices) : 0;

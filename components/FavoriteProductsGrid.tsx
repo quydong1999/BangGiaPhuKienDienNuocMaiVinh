@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { getOptimizedImageUrl, getBlurPlaceholder } from '@/lib/image-blur';
 import { Product } from '@/types/types';
@@ -16,6 +16,7 @@ export function FavoriteProductsGrid() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useAppDispatch();
+  const clickTimer = useRef<NodeJS.Timeout | null>(null);
 
   const fetchFavorites = async () => {
     try {
@@ -54,12 +55,22 @@ export function FavoriteProductsGrid() {
   }, []);
 
   const handleProductClick = (product: Product) => {
-    dispatch(openModal({ type: 'productPreview', props: { product } }));
+    if (clickTimer.current) {
+      clearTimeout(clickTimer.current);
+      clickTimer.current = null;
+      // Double click -> Edit (Admin only check is handled inside ModalProvider or here)
+      dispatch(openModal({ type: 'productForm', props: { categoryId: product.categoryId, initialData: product } }));
+    } else {
+      clickTimer.current = setTimeout(() => {
+        dispatch(openModal({ type: 'productPreview', props: { product } }));
+        clickTimer.current = null;
+      }, 300);
+    }
   };
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {[...Array(5)].map((_, i) => (
           <div key={i} className="animate-pulse bg-white border border-slate-200">
             <div className="aspect-[4/3] bg-slate-200" />
