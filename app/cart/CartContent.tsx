@@ -338,7 +338,7 @@ export default function CartContent() {
         <div class="header-container">
           <div class="store-info">
             <div class="store-name">Cửa hàng Điện nước Mai Vinh</div>
-            <div>Địa chỉ: Thắng Kiên - Đề Gi - Phù Cát - Bình Định</div>
+            <div>Địa chỉ: Thắng Kiên - Đề Gi - Gia Lai</div>
             <div>SĐT: 0976 576 443 - 0982 390 943</div>
           </div>
         </div>
