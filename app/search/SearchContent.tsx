@@ -147,28 +147,33 @@ function SearchResults() {
 
 export default function SearchContent() {
   return (
-    <main id="main-content" className="min-h-screen bg-light-grey flex flex-col">
+    <div className="flex flex-col h-dvh overflow-hidden bg-light-grey">
       {/* Header & Breadcrumb */}
-      <HomeHeader compact />
-      <div className="w-full max-w-6xl mx-auto px-4 mt-1">
-        <Breadcrumbs
-          items={[
-            { label: 'Trang chủ', href: '/' },
-            { label: 'Kết quả tìm kiếm' }
-          ]}
-        />
+      <div className="flex-none z-50">
+        <HomeHeader compact />
       </div>
 
-      <div className="flex-1 w-full max-w-6xl mx-auto p-4 md:p-6">
-        <Suspense fallback={
-          <div className="flex flex-col items-center justify-center py-20 text-slate-500">
-            <Loader2 className="animate-spin mb-4" size={40} />
-            <p>Đang tải...</p>
-          </div>
-        }>
-          <SearchResults />
-        </Suspense>
-      </div>
-    </main>
+      <main id="main-content" className="flex-1 overflow-y-auto custom-scrollbar">
+        <div className="w-full max-w-6xl mx-auto px-4 mt-1">
+          <Breadcrumbs
+            items={[
+              { label: 'Trang chủ', href: '/' },
+              { label: 'Kết quả tìm kiếm' }
+            ]}
+          />
+        </div>
+
+        <div className="w-full max-w-6xl mx-auto p-4 md:p-6">
+          <Suspense fallback={
+            <div className="flex flex-col items-center justify-center py-20 text-slate-500">
+              <Loader2 className="animate-spin mb-4" size={40} />
+              <p>Đang tải...</p>
+            </div>
+          }>
+            <SearchResults />
+          </Suspense>
+        </div>
+      </main>
+    </div>
   );
 }

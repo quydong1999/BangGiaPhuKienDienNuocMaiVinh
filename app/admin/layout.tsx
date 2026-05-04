@@ -20,7 +20,7 @@ export default async function AdminLayout({
       {/* Main Content Area */}
       <div className="flex-1 md:ml-64 flex flex-col overflow-hidden pt-16 md:pt-0">
         {/* Dynamic Page Content */}
-        <main className="flex-1 p-4 lg:p-6 flex flex-col overflow-hidden">
+        <main className="flex-1 p-4 lg:p-6 flex flex-col overflow-y-auto custom-scrollbar">
           {children}
         </main>
       </div>
