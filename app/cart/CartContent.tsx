@@ -4,8 +4,9 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import { Minus, Plus, Trash2, ShoppingBag, FileSpreadsheet, Printer, Save } from 'lucide-react';
+import { Minus, Plus, Trash2, ShoppingBag, FileSpreadsheet, Printer, Save, FileText } from 'lucide-react';
 import * as XLSX from 'xlsx-js-style';
+import { ReadingConfig, doReadNumber } from 'read-vietnamese-number';
 import { getBlurPlaceholder, getOptimizedImageUrl } from '@/lib/image-blur';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { selectCartItems, removeFromCart, updateQuantity, clearCart } from '@/store/cartSlice';
@@ -259,6 +260,150 @@ export default function CartContent() {
         <script>
           window.onload = () => {
             window.print();
+            window.close();
+          };
+        </script>
+      </body>
+      </html>
+    `;
+
+    printWindow.document.open();
+    printWindow.document.write(html);
+    printWindow.document.close();
+  };
+
+  const handlePrintQuotation = () => {
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      alert('Vui lòng cho phép trình duyệt hiển thị popup để in báo giá.');
+      return;
+    }
+
+    const now = new Date();
+    const day = now.getDate();
+    const month = now.getMonth() + 1;
+    const year = now.getFullYear();
+
+    const rowsHtml = items.map((item, index) => {
+      const cleanedSpec = cleanSpecName(item.specName);
+      const isVisibleSpec = cleanedSpec && cleanedSpec !== '-' && cleanedSpec !== 'Mặc định';
+      const productName = isVisibleSpec
+        ? `${item.product.name} (${cleanedSpec})`
+        : item.product.name;
+
+      return `
+        <tr>
+          <td class="text-center">${index + 1}</td>
+          <td>${productName}</td>
+          <td class="text-center">${item.unit}</td>
+          <td class="text-center">${item.quantity}</td>
+          <td class="text-right">${formatVND(item.price)}</td>
+          <td class="text-right">${formatVND(item.price * item.quantity)}</td>
+        </tr>
+      `;
+    }).join('');
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Báo giá - Cửa hàng Điện nước Mai Vinh</title>
+        <meta charset="utf-8">
+        <style>
+          body { font-family: "Times New Roman", Times, serif; padding: 20px; color: #000; line-height: 1.4; }
+          .header-container { text-align: center; margin-bottom: 20px; }
+          .store-name { font-weight: bold; text-transform: uppercase; font-size: 20px; margin-bottom: 4px; }
+          .title-container { text-align: center; margin: 30px 0; }
+          .title { font-size: 32px; font-weight: bold; }
+          .info-section { margin-bottom: 16px; font-size: 15px; }
+          .info-row { display: flex; align-items: baseline; margin-bottom: 8px; }
+          .info-label { white-space: nowrap; margin-right: 4px; }
+          .info-dots { flex: 1; border-bottom: 1px dotted #000; margin-bottom: 3px; }
+          table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+          th, td { border: 1px solid #000; padding: 8px; font-size: 15px; }
+          th { background-color: #f2f2f2; font-weight: bold; text-align: center; }
+          .text-center { text-align: center; }
+          .text-right { text-align: right; }
+          .footer { margin-top: 8px; display: flex; justify-content: space-between; }
+          .footer-column { text-align: center; width: 280px; }
+          .date { font-style: italic; margin-bottom: 10px; font-size: 15px; }
+          .signature-space { height: 100px; }
+          @media print {
+            body { padding: 0; }
+            @page { margin: 1.5cm; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header-container">
+          <div class="store-info">
+            <div class="store-name">Cửa hàng Điện nước Mai Vinh</div>
+            <div>Địa chỉ: Thắng Kiên - Đề Gi - Phù Cát - Bình Định</div>
+            <div>SĐT: 0976 576 443 - 0982 390 943</div>
+          </div>
+        </div>
+
+        <div class="title-container">
+          <div class="title">BẢNG BÁO GIÁ</div>
+        </div>
+
+        <div class="info-section">
+          <div class="info-row"><span class="info-label">Tên khách hàng:</span><span class="info-dots"></span></div>
+          <div class="info-row"><span class="info-label">Mã số thuế:</span><span class="info-dots"></span></div>
+          <div class="info-row"><span class="info-label">Điện thoại:</span><span class="info-dots"></span></div>
+          <div class="info-row"><span class="info-label">Email:</span><span class="info-dots"></span></div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th width="5%">STT</th>
+              <th width="45%">Tên sản phẩm</th>
+              <th width="10%">Đvt</th>
+              <th width="10%">Số lượng</th>
+              <th width="15%">Đơn giá</th>
+              <th width="15%">Thành tiền</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rowsHtml}
+          </tbody>
+          <tfoot>
+            <tr style="font-weight: bold; background-color: #f2f2f2;">
+              <td colspan="5" class="text-center">TỔNG CỘNG</td>
+              <td class="text-right">${formatVND(grandTotal)}</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div style="margin-top: 10px; font-size: 15px;">
+          <strong>Bằng chữ:</strong> <em>${(() => { const cfg = new ReadingConfig(); cfg.unit = ['đồng']; const txt = doReadNumber(String(grandTotal), cfg); return txt.charAt(0).toUpperCase() + txt.slice(1); })()}</em>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-top: 40px;">
+          <div style="width: 280px;"></div>
+          <div style="width: 280px; text-align: center;">
+            <span class="date">Đề Gi, ngày ${day} tháng ${month} năm ${year}</span>
+          </div>
+        </div>
+        <div class="footer">
+          <div class="footer-column">
+            <div style="font-weight: bold;">Người nhận</div>
+            <div style="font-style: italic; margin-top: 4px;">(Ký và ghi rõ họ tên)</div>
+            <div class="signature-space"></div>
+          </div>
+          <div class="footer-column">
+            <div style="font-weight: bold;">Người lập</div>
+            <div style="font-style: italic; margin-top: 4px;">(Ký và ghi rõ họ tên)</div>
+            <div class="signature-space"></div>
+            <div style="font-weight: bold; font-size: 18px;">Nguyễn Thị Mai</div>
+          </div>
+        </div>
+
+        <script>
+          window.onload = () => {
+            window.print();
+            window.close();
           };
         </script>
       </body>
@@ -400,15 +545,14 @@ export default function CartContent() {
           <span className="text-lg font-bold text-teal-700">{formatVND(grandTotal)}</span>
         </div>
         <div className="space-y-3">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <button
               type="button"
               onClick={handleExportExcel}
               className="w-full flex items-center justify-center gap-2 py-3 border border-teal-600 text-teal-600 font-semibold hover:bg-teal-50 active:scale-[0.98] transition-all"
             >
               <FileSpreadsheet size={18} />
-              <span className="hidden sm:inline">Xuất Excel</span>
-              <span className="sm:hidden">Excel</span>
+              <span>Excel</span>
             </button>
             <button
               type="button"
@@ -416,8 +560,15 @@ export default function CartContent() {
               className="w-full flex items-center justify-center gap-2 py-3 border border-teal-600 text-teal-600 font-semibold hover:bg-teal-50 active:scale-[0.98] transition-all"
             >
               <Printer size={18} />
-              <span className="hidden sm:inline">In hóa đơn</span>
-              <span className="sm:hidden">In</span>
+              <span>Hóa đơn</span>
+            </button>
+            <button
+              type="button"
+              onClick={handlePrintQuotation}
+              className="w-full flex items-center justify-center gap-2 py-3 border border-teal-600 text-teal-600 font-semibold hover:bg-teal-50 active:scale-[0.98] transition-all"
+            >
+              <FileText size={18} />
+              <span>Báo giá</span>
             </button>
           </div>
           {session?.user?.isAdmin && (
