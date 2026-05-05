@@ -1,4 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { usePersistentQuery } from './usePersistentQuery';
+import { clearPersistedQueryData } from '@/lib/queryPersistence';
 
 // Định nghĩa kiểu dữ liệu cho Category dựa trên Mongoose Model của bạn
 export interface Category {
@@ -38,9 +40,10 @@ const fetchCategories = async (): Promise<Category[]> => {
 };
 
 export function useCategories(initialData?: Category[]) {
-  return useQuery({
+  return usePersistentQuery({
     queryKey: ['categories'],
     queryFn: fetchCategories,
+    cacheKey: 'categories',
     initialData,
   });
 }
@@ -86,6 +89,7 @@ export function useCreateCategory() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
+      clearPersistedQueryData('categories');
     },
   });
 }
@@ -141,6 +145,7 @@ export function useUpdateCategory() {
     onSettled: (_, __, variables) => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
       queryClient.invalidateQueries({ queryKey: ["category", variables.slug] });
+      clearPersistedQueryData('categories');
     },
   });
 }
@@ -179,6 +184,7 @@ export function useDeleteCategory() {
     onSettled: (_, __, slug) => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
       queryClient.invalidateQueries({ queryKey: ["category", slug] });
+      clearPersistedQueryData('categories');
     },
   });
 }

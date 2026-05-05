@@ -1,4 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { usePersistentQuery } from './usePersistentQuery';
+import { clearProductsCache } from '@/lib/queryPersistence';
 import { Product } from "@/types/types";
 
 export interface ProductsResponse {
@@ -21,10 +23,11 @@ const fetchProducts = async (categoryId?: string): Promise<Product[]> => {
 };
 
 export function useProducts(categoryId?: string, initialData?: Product[]) {
-    return useQuery({
+    return usePersistentQuery({
         queryKey: ['products', categoryId],
         queryFn: () => fetchProducts(categoryId),
-        enabled: !!categoryId, // Only run the query if categoryId is available
+        cacheKey: `products_${categoryId}`,
+        enabled: !!categoryId,
         initialData,
     });
 }
@@ -71,6 +74,7 @@ export function useCreateProduct() {
         onSuccess: () => {
             // Invalidate all product related queries
             queryClient.invalidateQueries({ queryKey: ["products"] });
+            clearProductsCache();
         },
     });
 }
@@ -153,6 +157,7 @@ export function useUpdateProduct() {
             if (data?._id) {
                 queryClient.invalidateQueries({ queryKey: ["product", data._id] });
             }
+            clearProductsCache();
         },
     });
 }
@@ -194,6 +199,7 @@ export function useDeleteProduct() {
         },
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ["products"] });
+            clearProductsCache();
         },
     });
 }
