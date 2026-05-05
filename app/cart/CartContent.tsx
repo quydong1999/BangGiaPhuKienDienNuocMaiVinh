@@ -291,14 +291,15 @@ export default function CartContent() {
         ? `${item.product.name} (${cleanedSpec})`
         : item.product.name;
 
+      const fmtNum = (v: number) => new Intl.NumberFormat('vi-VN').format(v);
       return `
         <tr>
           <td class="text-center">${index + 1}</td>
           <td>${productName}</td>
           <td class="text-center">${item.unit}</td>
           <td class="text-center">${item.quantity}</td>
-          <td class="text-right">${formatVND(item.price)}</td>
-          <td class="text-right">${formatVND(item.price * item.quantity)}</td>
+          <td class="text-right">${fmtNum(item.price)}</td>
+          <td class="text-right">${fmtNum(item.price * item.quantity)}</td>
         </tr>
       `;
     }).join('');
@@ -370,8 +371,16 @@ export default function CartContent() {
           </tbody>
           <tfoot>
             <tr style="font-weight: bold; background-color: #f2f2f2;">
-              <td colspan="5" class="text-center">TỔNG CỘNG</td>
-              <td class="text-right">${formatVND(grandTotal)}</td>
+              <td colspan="5" class="text-center">TỔNG CỘNG TRƯỚC VAT</td>
+              <td class="text-right">${new Intl.NumberFormat('vi-VN').format(grandTotal)}</td>
+            </tr>
+            <tr style="font-weight: bold; background-color: #f2f2f2;">
+              <td colspan="5" class="text-center">VAT (8%)</td>
+              <td class="text-right">${new Intl.NumberFormat('vi-VN').format(Math.round(grandTotal * 0.08))}</td>
+            </tr>
+            <tr style="font-weight: bold; background-color: #f2f2f2;">
+              <td colspan="5" class="text-center">TỔNG CỘNG SAU VAT</td>
+              <td class="text-right">${new Intl.NumberFormat('vi-VN').format(Math.round(grandTotal * 1.08))}</td>
             </tr>
           </tfoot>
         </table>
