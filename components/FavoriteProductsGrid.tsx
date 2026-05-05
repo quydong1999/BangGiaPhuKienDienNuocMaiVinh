@@ -9,50 +9,37 @@ import { openModal } from '@/store/modalSlice';
 import { FavoriteButton } from './FavoriteButton';
 import { getFavoriteProducts, FAVORITES_UPDATED_EVENT } from '@/lib/favorites';
 import { formatVND } from '@/lib/utils';
+import { useFavoriteProducts } from '@/hooks/useProducts';
+import { useQueryClient } from '@tanstack/react-query';
 
 const imgNotFoundUrl = "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?_=20210521171500";
 
 export function FavoriteProductsGrid() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [favoriteIds, setFavoriteIds] = useState<string[]>(() => getFavoriteProducts());
   const dispatch = useAppDispatch();
   const clickTimer = useRef<NodeJS.Timeout | null>(null);
+  const queryClient = useQueryClient();
 
-  const fetchFavorites = async () => {
-    try {
-      const ids = getFavoriteProducts();
-      if (ids.length === 0) {
-        setProducts([]);
-        setIsLoading(false);
-        return;
-      }
+  // Persistent query: cache bền vững trong localStorage
+  const { data: products = [], isLoading } = useFavoriteProducts(favoriteIds);
 
-      const res = await fetch('/api/products/by-ids', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ids })
-      });
-      const data = await res.json();
-      if (data.success) {
-        setProducts(data.data);
-      }
-    } catch (err) {
-      console.error('Failed to fetch favorite products', err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+  // Lắng nghe sự kiện thay đổi danh sách yêu thích
   useEffect(() => {
-    fetchFavorites();
-
     const handleUpdate = () => {
-      fetchFavorites();
+      const newIds = getFavoriteProducts();
+      setFavoriteIds(newIds);
+      // Invalidate để refetch với IDs mới
+      queryClient.invalidateQueries({ queryKey: ['products', 'favorites'] });
     };
 
     window.addEventListener(FAVORITES_UPDATED_EVENT, handleUpdate);
     return () => window.removeEventListener(FAVORITES_UPDATED_EVENT, handleUpdate);
-  }, []);
+  }, [queryClient]);
+
+  // Sắp xếp products theo thứ tự của favoriteIds
+  const orderedProducts = favoriteIds
+    .map(id => products.find(p => p._id === id))
+    .filter(Boolean) as Product[];
 
   const handleProductClick = (product: Product) => {
     if (clickTimer.current) {
@@ -68,7 +55,7 @@ export function FavoriteProductsGrid() {
     }
   };
 
-  if (isLoading) {
+  if (isLoading && orderedProducts.length === 0) {
     return (
       <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {[...Array(5)].map((_, i) => (
@@ -84,7 +71,7 @@ export function FavoriteProductsGrid() {
     );
   }
 
-  if (products.length === 0) {
+  if (favoriteIds.length === 0) {
     return (
       <div className="text-center py-12 text-slate-500 bg-white rounded-lg border border-slate-200">
         <p>Bạn chưa có sản phẩm yêu thích nào.</p>
@@ -95,7 +82,7 @@ export function FavoriteProductsGrid() {
 
   return (
     <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-      {products.map((item, index) => {
+      {orderedProducts.map((item, index) => {
         const allPrices = item.specs?.flatMap(s => s.prices.map(p => p.price)) || [];
         const minPrice = allPrices.length > 0 ? Math.min(...allPrices) : 0;
         const maxPrice = allPrices.length > 0 ? Math.max(...allPrices) : 0;

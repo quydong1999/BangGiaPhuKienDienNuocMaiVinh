@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { usePersistentQuery } from './usePersistentQuery';
-import { clearProductsCache } from '@/lib/queryPersistence';
+import { clearProductsCache, clearPersistedQueryData } from '@/lib/queryPersistence';
 import { Product } from "@/types/types";
 
 export interface ProductsResponse {
@@ -29,6 +29,32 @@ export function useProducts(categoryId?: string, initialData?: Product[]) {
         cacheKey: `products_${categoryId}`,
         enabled: !!categoryId,
         initialData,
+    });
+}
+
+const fetchProductsByIds = async (ids: string[]): Promise<Product[]> => {
+    if (ids.length === 0) return [];
+    const response = await fetch('/api/products/by-ids', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids }),
+    });
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    const result: ProductsResponse = await response.json();
+    if (!result.success) {
+        throw new Error('Failed to fetch products by ids');
+    }
+    return result.data;
+};
+
+export function useFavoriteProducts(ids: string[]) {
+    return usePersistentQuery({
+        queryKey: ['products', 'favorites', ids],
+        queryFn: () => fetchProductsByIds(ids),
+        cacheKey: 'products_favorites',
+        enabled: ids.length > 0,
     });
 }
 
