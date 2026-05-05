@@ -386,7 +386,7 @@ export default function CartContent() {
         </table>
 
         <div style="margin-top: 10px; font-size: 15px;">
-          <strong>Bằng chữ:</strong> <em>${(() => { const cfg = new ReadingConfig(); cfg.unit = ['đồng']; const txt = doReadNumber(String(grandTotal), cfg); return txt.charAt(0).toUpperCase() + txt.slice(1); })()}</em>
+          <strong>Bằng chữ:</strong> <em>${(() => { const cfg = new ReadingConfig(); cfg.unit = ['đồng']; const txt = doReadNumber(String(Math.round(grandTotal * 1.08)), cfg); return txt.charAt(0).toUpperCase() + txt.slice(1); })()}</em>
         </div>
 
         <div style="display: flex; justify-content: space-between; margin-top: 40px;">
