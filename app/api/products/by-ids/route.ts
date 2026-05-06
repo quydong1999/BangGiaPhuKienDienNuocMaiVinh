@@ -1,8 +1,11 @@
+import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 import { productService } from '@/services';
 
 export async function POST(req: Request) {
   try {
+    const session = await auth();
+    const isAdmin = session?.user?.isAdmin === true;
     const body = await req.json();
     const { ids } = body;
 
@@ -14,6 +17,19 @@ export async function POST(req: Request) {
     }
 
     const result = await productService.findByIds(ids);
+
+    if (!isAdmin && result.success && result.data) {
+      result.data = result.data.map(product => {
+        const specs = product.specs?.map((spec: any) => ({
+          ...spec,
+          prices: spec.prices?.map((price: any) => {
+            const { basePrice, ...rest } = price;
+            return rest;
+          })
+        }));
+        return { ...product, specs };
+      }) as any;
+    }
 
     return NextResponse.json(result, { status: 200 });
   } catch (error: any) {

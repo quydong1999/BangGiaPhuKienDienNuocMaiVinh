@@ -32,7 +32,7 @@ export type Category = {
 export type ProductPrice = {
   unit: string;
   price: number;
-  basePrice: number;
+  basePrice?: number;
 };
 
 export type ProductSpec = {
@@ -53,5 +53,5 @@ export interface FlattenedProduct extends Omit<Product, 'specs'> {
   spec: string;
   unit: string;
   priceSell: number;
-  basePrice: number;
+  basePrice?: number;
 }

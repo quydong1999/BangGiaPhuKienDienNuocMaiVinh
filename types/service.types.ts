@@ -29,7 +29,7 @@ export interface ICloudinaryImage {
 export interface IProductPrice {
   unit: string;
   price: number;
-  basePrice: number;
+  basePrice?: number;
 }
 
 export interface IProductSpec {

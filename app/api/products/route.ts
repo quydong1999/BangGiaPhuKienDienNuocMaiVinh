@@ -14,10 +14,25 @@ import type { IProductCreateInput } from '@/types/service.types';
 
 export async function GET(req: Request) {
   try {
+    const session = await auth();
+    const isAdmin = session?.user?.isAdmin === true;
     const { searchParams } = new URL(req.url);
     const categoryId = searchParams.get('categoryId') || undefined;
 
     const result = await productService.findAll(categoryId);
+
+    if (!isAdmin && result.success && result.data) {
+      result.data = result.data.map(product => {
+        const specs = product.specs.map(spec => ({
+          ...spec,
+          prices: spec.prices.map(price => {
+            const { basePrice, ...rest } = price;
+            return rest;
+          })
+        }));
+        return { ...product, specs };
+      });
+    }
 
     return NextResponse.json(result, { status: 200 });
   } catch (error: any) {
