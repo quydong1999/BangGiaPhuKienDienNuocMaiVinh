@@ -415,7 +415,7 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
         transition={{ type: "spring", duration: 0.4, bounce: 0.3 }}
-        className="bg-white shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden sm:rounded-xl"
+        className="bg-white shadow-2xl w-full max-w-[95vw] md:max-w-[90vw] xl:max-w-[85vw] max-h-[90vh] flex flex-col overflow-hidden sm:rounded-xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
