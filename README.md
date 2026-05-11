@@ -43,6 +43,10 @@ A highly-optimized full-stack web application built with **Next.js 15**, focusin
 - Role-Based Access Control via **NextAuth.js (Auth.js v5)** and passwordless **Google One-Tap Login**.
 - **Data Redaction & API Security:** Hardened API layer strictly filters out sensitive properties (like `basePrice`) ensuring they are only transmitted to authenticated administrative users.
 
+### 5. Smart Bulk Import & Data Processing
+- **Excel/Sheets Integration:** Built a highly resilient "Bulk Import" feature allowing administrators to instantly populate the catalog by pasting raw data directly from external spreadsheets.
+- **Responsive Preview Table:** Implemented client-side parsing and intelligent layout scaling ensuring the data preview table automatically utilizes maximum screen real-estate on desktop devices, optimizing the administrative data-entry experience.
+
 ---
 
 ## 🧠 System Architecture
