@@ -10,6 +10,7 @@ import { AnimatePresence } from 'framer-motion';
 import { useAdmin } from '@/hooks/useAdmin';
 
 const MODAL_COMPONENTS = {
+  shareDocument: dynamic(() => import('./ShareDocumentModal').then(m => m.ShareDocumentModal), { ssr: false }),
   login: dynamic(() => import('./LoginModal').then(m => m.default), { ssr: false }),
   search: dynamic(() => import('./SearchModal').then(m => m.SearchModal), { ssr: false }),
   categoryForm: dynamic(() => import('./CategoryFormModal').then(m => m.CategoryFormModal), { ssr: false }),

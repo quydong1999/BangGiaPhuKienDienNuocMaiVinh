@@ -4,9 +4,8 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import { Minus, Plus, Trash2, ShoppingBag, FileSpreadsheet, Printer, Save, FileText } from 'lucide-react';
-import * as XLSX from 'xlsx-js-style';
-import { ReadingConfig, doReadNumber } from 'read-vietnamese-number';
+import { Minus, Plus, Trash2, ShoppingBag, Save, Share2 } from 'lucide-react';
+import { cleanSpecName } from '@/lib/document-service';
 import { getBlurPlaceholder, getOptimizedImageUrl } from '@/lib/image-blur';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { selectCartItems, removeFromCart, updateQuantity, clearCart } from '@/store/cartSlice';
@@ -16,15 +15,6 @@ import Swal from 'sweetalert2';
 const imgNotFoundUrl = "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png?_=20210521171500";
 
 import { formatVND } from '@/lib/utils';
-
-const cleanSpecName = (spec: string) => {
-  if (!spec) return spec;
-  // Strip quotes if both start and end exist
-  if (spec.startsWith('"') && spec.endsWith('"')) {
-    return spec.substring(1, spec.length - 1);
-  }
-  return spec;
-};
 
 export default function CartContent() {
   const { data: session } = useSession();
@@ -75,354 +65,7 @@ export default function CartContent() {
     }));
   };
 
-  const handleExportExcel = () => {
-    const exportData: any[] = items.map((item, index) => {
-      const cleanedSpec = cleanSpecName(item.specName);
-      const isVisibleSpec = cleanedSpec && cleanedSpec !== '-' && cleanedSpec !== 'Mặc định';
-      const productName = isVisibleSpec
-        ? `${item.product.name} (${cleanedSpec})`
-        : item.product.name;
 
-      return {
-        'STT': index + 1,
-        'Tên sản phẩm': productName,
-        'Số lượng': item.quantity,
-        'Đơn vị tính': item.unit,
-        'Đơn giá': item.price,
-        'Thành tiền': item.price * item.quantity
-      };
-    });
-
-    // Add Total Row
-    exportData.push({
-      'STT': '',
-      'Tên sản phẩm': 'TỔNG CỘNG',
-      'Số lượng': null,
-      'Đơn vị tính': '',
-      'Đơn giá': null,
-      'Thành tiền': grandTotal
-    } as Record<string, any>);
-
-    const worksheet = XLSX.utils.json_to_sheet(exportData);
-
-    // Set column widths
-    worksheet['!cols'] = [
-      { wch: 5 },  // STT
-      { wch: 40 }, // Tên sản phẩm
-      { wch: 10 }, // Số lượng
-      { wch: 15 }, // Đơn vị tính
-      { wch: 15 }, // Đơn giá
-      { wch: 15 }, // Thành tiền
-    ];
-
-    // Hàng cuối sẽ có index là items.length + 1 vì header ở index 0
-    const lastRowIndex = items.length + 1;
-
-    // Thiết lập định dạng cho toàn bộ các ô (cell) trong sheet
-    const range = XLSX.utils.decode_range(worksheet['!ref'] as string);
-    for (let R = range.s.r; R <= range.e.r; ++R) {
-      for (let C = range.s.c; C <= range.e.c; ++C) {
-        const cellAddress = { c: C, r: R };
-        const cellRef = XLSX.utils.encode_cell(cellAddress);
-
-        if (!worksheet[cellRef]) continue;
-        if (!worksheet[cellRef].s) worksheet[cellRef].s = {};
-
-        // 1. Toàn bộ font Arial cỡ 10
-        worksheet[cellRef].s.font = { name: 'Arial', sz: 10 };
-
-        // 2. Border và Background
-        const isHeaderOrFooter = (R === 0) || (R === lastRowIndex);
-        worksheet[cellRef].s.border = {
-          top: { style: 'thin', color: { rgb: "000000" } },
-          bottom: { style: 'thin', color: { rgb: "000000" } },
-          left: { style: (isHeaderOrFooter || C === 0) ? 'thin' : 'dotted', color: { rgb: "000000" } },
-          right: { style: (isHeaderOrFooter || C === 5) ? 'thin' : 'dotted', color: { rgb: "000000" } }
-        };
-
-        if (isHeaderOrFooter) {
-          worksheet[cellRef].s.fill = { fgColor: { rgb: "EAEAEA" } };
-        }
-
-        // 3. Row 1 (Header) in đậm, căn giữa
-        if (R === 0) {
-          worksheet[cellRef].s.font.bold = true;
-          worksheet[cellRef].s.alignment = { horizontal: 'center', vertical: 'center' };
-        }
-
-        // 4. Row cuối (Tổng cộng) in đậm
-        if (R === lastRowIndex) {
-          worksheet[cellRef].s.font.bold = true;
-        }
-
-        // 5. Cột D (index 3) căn giữa
-        if ((C === 0 || C === 2 || C === 3) && !isHeaderOrFooter) {
-          worksheet[cellRef].s.alignment = { horizontal: 'center', vertical: 'center' };
-        }
-
-        // 6. Cột Đơn giá (Cột E - index 4) và Thành tiền (Cột F - index 5) format số không thập phân
-        if ((C === 4 || C === 5) && R !== 0) {
-          worksheet[cellRef].z = '#,##0';
-        }
-      }
-    }
-
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'HoaDon');
-
-    // Mẹo trick để merge cell cho hàng cuối (TỔNG CỘNG)
-    if (!worksheet['!merges']) worksheet['!merges'] = [];
-    worksheet['!merges'].push({ s: { r: lastRowIndex, c: 1 }, e: { r: lastRowIndex, c: 4 } });
-
-    const now = new Date();
-    const day = String(now.getDate()).padStart(2, '0');
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const year = now.getFullYear();
-    const fileName = `HoaDonBanHang_MaiVinh_${day}${month}${year}.xlsx`;
-
-    XLSX.writeFile(workbook, fileName);
-  };
-
-  const handlePrint = () => {
-    const printWindow = window.open('', '_blank');
-    if (!printWindow) {
-      alert('Vui lòng cho phép trình duyệt hiển thị popup để in hóa đơn.');
-      return;
-    }
-
-    const rowsHtml = items.map((item, index) => {
-      const cleanedSpec = cleanSpecName(item.specName);
-      const isVisibleSpec = cleanedSpec && cleanedSpec !== '-' && cleanedSpec !== 'Mặc định';
-      const productName = isVisibleSpec
-        ? `${item.product.name} (${cleanedSpec})`
-        : item.product.name;
-
-      return `
-        <tr>
-          <td class="text-center">${index + 1}</td>
-          <td>${productName}</td>
-          <td class="text-center">${item.quantity}</td>
-          <td class="text-center">${item.unit}</td>
-          <td class="text-right">${formatVND(item.price)}</td>
-          <td class="text-right">${formatVND(item.price * item.quantity)}</td>
-        </tr>
-      `;
-    }).join('');
-
-    const html = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Hóa đơn Cửa hàng Mai Vinh</title>
-        <meta charset="utf-8">
-        <style>
-          body { font-family: Arial, sans-serif; padding: 20px; color: #000; }
-          .header { text-align: center; margin-bottom: 20px; }
-          .header h2 { margin: 0; font-size: 22px; text-transform: uppercase; }
-          table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-          th, td { border: 1px solid #000; padding: 8px; font-size: 14px; }
-          th { background-color: #EAEAEA; }
-          .text-center { text-align: center; }
-          .text-right { text-align: right; }
-          .footer-row { background-color: #EAEAEA; font-weight: bold; }
-          @media print {
-            body { padding: 0; }
-            @page { margin: 1.5cm; }
-          }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <h2>Hóa Đơn Bán Hàng</h2>
-          <p>Ngày xuất hóa đơn: ${new Date().toLocaleDateString('vi-VN')}</p>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th width="5%">STT</th>
-              <th width="35%">Tên sản phẩm</th>
-              <th width="10%">Số lượng</th>
-              <th width="15%">Đơn vị tính</th>
-              <th width="15%">Đơn giá</th>
-              <th width="20%">Thành tiền</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${rowsHtml}
-          </tbody>
-          <tfoot>
-            <tr class="footer-row">
-              <td colspan="5" class="text-center">TỔNG CỘNG</td>
-              <td class="text-right">${formatVND(grandTotal)}</td>
-            </tr>
-          </tfoot>
-        </table>
-        <script>
-          window.onload = () => {
-            window.print();
-            window.close();
-          };
-        </script>
-      </body>
-      </html>
-    `;
-
-    printWindow.document.open();
-    printWindow.document.write(html);
-    printWindow.document.close();
-  };
-
-  const handlePrintQuotation = () => {
-    const printWindow = window.open('', '_blank');
-    if (!printWindow) {
-      alert('Vui lòng cho phép trình duyệt hiển thị popup để in báo giá.');
-      return;
-    }
-
-    const now = new Date();
-    const day = now.getDate();
-    const month = now.getMonth() + 1;
-    const year = now.getFullYear();
-
-    const rowsHtml = items.map((item, index) => {
-      const cleanedSpec = cleanSpecName(item.specName);
-      const isVisibleSpec = cleanedSpec && cleanedSpec !== '-' && cleanedSpec !== 'Mặc định';
-      const productName = isVisibleSpec
-        ? `${item.product.name} (${cleanedSpec})`
-        : item.product.name;
-
-      const fmtNum = (v: number) => new Intl.NumberFormat('vi-VN').format(v);
-      return `
-        <tr>
-          <td class="text-center">${index + 1}</td>
-          <td>${productName}</td>
-          <td class="text-center">${item.unit}</td>
-          <td class="text-center">${item.quantity}</td>
-          <td class="text-right">${fmtNum(item.price)}</td>
-          <td class="text-right">${fmtNum(item.price * item.quantity)}</td>
-        </tr>
-      `;
-    }).join('');
-
-    const html = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Báo giá - Cửa hàng Điện nước Mai Vinh</title>
-        <meta charset="utf-8">
-        <style>
-          body { font-family: "Times New Roman", Times, serif; padding: 20px; color: #000; line-height: 1.4; }
-          .header-container { text-align: center; margin-bottom: 20px; }
-          .store-name { font-weight: bold; text-transform: uppercase; font-size: 20px; margin-bottom: 4px; }
-          .title-container { text-align: center; margin: 30px 0; }
-          .title { font-size: 32px; font-weight: bold; }
-          .info-section { margin-bottom: 16px; font-size: 15px; }
-          .info-row { display: flex; align-items: baseline; margin-bottom: 8px; }
-          .info-label { white-space: nowrap; margin-right: 4px; }
-          .info-dots { flex: 1; border-bottom: 1px dotted #000; margin-bottom: 3px; }
-          table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-          th, td { border: 1px solid #000; padding: 8px; font-size: 15px; }
-          th { background-color: #f2f2f2; font-weight: bold; text-align: center; }
-          .text-center { text-align: center; }
-          .text-right { text-align: right; }
-          .footer { margin-top: 8px; display: flex; justify-content: space-between; }
-          .footer-column { text-align: center; width: 280px; }
-          .date { font-style: italic; margin-bottom: 10px; font-size: 15px; }
-          .signature-space { height: 100px; }
-          @media print {
-            body { padding: 0; }
-            @page { margin: 1.5cm; }
-          }
-        </style>
-      </head>
-      <body>
-        <div class="header-container">
-          <div class="store-info">
-            <div class="store-name">Cửa hàng Điện nước Mai Vinh</div>
-            <div>Địa chỉ: Thắng Kiên - Đề Gi - Gia Lai</div>
-            <div>SĐT: 0976 576 443 - 0982 390 943</div>
-          </div>
-        </div>
-
-        <div class="title-container">
-          <div class="title">BẢNG BÁO GIÁ</div>
-        </div>
-
-        <div class="info-section">
-          <div class="info-row"><span class="info-label">Tên khách hàng:</span><span class="info-dots"></span></div>
-          <div class="info-row"><span class="info-label">Mã số thuế:</span><span class="info-dots"></span></div>
-          <div class="info-row"><span class="info-label">Điện thoại:</span><span class="info-dots"></span></div>
-          <div class="info-row"><span class="info-label">Email:</span><span class="info-dots"></span></div>
-        </div>
-
-        <table>
-          <thead>
-            <tr>
-              <th width="5%">STT</th>
-              <th width="45%">Tên sản phẩm</th>
-              <th width="10%">Đvt</th>
-              <th width="10%">Số lượng</th>
-              <th width="15%">Đơn giá</th>
-              <th width="15%">Thành tiền</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${rowsHtml}
-          </tbody>
-          <tfoot>
-            <tr style="font-weight: bold; background-color: #f2f2f2;">
-              <td colspan="5" class="text-center">TỔNG CỘNG TRƯỚC VAT</td>
-              <td class="text-right">${new Intl.NumberFormat('vi-VN').format(grandTotal)}</td>
-            </tr>
-            <tr style="font-weight: bold; background-color: #f2f2f2;">
-              <td colspan="5" class="text-center">VAT (8%)</td>
-              <td class="text-right">${new Intl.NumberFormat('vi-VN').format(Math.round(grandTotal * 0.08))}</td>
-            </tr>
-            <tr style="font-weight: bold; background-color: #f2f2f2;">
-              <td colspan="5" class="text-center">TỔNG CỘNG SAU VAT</td>
-              <td class="text-right">${new Intl.NumberFormat('vi-VN').format(Math.round(grandTotal * 1.08))}</td>
-            </tr>
-          </tfoot>
-        </table>
-
-        <div style="margin-top: 10px; font-size: 15px;">
-          <strong>Bằng chữ:</strong> <em>${(() => { const cfg = new ReadingConfig(); cfg.unit = ['đồng']; const txt = doReadNumber(String(Math.round(grandTotal * 1.08)), cfg); return txt.charAt(0).toUpperCase() + txt.slice(1); })()}</em>
-        </div>
-
-        <div style="display: flex; justify-content: space-between; margin-top: 40px;">
-          <div style="width: 280px;"></div>
-          <div style="width: 280px; text-align: center;">
-            <span class="date">Đề Gi, ngày ${day} tháng ${month} năm ${year}</span>
-          </div>
-        </div>
-        <div class="footer">
-          <div class="footer-column">
-            <div style="font-weight: bold;">Người nhận</div>
-            <div style="font-style: italic; margin-top: 4px;">(Ký và ghi rõ họ tên)</div>
-            <div class="signature-space"></div>
-          </div>
-          <div class="footer-column">
-            <div style="font-weight: bold;">Người lập</div>
-            <div style="font-style: italic; margin-top: 4px;">(Ký và ghi rõ họ tên)</div>
-            <div class="signature-space"></div>
-            <div style="font-weight: bold; font-size: 18px;">Nguyễn Thị Mai</div>
-          </div>
-        </div>
-
-        <script>
-          window.onload = () => {
-            window.print();
-            window.close();
-          };
-        </script>
-      </body>
-      </html>
-    `;
-
-    printWindow.document.open();
-    printWindow.document.write(html);
-    printWindow.document.close();
-  };
 
   if (items.length === 0) {
     return (
@@ -553,42 +196,24 @@ export default function CartContent() {
           <span className="text-sm text-slate-600">Tổng ({items.length} mặt hàng)</span>
           <span className="text-lg font-bold text-teal-700">{formatVND(grandTotal)}</span>
         </div>
-        <div className="space-y-3">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <button
-              type="button"
-              onClick={handleExportExcel}
-              className="w-full flex items-center justify-center gap-2 py-3 border border-teal-600 text-teal-600 font-semibold hover:bg-teal-50 active:scale-[0.98] transition-all"
-            >
-              <FileSpreadsheet size={18} />
-              <span>Excel</span>
-            </button>
-            <button
-              type="button"
-              onClick={handlePrint}
-              className="w-full flex items-center justify-center gap-2 py-3 border border-teal-600 text-teal-600 font-semibold hover:bg-teal-50 active:scale-[0.98] transition-all"
-            >
-              <Printer size={18} />
-              <span>Hóa đơn</span>
-            </button>
-            <button
-              type="button"
-              onClick={handlePrintQuotation}
-              className="w-full flex items-center justify-center gap-2 py-3 border border-teal-600 text-teal-600 font-semibold hover:bg-teal-50 active:scale-[0.98] transition-all"
-            >
-              <FileText size={18} />
-              <span>Báo giá</span>
-            </button>
-          </div>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <button
+            type="button"
+            onClick={() => dispatch(openModal({ type: 'shareDocument', props: { items, grandTotal } }))}
+            className="flex-1 w-full flex items-center justify-center gap-2 py-3 border-2 border-teal-600 text-teal-600 font-bold uppercase tracking-widest rounded-lg hover:bg-teal-50 active:scale-[0.98] transition-all"
+          >
+            <Share2 size={18} />
+            Chia sẻ tài liệu
+          </button>
           {session?.user?.isAdmin && (
             <button
               type="button"
               onClick={handleSaveInvoice}
               disabled={hasInvalidQty}
-              className="w-full flex items-center justify-center gap-2 py-3 bg-teal-600 text-white font-black uppercase tracking-widest hover:bg-teal-700 shadow-lg shadow-teal-100 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] transition-all"
+              className="flex-1 w-full flex items-center justify-center gap-2 py-3 bg-teal-600 text-white font-black uppercase tracking-widest hover:bg-teal-700 shadow-lg shadow-teal-100 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] transition-all"
             >
               <Save size={18} />
-              Lưu Hóa Đơn
+              Lưu Phiếu
             </button>
           )}
         </div>
