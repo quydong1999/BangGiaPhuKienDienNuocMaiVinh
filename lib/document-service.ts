@@ -586,7 +586,7 @@ export const exportDocumentToPDF = (items: CartItem[], grandTotal: number, docTy
       <meta charset="utf-8">
       <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
       <style>
-        body { font-family: "Times New Roman", Times, serif; padding: 0; color: #000; line-height: 1.4; background: #fff; }
+        body { font-family: "Times New Roman", Times, serif; margin: 0; padding: 0; color: #000; line-height: 1.4; background: #fff; }
         #pdf-content { padding: 40px; }
         .header-container { text-align: center; margin-bottom: 20px; }
         .store-name { font-weight: bold; text-transform: uppercase; font-size: 20px; margin-bottom: 4px; }
@@ -611,7 +611,7 @@ export const exportDocumentToPDF = (items: CartItem[], grandTotal: number, docTy
       <div style="position: fixed; z-index: 9999; top: 0; left: 0; right: 0; bottom: 0; background: white; display: flex; align-items: center; justify-content: center; font-family: sans-serif; font-size: 18px; color: #333;">
         Đang tạo file PDF, vui lòng đợi...
       </div>
-      <div id="pdf-content" style="width: 800px; padding: 40px; background: white; margin: 0 auto; box-sizing: border-box;">
+      <div id="pdf-content" style="width: 800px; padding: 40px; background: white; margin: 0; box-sizing: border-box;">
         <div class="header-container">
           <div class="store-info">
             <div class="store-name">Cửa hàng Điện nước Mai Vinh</div>
@@ -687,7 +687,7 @@ export const exportDocumentToPDF = (items: CartItem[], grandTotal: number, docTy
             margin: 0,
             filename: '${fileName}',
             image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true, windowWidth: 800 },
+            html2canvas: { scale: 2, useCORS: true, windowWidth: 800, scrollX: 0, scrollY: 0 },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
           };
           html2pdf().set(opt).from(element).save().then(() => {
