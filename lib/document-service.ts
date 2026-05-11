@@ -611,7 +611,7 @@ export const exportDocumentToPDF = (items: CartItem[], grandTotal: number, docTy
       <div style="position: fixed; z-index: 9999; top: 0; left: 0; right: 0; bottom: 0; background: white; display: flex; align-items: center; justify-content: center; font-family: sans-serif; font-size: 18px; color: #333;">
         Đang tạo file PDF, vui lòng đợi...
       </div>
-      <div id="pdf-content" style="width: 190mm; padding: 0; background: white; margin: 0 auto;">
+      <div id="pdf-content" style="width: 800px; padding: 40px; background: white; margin: 0 auto; box-sizing: border-box;">
         <div class="header-container">
           <div class="store-info">
             <div class="store-name">Cửa hàng Điện nước Mai Vinh</div>
@@ -684,10 +684,10 @@ export const exportDocumentToPDF = (items: CartItem[], grandTotal: number, docTy
           }
           const element = document.getElementById('pdf-content');
           const opt = {
-            margin: 10,
+            margin: 0,
             filename: '${fileName}',
             image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true },
+            html2canvas: { scale: 2, useCORS: true, windowWidth: 800 },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
           };
           html2pdf().set(opt).from(element).save().then(() => {
