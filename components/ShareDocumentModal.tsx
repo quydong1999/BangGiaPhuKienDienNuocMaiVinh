@@ -103,7 +103,7 @@ export function ShareDocumentModal({ isOpen, onClose, items, grandTotal }: Share
             <button
               type="button"
               onClick={handleExportExcel}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 border-2 border-teal-600 text-teal-600 font-semibold rounded-lg hover:bg-teal-50 active:scale-[0.98] transition-all"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-green-600 text-white font-semibold hover:bg-green-700 active:scale-[0.98] transition-all shadow-sm"
             >
               <FileSpreadsheet size={18} />
               <span>Excel</span>
@@ -111,7 +111,7 @@ export function ShareDocumentModal({ isOpen, onClose, items, grandTotal }: Share
             <button
               type="button"
               onClick={handleExportPDF}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 border-2 border-teal-600 text-teal-600 font-semibold rounded-lg hover:bg-teal-50 active:scale-[0.98] transition-all"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-red-600 text-white font-semibold hover:bg-red-700 active:scale-[0.98] transition-all shadow-sm"
             >
               <FileDown size={18} />
               <span>PDF</span>
@@ -119,7 +119,7 @@ export function ShareDocumentModal({ isOpen, onClose, items, grandTotal }: Share
             <button
               type="button"
               onClick={handlePrint}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 active:scale-[0.98] transition-all shadow-sm"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-teal-600 text-white font-semibold hover:bg-teal-700 active:scale-[0.98] transition-all shadow-sm"
             >
               <Printer size={18} />
               <span>In tài liệu</span>

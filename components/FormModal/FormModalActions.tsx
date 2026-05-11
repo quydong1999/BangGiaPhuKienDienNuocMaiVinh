@@ -25,7 +25,7 @@ export function FormModalActions({
                     onClick={onDelete}
                     disabled={isBusy || deleteDisabled}
                     title={deleteDisabled ? deleteTooltip : labels?.delete ?? "Xóa"}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 border border-red-200 text-red-600 font-medium hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-red-100 text-red-700 font-medium hover:bg-red-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     <Trash2 size={18} />
                     {labels?.delete ?? "Xóa"}
@@ -35,7 +35,7 @@ export function FormModalActions({
             <button
                 type="submit"
                 disabled={isBusy || !isValid}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-teal-600 text-white font-medium hover:bg-teal-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-teal-600 text-white font-medium hover:bg-teal-700 shadow-sm transition-all disabled:opacity-70 disabled:cursor-not-allowed"
             >
                 {isBusy ? (
                     <Spinner />

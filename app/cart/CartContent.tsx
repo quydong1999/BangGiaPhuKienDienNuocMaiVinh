@@ -200,7 +200,7 @@ export default function CartContent() {
           <button
             type="button"
             onClick={() => dispatch(openModal({ type: 'shareDocument', props: { items, grandTotal } }))}
-            className="flex-1 w-full flex items-center justify-center gap-2 py-3 border-2 border-teal-600 text-teal-600 font-bold uppercase tracking-widest rounded-lg hover:bg-teal-50 active:scale-[0.98] transition-all"
+            className="flex-1 w-full flex items-center justify-center gap-2 py-3 bg-teal-600 text-white font-bold uppercase tracking-widest hover:bg-teal-700 shadow-md active:scale-[0.98] transition-all"
           >
             <Share2 size={18} />
             Chia sẻ tài liệu
@@ -210,7 +210,7 @@ export default function CartContent() {
               type="button"
               onClick={handleSaveInvoice}
               disabled={hasInvalidQty}
-              className="flex-1 w-full flex items-center justify-center gap-2 py-3 bg-teal-600 text-white font-black uppercase tracking-widest hover:bg-teal-700 shadow-lg shadow-teal-100 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] transition-all"
+              className="flex-1 w-full flex items-center justify-center gap-2 py-3 bg-teal-600 text-white font-bold uppercase tracking-widest hover:bg-teal-700 shadow-md disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] transition-all"
             >
               <Save size={18} />
               Lưu Phiếu

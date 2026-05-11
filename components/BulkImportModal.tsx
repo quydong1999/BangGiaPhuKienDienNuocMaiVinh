@@ -807,7 +807,7 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
               <button
                 onClick={handleAnalyze}
                 disabled={csvRows.length === 0 || parseErrors.length > 0 || isAnalyzing}
-                className="flex items-center gap-2 px-5 py-2.5 bg-teal-600 text-white text-sm font-medium rounded-lg hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 px-5 py-2.5 bg-teal-600 text-white text-sm font-medium hover:bg-teal-700 shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isAnalyzing ? (
                   <>
@@ -831,7 +831,7 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
                   setConfirmInput("");
                 }}
                 disabled={!hasChanges || selectedCount === 0}
-                className="flex items-center gap-2 px-5 py-2.5 bg-teal-600 text-white text-sm font-medium rounded-lg hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 px-5 py-2.5 bg-teal-600 text-white text-sm font-medium hover:bg-teal-700 shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Check size={16} />
                 Xác nhận nhập
@@ -856,7 +856,7 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
                 <button
                   onClick={handleImport}
                   disabled={confirmInput !== confirmCode || isImporting}
-                  className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white text-sm font-medium rounded-lg hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                  className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white text-sm font-medium hover:bg-teal-700 shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
                 >
                   {isImporting ? (
                     <>
@@ -880,7 +880,7 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
                   // Reload page to reflect changes
                   window.location.reload();
                 }}
-                className="flex items-center gap-2 px-5 py-2.5 bg-teal-600 text-white text-sm font-medium rounded-lg hover:bg-teal-700 transition-colors"
+                className="flex items-center gap-2 px-5 py-2.5 bg-teal-600 text-white text-sm font-medium hover:bg-teal-700 shadow-sm transition-colors"
               >
                 <Check size={16} />
                 Hoàn tất
