@@ -40,11 +40,12 @@ A highly-optimized full-stack web application built with **Next.js 15**, focusin
 - Built-in capabilities to generate professional quotations with formatted prices (e.g., dynamic unit formatting) and seamless **Excel (`xlsx`) export** for B2B transactions.
 
 ### 4. Admin Dashboard & Enterprise Security (RBAC)
-- Role-Based Access Control via **NextAuth.js (Auth.js v5)** and passwordless **Google One-Tap Login**.
+- Role-Based Access Control via **NextAuth.js (Auth.js v5)** with **Google OAuth 2.0** and automatic token refresh.
 - **Data Redaction & API Security:** Hardened API layer strictly filters out sensitive properties (like `basePrice`) ensuring they are only transmitted to authenticated administrative users.
 
-### 5. Smart Bulk Import & Data Processing
-- **Excel/Sheets Integration:** Built a highly resilient "Bulk Import" feature allowing administrators to instantly populate the catalog by pasting raw data directly from external spreadsheets.
+### 5. Smart Bulk Import & Google Sheets Integration
+- **Dual Data Source:** Supports both CSV file upload and **direct Google Sheets import** — paste a private Sheet URL, pick a tab, and import instantly using the logged-in user's OAuth token.
+- **Automatic Token Refresh:** The JWT callback handles Google access token rotation seamlessly, so long-lived admin sessions never lose Sheets API access.
 - **Responsive Preview Table:** Implemented client-side parsing and intelligent layout scaling ensuring the data preview table automatically utilizes maximum screen real-estate on desktop devices, optimizing the administrative data-entry experience.
 
 ---
@@ -124,7 +125,7 @@ graph LR
 | **Framework** | Next.js 15 (React 19), TypeScript 5 |
 | **Styling** | Tailwind CSS v4, Framer Motion, Lucide React |
 | **Databases** | MongoDB (Mongoose), Upstash Redis |
-| **Auth & Security** | Next-Auth.js (v5), Google One-Tap SDK |
+| **Auth & Security** | Next-Auth.js (v5), Google OAuth 2.0, Google Sheets API |
 | **State & Fetching** | Redux Toolkit (Modals), TanStack Query v5 |
 | **Utilities** | React Hook Form, Zod, Excel generation (`xlsx-js-style`), Image Compression |
 | **Integrations** | Cloudinary Storage, Google Gemini AI (`@google/genai`) |

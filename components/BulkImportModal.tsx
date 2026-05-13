@@ -16,6 +16,9 @@ import {
   DollarSign,
   Pencil,
   CheckCircle2,
+  Link2,
+  Sheet,
+  ChevronDown,
 } from "lucide-react";
 import type { Product } from "@/types/types";
 import type { BulkImportAction } from "@/types/service.types";
@@ -23,6 +26,7 @@ import type { BulkImportAction } from "@/types/service.types";
 // ─── Types ──────────────────────────────────────────────────────────────────
 
 type ImportStage = "upload" | "analyze" | "confirm";
+type UploadTab = "csv" | "gsheet";
 
 interface CsvRow {
   name: string;
@@ -239,6 +243,15 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
   const [confirmInput, setConfirmInput] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // ─── Google Sheet State ────────────────────────────────────────────────
+  const [uploadTab, setUploadTab] = useState<UploadTab>("csv");
+  const [sheetUrl, setSheetUrl] = useState("");
+  const [sheetTabs, setSheetTabs] = useState<string[]>([]);
+  const [selectedTab, setSelectedTab] = useState("");
+  const [isFetchingTabs, setIsFetchingTabs] = useState(false);
+  const [isFetchingData, setIsFetchingData] = useState(false);
+  const [sheetError, setSheetError] = useState<string | null>(null);
+
   if (!isOpen) return null;
 
   const resetState = () => {
@@ -256,6 +269,12 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
     setExcludedIndices(new Set());
     setConfirmCode(null);
     setConfirmInput("");
+    setSheetUrl("");
+    setSheetTabs([]);
+    setSelectedTab("");
+    setIsFetchingTabs(false);
+    setIsFetchingData(false);
+    setSheetError(null);
   };
 
   const handleClose = () => {
@@ -303,6 +322,65 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
     setIsDragging(false);
     const file = e.dataTransfer.files[0];
     if (file) processFile(file);
+  };
+
+  // ─── Google Sheet Handlers ──────────────────────────────────────────────
+
+  const handleFetchTabs = async () => {
+    if (!sheetUrl.trim()) {
+      setSheetError("Vui lòng dán URL Google Sheet.");
+      return;
+    }
+    setIsFetchingTabs(true);
+    setSheetError(null);
+    setSheetTabs([]);
+    setSelectedTab("");
+    try {
+      const res = await fetch("/api/bulk-import/fetch-sheet", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "get_tabs", url: sheetUrl }),
+      });
+      const json = await res.json();
+      if (!json.success) {
+        setSheetError(json.message || "Lỗi khi lấy danh sách tab.");
+      } else {
+        setSheetTabs(json.tabs);
+        if (json.tabs.length > 0) setSelectedTab(json.tabs[0]);
+      }
+    } catch {
+      setSheetError("Lỗi kết nối server.");
+    } finally {
+      setIsFetchingTabs(false);
+    }
+  };
+
+  const handleFetchSheetData = async () => {
+    if (!selectedTab) return;
+    setIsFetchingData(true);
+    setSheetError(null);
+    try {
+      const res = await fetch("/api/bulk-import/fetch-sheet", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "get_data", url: sheetUrl, sheetName: selectedTab }),
+      });
+      const json = await res.json();
+      if (!json.success) {
+        setSheetError(json.message || "Lỗi khi đọc dữ liệu.");
+      } else {
+        // Dùng parseCSV hiện có để xử lý
+        const { rows, errors, totalLines } = parseCSV(json.csvText);
+        setCsvRows(rows);
+        setParseErrors(errors);
+        setParsedCount(totalLines);
+        setFileName(`Google Sheet — ${selectedTab}`);
+      }
+    } catch {
+      setSheetError("Lỗi kết nối server.");
+    } finally {
+      setIsFetchingData(false);
+    }
   };
 
   // ─── Analyze ────────────────────────────────────────────────────────────
@@ -427,7 +505,7 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
             <div>
               <h2 className="text-lg font-bold text-slate-800">Nhập hàng loạt</h2>
               <p className="text-xs text-slate-400">
-                {stage === "upload" && "Bước 1/3 — Tải lên file CSV"}
+                {stage === "upload" && "Bước 1/3 — Chọn nguồn dữ liệu"}
                 {stage === "analyze" && "Bước 2/3 — Phân tích dữ liệu"}
                 {stage === "confirm" && "Bước 3/3 — Kết quả"}
               </p>
@@ -454,61 +532,176 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
           {/* ─── Stage: Upload ──────────────────────────────────────── */}
           {stage === "upload" && (
             <div className="flex flex-col gap-4">
-              {/* Drop Zone */}
-              <div
-                onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
-                onDragLeave={() => setIsDragging(false)}
-                onDrop={handleDrop}
-                onClick={() => fileInputRef.current?.click()}
-                className={`
-                  relative border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all
-                  ${isDragging
-                    ? "border-teal-400 bg-teal-50"
-                    : fileName
-                      ? "border-teal-300 bg-teal-50/50"
-                      : "border-slate-200 hover:border-slate-300 hover:bg-slate-50"
-                  }
-                `}
-              >
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".csv"
-                  onChange={handleFileSelect}
-                  className="hidden"
-                />
+              {/* Tab Selector: CSV / Google Sheet */}
+              {!fileName && (
+                <div className="flex border-b border-slate-200">
+                  <button
+                    type="button"
+                    onClick={() => { setUploadTab("csv"); setSheetError(null); }}
+                    className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+                      uploadTab === "csv"
+                        ? "border-teal-500 text-teal-700"
+                        : "border-transparent text-slate-400 hover:text-slate-600"
+                    }`}
+                  >
+                    <Upload size={16} />
+                    Tải lên CSV
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setUploadTab("gsheet"); setParseErrors([]); }}
+                    className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+                      uploadTab === "gsheet"
+                        ? "border-teal-500 text-teal-700"
+                        : "border-transparent text-slate-400 hover:text-slate-600"
+                    }`}
+                  >
+                    <Sheet size={16} />
+                    Từ Google Sheet
+                  </button>
+                </div>
+              )}
 
-                {fileName ? (
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center">
-                      <Check size={24} className="text-teal-600" />
+              {/* ── CSV Upload Tab ──────────────────────────────────────── */}
+              {(uploadTab === "csv" || fileName) && (
+                <>
+                  {/* Drop Zone */}
+                  <div
+                    onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                    onDragLeave={() => setIsDragging(false)}
+                    onDrop={handleDrop}
+                    onClick={() => fileInputRef.current?.click()}
+                    className={`
+                      relative border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all
+                      ${isDragging
+                        ? "border-teal-400 bg-teal-50"
+                        : fileName
+                          ? "border-teal-300 bg-teal-50/50"
+                          : "border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+                      }
+                    `}
+                  >
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".csv"
+                      onChange={handleFileSelect}
+                      className="hidden"
+                    />
+
+                    {fileName ? (
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center">
+                          <Check size={24} className="text-teal-600" />
+                        </div>
+                        <p className="text-sm font-medium text-slate-700">{fileName}</p>
+                        <p className="text-xs text-slate-400">
+                          {csvRows.length} dòng hợp lệ / {parsedCount} tổng dòng
+                        </p>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            resetState();
+                          }}
+                          className="text-xs text-slate-400 hover:text-red-500 underline mt-1"
+                        >
+                          Chọn nguồn khác
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center">
+                          <Upload size={24} className="text-slate-400" />
+                        </div>
+                        <p className="text-sm font-medium text-slate-600">
+                          Kéo thả file CSV vào đây
+                        </p>
+                        <p className="text-xs text-slate-400">hoặc nhấn để chọn file</p>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+
+              {/* ── Google Sheet Tab ────────────────────────────────────── */}
+              {uploadTab === "gsheet" && !fileName && (
+                <div className="flex flex-col gap-3">
+                  {/* URL Input */}
+                  <div className="flex gap-2">
+                    <div className="relative flex-1">
+                      <Link2 size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <input
+                        type="url"
+                        value={sheetUrl}
+                        onChange={(e) => { setSheetUrl(e.target.value); setSheetError(null); }}
+                        placeholder="Dán link Google Sheet tại đây..."
+                        className="w-full pl-9 pr-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                      />
                     </div>
-                    <p className="text-sm font-medium text-slate-700">{fileName}</p>
-                    <p className="text-xs text-slate-400">
-                      {csvRows.length} dòng hợp lệ / {parsedCount} tổng dòng
-                    </p>
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        resetState();
-                      }}
-                      className="text-xs text-slate-400 hover:text-red-500 underline mt-1"
+                      onClick={handleFetchTabs}
+                      disabled={!sheetUrl.trim() || isFetchingTabs}
+                      className="flex items-center gap-2 px-4 py-2.5 bg-teal-600 text-white text-sm font-medium rounded-xl hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
                     >
-                      Chọn file khác
+                      {isFetchingTabs ? (
+                        <Loader2 size={16} className="animate-spin" />
+                      ) : (
+                        <Sheet size={16} />
+                      )}
+                      Lấy danh sách tab
                     </button>
                   </div>
-                ) : (
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center">
-                      <Upload size={24} className="text-slate-400" />
+
+                  {/* Sheet Error */}
+                  {sheetError && (
+                    <div className="rounded-xl border border-red-200 bg-red-50 p-3 flex items-center gap-2">
+                      <AlertCircle size={16} className="text-red-500 shrink-0" />
+                      <span className="text-sm text-red-600">{sheetError}</span>
                     </div>
-                    <p className="text-sm font-medium text-slate-600">
-                      Kéo thả file CSV vào đây
-                    </p>
-                    <p className="text-xs text-slate-400">hoặc nhấn để chọn file</p>
-                  </div>
-                )}
-              </div>
+                  )}
+
+                  {/* Tab Selector */}
+                  {sheetTabs.length > 0 && (
+                    <div className="rounded-xl border border-teal-200 bg-teal-50/50 p-4 flex flex-col gap-3">
+                      <p className="text-xs font-medium text-teal-700">Chọn tab để nhập dữ liệu:</p>
+                      <div className="flex gap-2">
+                        <div className="relative flex-1">
+                          <select
+                            value={selectedTab}
+                            onChange={(e) => setSelectedTab(e.target.value)}
+                            className="w-full appearance-none px-3 py-2.5 pr-8 border border-teal-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 cursor-pointer"
+                          >
+                            {sheetTabs.map((tab) => (
+                              <option key={tab} value={tab}>{tab}</option>
+                            ))}
+                          </select>
+                          <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-teal-500 pointer-events-none" />
+                        </div>
+                        <button
+                          onClick={handleFetchSheetData}
+                          disabled={!selectedTab || isFetchingData}
+                          className="flex items-center gap-2 px-4 py-2.5 bg-teal-600 text-white text-sm font-medium rounded-xl hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                        >
+                          {isFetchingData ? (
+                            <>
+                              <Loader2 size={16} className="animate-spin" />
+                              Đang tải...
+                            </>
+                          ) : (
+                            <>
+                              Tải dữ liệu
+                              <ArrowRight size={16} />
+                            </>
+                          )}
+                        </button>
+                      </div>
+                      <p className="text-[11px] text-slate-400">
+                        {sheetTabs.length} tab tìm thấy trong sheet
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Error Log */}
               {parseErrors.length > 0 && (

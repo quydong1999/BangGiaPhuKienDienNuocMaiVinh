@@ -1,5 +1,4 @@
 import { SessionProvider } from "next-auth/react"
-import OneTapProvider from "@/components/providers/OneTapProvider";
 import type { Metadata, Viewport } from 'next';
 import { Roboto } from 'next/font/google';
 import './globals.css';
@@ -75,7 +74,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <QueryProvider>
             <SessionProvider>
               <SkeletonProvider>
-                <OneTapProvider />
                 {children}
                 <ModalProvider />
                 <CartHydration />
