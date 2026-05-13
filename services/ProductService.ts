@@ -419,7 +419,7 @@ export class ProductService {
             prices: spec.prices,
           })),
         }));
-        await Product.create(newProducts, { session });
+        await Product.create(newProducts, { session, ordered: true });
         result.productsCreated = newProducts.length;
       }
 
