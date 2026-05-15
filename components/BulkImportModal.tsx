@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Upload,
@@ -19,6 +19,10 @@ import {
   Link2,
   Sheet,
   ChevronDown,
+  History,
+  Clock,
+  Trash2,
+  ExternalLink,
 } from "lucide-react";
 import type { Product } from "@/types/types";
 import type { BulkImportAction } from "@/types/service.types";
@@ -27,6 +31,54 @@ import type { BulkImportAction } from "@/types/service.types";
 
 type ImportStage = "upload" | "analyze" | "confirm";
 type UploadTab = "csv" | "gsheet";
+
+interface SheetHistoryEntry {
+  url: string;
+  spreadsheetId: string;
+  sheetName: string;
+  tabs: string[];
+  lastUsed: number;
+}
+
+// ─── Sheet History Helpers (localStorage) ───────────────────────────────────
+
+const HISTORY_KEY_PREFIX = "gsheet_history_";
+
+function getSheetHistory(categoryId: string): SheetHistoryEntry[] {
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY_PREFIX + categoryId);
+    if (!raw) return [];
+    return JSON.parse(raw) as SheetHistoryEntry[];
+  } catch {
+    return [];
+  }
+}
+
+function saveSheetHistory(categoryId: string, entry: SheetHistoryEntry): SheetHistoryEntry[] {
+  const history = getSheetHistory(categoryId);
+  // Update existing or prepend new
+  const idx = history.findIndex((h) => h.spreadsheetId === entry.spreadsheetId);
+  if (idx !== -1) {
+    history[idx] = { ...entry, lastUsed: Date.now() };
+  } else {
+    history.unshift({ ...entry, lastUsed: Date.now() });
+  }
+  // Sort by most recently used
+  history.sort((a, b) => b.lastUsed - a.lastUsed);
+  localStorage.setItem(HISTORY_KEY_PREFIX + categoryId, JSON.stringify(history));
+  return history;
+}
+
+function removeSheetHistoryEntry(categoryId: string, spreadsheetId: string): SheetHistoryEntry[] {
+  const history = getSheetHistory(categoryId).filter((h) => h.spreadsheetId !== spreadsheetId);
+  localStorage.setItem(HISTORY_KEY_PREFIX + categoryId, JSON.stringify(history));
+  return history;
+}
+
+function extractSpreadsheetIdFromUrl(url: string): string | null {
+  const match = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
+  return match ? match[1] : null;
+}
 
 interface CsvRow {
   name: string;
@@ -252,6 +304,16 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
   const [isFetchingData, setIsFetchingData] = useState(false);
   const [sheetError, setSheetError] = useState<string | null>(null);
 
+  // ─── Sheet History State ──────────────────────────────────────────────
+  const [sheetHistory, setSheetHistory] = useState<SheetHistoryEntry[]>([]);
+
+  // Load history on mount
+  useEffect(() => {
+    if (isOpen && categoryId) {
+      setSheetHistory(getSheetHistory(categoryId));
+    }
+  }, [isOpen, categoryId]);
+
   if (!isOpen) return null;
 
   const resetState = () => {
@@ -347,12 +409,41 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
       } else {
         setSheetTabs(json.tabs);
         if (json.tabs.length > 0) setSelectedTab(json.tabs[0]);
+
+        // Save to history
+        const spreadsheetId = extractSpreadsheetIdFromUrl(sheetUrl);
+        if (spreadsheetId) {
+          const updated = saveSheetHistory(categoryId, {
+            url: sheetUrl,
+            spreadsheetId,
+            sheetName: json.title || "Không rõ tên",
+            tabs: json.tabs,
+            lastUsed: Date.now(),
+          });
+          setSheetHistory(updated);
+        }
       }
     } catch {
       setSheetError("Lỗi kết nối server.");
     } finally {
       setIsFetchingTabs(false);
     }
+  };
+
+  const handleSelectHistory = (entry: SheetHistoryEntry) => {
+    setSheetUrl(entry.url);
+    setSheetTabs(entry.tabs);
+    setSelectedTab(entry.tabs[0] || "");
+    setSheetError(null);
+    // Update lastUsed
+    const updated = saveSheetHistory(categoryId, entry);
+    setSheetHistory(updated);
+  };
+
+  const handleRemoveHistory = (e: React.MouseEvent, spreadsheetId: string) => {
+    e.stopPropagation();
+    const updated = removeSheetHistoryEntry(categoryId, spreadsheetId);
+    setSheetHistory(updated);
   };
 
   const handleFetchSheetData = async () => {
@@ -626,6 +717,59 @@ export function BulkImportModal({ isOpen, onClose, categoryId }: BulkImportModal
               {/* ── Google Sheet Tab ────────────────────────────────────── */}
               {uploadTab === "gsheet" && !fileName && (
                 <div className="flex flex-col gap-3">
+                  {/* Sheet History */}
+                  {sheetHistory.length > 0 && sheetTabs.length === 0 && (
+                    <div className="rounded-xl border border-slate-200 bg-slate-50/50 overflow-hidden">
+                      <div className="flex items-center gap-2 px-4 py-2.5 border-b border-slate-200 bg-slate-50">
+                        <History size={14} className="text-slate-500" />
+                        <span className="text-xs font-medium text-slate-600">Sheet đã dùng trước đây</span>
+                      </div>
+                      <div className="max-h-48 overflow-y-auto divide-y divide-slate-100">
+                        {sheetHistory.map((entry) => (
+                          <button
+                            key={entry.spreadsheetId}
+                            type="button"
+                            onClick={() => handleSelectHistory(entry)}
+                            className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-teal-50/50 transition-colors group"
+                          >
+                            <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center shrink-0">
+                              <Sheet size={14} className="text-green-600" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-slate-700 truncate">{entry.sheetName}</p>
+                              <div className="flex items-center gap-2 mt-0.5">
+                                <span className="text-[11px] text-slate-400">
+                                  {entry.tabs.length} tab
+                                </span>
+                                <span className="text-[11px] text-slate-300">•</span>
+                                <span className="text-[11px] text-slate-400 flex items-center gap-1">
+                                  <Clock size={10} />
+                                  {new Date(entry.lastUsed).toLocaleDateString("vi-VN")}
+                                </span>
+                              </div>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); window.open(entry.url, "_blank", "noopener,noreferrer"); }}
+                              className="p-1.5 rounded-lg text-slate-300 hover:text-teal-600 hover:bg-teal-50 opacity-0 group-hover:opacity-100 transition-all shrink-0"
+                              title="Mở sheet trong tab mới"
+                            >
+                              <ExternalLink size={14} />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={(e) => handleRemoveHistory(e, entry.spreadsheetId)}
+                              className="p-1.5 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-all shrink-0"
+                              title="Xóa khỏi lịch sử"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   {/* URL Input */}
                   <div className="flex gap-2">
                     <div className="relative flex-1">

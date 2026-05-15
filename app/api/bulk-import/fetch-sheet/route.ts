@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
         // ─── Action: Lấy danh sách tab ───────────────────────────────────
         if (action === "get_tabs") {
             const res = await fetch(
-                `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?fields=sheets.properties.title`,
+                `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?fields=properties.title,sheets.properties.title`,
                 {
                     headers: { Authorization: `Bearer ${accessToken}` },
                 }
@@ -113,11 +113,12 @@ export async function POST(req: NextRequest) {
             }
 
             const data = await res.json()
+            const title: string = data.properties?.title ?? "Không rõ tên"
             const tabs: string[] = data.sheets?.map(
                 (s: { properties: { title: string } }) => s.properties.title
             ) ?? []
 
-            return NextResponse.json({ success: true, tabs })
+            return NextResponse.json({ success: true, tabs, title })
         }
 
         // ─── Action: Lấy dữ liệu tab ────────────────────────────────────

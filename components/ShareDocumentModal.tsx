@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { FormModal } from './FormModal';
-import { FileSpreadsheet, Printer, Receipt, FileText, FileDown } from 'lucide-react';
-import { exportDocumentToExcel, printSalesReceiptHTML, printQuotationHTML, exportDocumentToPDF } from '@/lib/document-service';
+import { FileSpreadsheet, Printer, Receipt, FileText } from 'lucide-react';
+import { exportDocumentToExcel, printSalesReceiptHTML, printQuotationHTML } from '@/lib/document-service';
 import type { CartItem } from '@/store/cartSlice';
 
 interface ShareDocumentModalProps {
@@ -22,10 +22,7 @@ export function ShareDocumentModal({ isOpen, onClose, items, grandTotal }: Share
     onClose();
   };
 
-  const handleExportPDF = () => {
-    exportDocumentToPDF(items, grandTotal, documentType, documentType === 'quotation' && includeVAT);
-    onClose();
-  };
+
 
   const handlePrint = () => {
     if (documentType === 'receipt') {
@@ -108,14 +105,7 @@ export function ShareDocumentModal({ isOpen, onClose, items, grandTotal }: Share
               <FileSpreadsheet size={18} />
               <span>Excel</span>
             </button>
-            <button
-              type="button"
-              onClick={handleExportPDF}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-red-600 text-white font-semibold hover:bg-red-700 active:scale-[0.98] transition-all shadow-sm"
-            >
-              <FileDown size={18} />
-              <span>PDF</span>
-            </button>
+
             <button
               type="button"
               onClick={handlePrint}
