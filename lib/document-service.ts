@@ -42,7 +42,7 @@ export const exportDocumentToExcel = (items: CartItem[], grandTotal: number, doc
     const cleanedSpec = cleanSpecName(item.specName);
     const isVisibleSpec = cleanedSpec && cleanedSpec !== '-' && cleanedSpec !== 'Mặc định';
     const productName = isVisibleSpec
-      ? `${item.product.name} (${cleanedSpec})`
+      ? `${item.product.name} ${cleanedSpec}`
       : item.product.name;
     aoa.push([index + 1, productName, item.unit, item.quantity, item.price, item.price * item.quantity]);
   });
@@ -224,7 +224,7 @@ export const printSalesReceiptHTML = (items: CartItem[], grandTotal: number) => 
     const cleanedSpec = cleanSpecName(item.specName);
     const isVisibleSpec = cleanedSpec && cleanedSpec !== '-' && cleanedSpec !== 'Mặc định';
     const productName = isVisibleSpec
-      ? `${item.product.name} (${cleanedSpec})`
+      ? `${item.product.name} ${cleanedSpec}`
       : item.product.name;
 
     const fmtNum = (v: number) => new Intl.NumberFormat('vi-VN').format(v);
@@ -368,7 +368,7 @@ export const printQuotationHTML = (items: CartItem[], grandTotal: number, includ
     const cleanedSpec = cleanSpecName(item.specName);
     const isVisibleSpec = cleanedSpec && cleanedSpec !== '-' && cleanedSpec !== 'Mặc định';
     const productName = isVisibleSpec
-      ? `${item.product.name} (${cleanedSpec})`
+      ? `${item.product.name} ${cleanedSpec}`
       : item.product.name;
 
     const fmtNum = (v: number) => new Intl.NumberFormat('vi-VN').format(v);
@@ -527,7 +527,7 @@ export const exportDocumentToPDF = (items: CartItem[], grandTotal: number, docTy
     const cleanedSpec = cleanSpecName(item.specName);
     const isVisibleSpec = cleanedSpec && cleanedSpec !== '-' && cleanedSpec !== 'Mặc định';
     const productName = isVisibleSpec
-      ? `${item.product.name} (${cleanedSpec})`
+      ? `${item.product.name} ${cleanedSpec}`
       : item.product.name;
 
     const fmtNum = (v: number) => new Intl.NumberFormat('vi-VN').format(v);
