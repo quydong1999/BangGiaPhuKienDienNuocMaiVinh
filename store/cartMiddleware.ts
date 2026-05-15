@@ -1,11 +1,11 @@
 import { createListenerMiddleware, isAnyOf } from '@reduxjs/toolkit';
-import { addToCart, removeFromCart, updateQuantity, clearCart, setCart } from './cartSlice';
+import { addToCart, removeFromCart, updateQuantity, clearCart, setCart, updatePrices } from './cartSlice';
 import type { RootState } from './store';
 
 export const cartListenerMiddleware = createListenerMiddleware();
 
 cartListenerMiddleware.startListening({
-  matcher: isAnyOf(addToCart, removeFromCart, updateQuantity, clearCart, setCart),
+  matcher: isAnyOf(addToCart, removeFromCart, updateQuantity, clearCart, setCart, updatePrices),
   effect: (_action, listenerApi) => {
     const state = listenerApi.getState() as RootState;
     try {

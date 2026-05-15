@@ -1,14 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import { Minus, Plus, Trash2, ShoppingBag, Save, Share2 } from 'lucide-react';
+import { Minus, Plus, Trash2, ShoppingBag, Save, Share2, RefreshCw } from 'lucide-react';
 import { cleanSpecName } from '@/lib/document-service';
 import { getBlurPlaceholder, getOptimizedImageUrl } from '@/lib/image-blur';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { selectCartItems, removeFromCart, updateQuantity, clearCart } from '@/store/cartSlice';
+import { selectCartItems, removeFromCart, updateQuantity, clearCart, updatePrices } from '@/store/cartSlice';
 import { openModal } from '@/store/modalSlice';
 import Swal from 'sweetalert2';
 
@@ -23,6 +23,7 @@ export default function CartContent() {
 
   // Local state to track the raw text while user is typing
   const [editingQty, setEditingQty] = useState<Record<string, string>>({});
+  const [isUpdatingPrices, setIsUpdatingPrices] = useState(false);
 
   const getDisplayQty = (cartId: string, quantity: number) =>
     editingQty[cartId] ?? String(quantity);
@@ -64,6 +65,70 @@ export default function CartContent() {
       }
     }));
   };
+
+  const handleUpdatePrices = useCallback(async () => {
+    setIsUpdatingPrices(true);
+    try {
+      const uniqueIds = [...new Set(items.map(item => item.product._id))];
+      const res = await fetch('/api/products/by-ids', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: uniqueIds }),
+      });
+      const result = await res.json();
+      if (!result.success || !result.data) {
+        Swal.fire('Lỗi', 'Không thể lấy giá mới từ hệ thống.', 'error');
+        return;
+      }
+
+      const productMap = new Map<string, any>();
+      for (const p of result.data) {
+        productMap.set(p._id, p);
+      }
+
+      const priceUpdates: { cartId: string; price: number }[] = [];
+      let updatedCount = 0;
+
+      for (const item of items) {
+        const product = productMap.get(item.product._id);
+        if (!product) continue;
+
+        const spec = product.specs?.find((s: any) => s.name === item.specName);
+        if (!spec) continue;
+
+        const priceEntry = spec.prices?.find((p: any) => p.unit === item.unit);
+        if (!priceEntry) continue;
+
+        if (priceEntry.price !== item.price) {
+          priceUpdates.push({ cartId: item.cartId, price: priceEntry.price });
+          updatedCount++;
+        }
+      }
+
+      if (priceUpdates.length > 0) {
+        dispatch(updatePrices(priceUpdates));
+        Swal.fire({
+          icon: 'success',
+          title: 'Đã cập nhật giá',
+          text: `${updatedCount} sản phẩm đã được cập nhật giá mới.`,
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      } else {
+        Swal.fire({
+          icon: 'info',
+          title: 'Giá đã mới nhất',
+          text: 'Tất cả sản phẩm trong giỏ đều đang ở giá hiện tại.',
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      }
+    } catch {
+      Swal.fire('Lỗi', 'Đã xảy ra lỗi khi cập nhật giá.', 'error');
+    } finally {
+      setIsUpdatingPrices(false);
+    }
+  }, [items, dispatch]);
 
 
 
@@ -197,6 +262,15 @@ export default function CartContent() {
           <span className="text-lg font-bold text-teal-700">{formatVND(grandTotal)}</span>
         </div>
         <div className="flex flex-col sm:flex-row gap-3">
+          <button
+            type="button"
+            onClick={handleUpdatePrices}
+            disabled={isUpdatingPrices}
+            className="flex-1 w-full flex items-center justify-center gap-2 py-3 border-2 border-teal-600 text-teal-700 font-bold uppercase tracking-widest hover:bg-teal-50 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <RefreshCw size={18} className={isUpdatingPrices ? 'animate-spin' : ''} />
+            {isUpdatingPrices ? 'Đang cập nhật...' : 'Cập nhật giá'}
+          </button>
           <button
             type="button"
             onClick={() => dispatch(openModal({ type: 'shareDocument', props: { items, grandTotal } }))}

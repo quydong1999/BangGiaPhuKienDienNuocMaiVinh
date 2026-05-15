@@ -50,10 +50,18 @@ export const cartSlice = createSlice({
     setCart: (state, action: PayloadAction<CartItem[]>) => {
       state.items = action.payload;
     },
+    updatePrices: (state, action: PayloadAction<{ cartId: string; price: number }[]>) => {
+      for (const update of action.payload) {
+        const item = state.items.find(i => i.cartId === update.cartId);
+        if (item) {
+          item.price = update.price;
+        }
+      }
+    },
   },
 });
 
-export const { addToCart, removeFromCart, updateQuantity, clearCart, setCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, updateQuantity, clearCart, setCart, updatePrices } = cartSlice.actions;
 
 // Selectors
 export const selectCartItems = (state: RootState) => state.cart.items;
