@@ -27,7 +27,10 @@ const getCachedCategory = (slug: string) => unstable_cache(
 const getCachedProducts = (categoryId: string) => unstable_cache(
   async () => {
     await connectDB();
-    const data = await Product.find({ categoryId }).lean();
+    const data = await Product.find({ categoryId })
+      .collation({ locale: 'vi', strength: 2 })
+      .sort({ name: 1, 'specs.name': 1 })
+      .lean();
     return JSON.parse(JSON.stringify(data));
   },
   [`products-${categoryId}`],
