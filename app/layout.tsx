@@ -18,7 +18,7 @@ const roboto = Roboto({
   variable: '--font-roboto',
 });
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
 export const metadata: Metadata = {
   title: {
@@ -46,9 +46,9 @@ export const metadata: Metadata = {
     countryName: 'Việt Nam',
   },
   alternates: {
-    canonical: `${baseUrl}`,
+    canonical: baseUrl,
   },
-  metadataBase: new URL(`${baseUrl}`),
+  metadataBase: new URL(baseUrl),
 };
 
 export const viewport: Viewport = {

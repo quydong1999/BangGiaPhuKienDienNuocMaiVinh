@@ -2,10 +2,6 @@ import mongoose from 'mongoose';
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
-if (!MONGODB_URI) {
-  throw new Error('Vui lòng định nghĩa biến MONGODB_URI trong file .env.local');
-}
-
 /**
  * MongoDB Singleton để duy trì kết nối duy nhất (đặc biệt quan trọng trong Next.js Dev mode).
  */
@@ -38,11 +34,15 @@ class MongoDB {
     }
 
     if (!this.promise) {
+      if (!MONGODB_URI) {
+        throw new Error('Vui lòng định nghĩa biến MONGODB_URI trong file .env.local');
+      }
+      
       const opts = {
         bufferCommands: false,
       };
 
-      this.promise = mongoose.connect(MONGODB_URI!, opts)
+      this.promise = mongoose.connect(MONGODB_URI, opts)
         .then((mongoose) => {
           console.log('✅ MongoDB đã kết nối thành công');
           return mongoose;

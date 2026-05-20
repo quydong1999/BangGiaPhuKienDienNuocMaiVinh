@@ -2,14 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useRef } from 'react';
 import { useCategories } from '@/hooks/useCategories';
 import { X, Star, ChevronRight, History } from 'lucide-react';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { openModal } from '@/store/modalSlice';
 import { getOptimizedImageUrl, getBlurPlaceholder } from '@/lib/image-blur';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -25,6 +24,9 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const isModalOpen = useAppSelector(state => state.modal.isOpen);
   const [isEffectivelyOpen, setIsEffectivelyOpen] = useState(isModalOpen);
 
+  const clickTimer = useRef<NodeJS.Timeout | null>(null);
+  const { data: categories, isLoading } = useCategories();
+
   useEffect(() => {
     if (isModalOpen) {
       setIsEffectivelyOpen(true);
@@ -34,8 +36,23 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     }
   }, [isModalOpen]);
 
-  const clickTimer = useRef<NodeJS.Timeout | null>(null);
-  const { data: categories, isLoading } = useCategories();
+  const activeRef = useRef<HTMLLIElement>(null);
+  const navRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (activeRef.current && navRef.current) {
+      // Scroll active item into view if it's not fully visible
+      const nav = navRef.current;
+      const activeEl = activeRef.current;
+
+      const navRect = nav.getBoundingClientRect();
+      const activeRect = activeEl.getBoundingClientRect();
+
+      if (activeRect.top < navRect.top || activeRect.bottom > navRect.bottom) {
+        activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  }, [pathname, isLoading]);
 
   const handleEditClick = (e: React.MouseEvent, category: any) => {
     e.preventDefault();
@@ -104,7 +121,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         </div>
 
         {/* Danh sách — cuộn được, chiếm hết phần còn lại */}
-        <nav className="flex-1 min-h-0 overflow-y-auto py-2 custom-scrollbar">
+        <nav ref={navRef} className="flex-1 min-h-0 overflow-y-auto py-2 custom-scrollbar">
           <ul className="space-y-1 px-2">
             <li>
               <Link
@@ -155,7 +172,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 const imageUrl = cat.image?.secure_url || cat.image?.url || imgNotFoundUrl;
 
                 return (
-                  <li key={cat.slug}>
+                  <li key={cat.slug} ref={isActive ? activeRef : null}>
                     <Link
                       href={`/${cat.slug}`}
                       onClick={(e) => handleCategoryClick(e, cat)}
