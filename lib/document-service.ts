@@ -94,10 +94,10 @@ export const exportDocumentToExcel = (items: CartItem[], grandTotal: number, doc
 
   const dateRow = bangChuRow + 2;
   merges.push({ s: { r: dateRow, c: 4 }, e: { r: dateRow, c: 5 } });
-  merges.push({ s: { r: dateRow + 1, c: 1 }, e: { r: dateRow + 1, c: 2 } }); // NgÆ°á»i nháº­n
-  merges.push({ s: { r: dateRow + 1, c: 4 }, e: { r: dateRow + 1, c: 5 } }); // NgÆ°á»i láº­p
-  merges.push({ s: { r: dateRow + 2, c: 1 }, e: { r: dateRow + 2, c: 2 } }); // (KÃ½)
-  merges.push({ s: { r: dateRow + 2, c: 4 }, e: { r: dateRow + 2, c: 5 } }); // (KÃ½)
+  merges.push({ s: { r: dateRow + 1, c: 1 }, e: { r: dateRow + 1, c: 2 } }); // Người nhận
+  merges.push({ s: { r: dateRow + 1, c: 4 }, e: { r: dateRow + 1, c: 5 } }); // Người lập
+  merges.push({ s: { r: dateRow + 2, c: 1 }, e: { r: dateRow + 2, c: 2 } }); // (Ký)
+  merges.push({ s: { r: dateRow + 2, c: 4 }, e: { r: dateRow + 2, c: 5 } }); // (Ký)
   merges.push({ s: { r: dateRow + 6, c: 4 }, e: { r: dateRow + 6, c: 5 } }); // Mai
 
   if (docType === 'quotation' && includeVAT) {
@@ -220,7 +220,7 @@ export const printSalesReceiptHTML = (items: CartItem[], grandTotal: number) => 
 
   const rowsHtml = items.map((item, index) => {
     const cleanedSpec = cleanSpecName(item.specName);
-    const isVisibleSpec = cleanedSpec && cleanedSpec !== '-' && cleanedSpec !== 'Máº·c Ä‘á»‹nh';
+    const isVisibleSpec = cleanedSpec && cleanedSpec !== '-' && cleanedSpec !== 'Mặc định';
     const productName = isVisibleSpec
       ? `${item.product.name} ${cleanedSpec}`
       : item.product.name;
@@ -364,7 +364,7 @@ export const printQuotationHTML = (items: CartItem[], grandTotal: number, includ
 
   const rowsHtml = items.map((item, index) => {
     const cleanedSpec = cleanSpecName(item.specName);
-    const isVisibleSpec = cleanedSpec && cleanedSpec !== '-' && cleanedSpec !== 'Máº·c Ä‘á»‹nh';
+    const isVisibleSpec = cleanedSpec && cleanedSpec !== '-' && cleanedSpec !== 'Mặc định';
     const productName = isVisibleSpec
       ? `${item.product.name} ${cleanedSpec}`
       : item.product.name;
